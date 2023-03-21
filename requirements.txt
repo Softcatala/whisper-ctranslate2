@@ -1,0 +1,3 @@
+ctranslate2==3.9.1
+faster-whisper @ git+https://github.com/guillaumekln/faster-whisper@0ab8db2
+tqdm
