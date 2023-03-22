@@ -1,12 +1,29 @@
-from .writers import get_writer
+from .writers import get_writer, format_timestamp
 from typing import NamedTuple, Optional, List
+import tqdm
+import sys
 
 try:
     from faster_whisper import WhisperModel
 except ModuleNotFoundError as e:
     print("Error faster_whisper dependency not found")
-    print("Install faster_whisper dependency by typing: pip install git+https://github.com/guillaumekln/faster-whisper")
+    print(
+        "Install faster_whisper dependency by typing: pip install git+https://github.com/guillaumekln/faster-whisper"
+    )
     exit()
+
+system_encoding = sys.getdefaultencoding()
+
+if system_encoding != "utf-8":
+
+    def make_safe(string):
+        return string.encode(system_encoding, errors="replace").decode(system_encoding)
+
+else:
+
+    def make_safe(string):
+        return string
+
 
 class TranscriptionOptions(NamedTuple):
     beam_size: int
@@ -43,9 +60,9 @@ class Transcribe:
         threads: int,
         device: str,
         compute_type: str,
+        verbose: bool,
         options: TranscriptionOptions,
     ):
-        print(f"model_path: {model_path}")
         model = WhisperModel(
             model_path, device=device, compute_type=compute_type, cpu_threads=threads
         )
@@ -73,7 +90,30 @@ class Transcribe:
             % (info.language, info.language_probability)
         )
 
+        list_segments = []
+        last_pos = 0
+        accumated_inc = 0
+        with tqdm.tqdm(
+            total=info.duration, unit="seconds", disable=verbose is not False
+        ) as pbar:
+            for segment in segments:
+                if verbose:
+                    start, end, text = segment.start, segment.end, segment.text
+                    line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
+                    print(make_safe(line))
+
+                list_segments.append(segment)
+                duration = segment.end - last_pos
+                increment = (
+                    duration
+                    if accumated_inc + duration < info.duration
+                    else info.duration - accumated_inc
+                )
+                accumated_inc += increment
+                last_pos = segment.end
+                pbar.update(increment)
+
         writer = get_writer(output_format, output_dir)
         results = {}
-        results["segments"] = list(segments)
+        results["segments"] = list_segments
         writer(results, audio)

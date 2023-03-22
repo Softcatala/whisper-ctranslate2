@@ -54,6 +54,14 @@ def read_command_line():
         choices=["txt", "vtt", "srt", "tsv", "all"],
         help="format of the output file; if not specified, all available formats will be produced",
     )
+
+    parser.add_argument(
+        "--verbose",
+        type=str2bool,
+        default=True,
+        help="whether to print out the progress and debug messages",
+    )
+
     parser.add_argument(
         "--task",
         type=str,
@@ -155,8 +163,11 @@ def read_command_line():
     )
 
     # CTranslate2 specific parameters
-    parser.add_argument(    
-        "--compute_type", choices=["int8", "int8_float16", "int16", "float16"], default="int8", help="Type of quantization to use"
+    parser.add_argument(
+        "--compute_type",
+        choices=["int8", "int8_float16", "int16", "float16"],
+        default="int8",
+        help="Type of quantization to use",
     )
 
     return parser.parse_args().__dict__
@@ -172,7 +183,8 @@ def main():
     language: str = args.pop("language")
     task: str = args.pop("task")
     device: str = args.pop("device")
-    compute_type: str = args.pop("compute_type") 
+    compute_type: str = args.pop("compute_type")
+    verbose: bool = args.pop("verbose")
 
     options = TranscriptionOptions(
         beam_size=args.pop("beam_size"),
@@ -208,6 +220,7 @@ def main():
             threads,
             device,
             compute_type,
+            verbose,
             options,
         )
 

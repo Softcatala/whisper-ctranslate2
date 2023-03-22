@@ -21,3 +21,23 @@ And then, just type:
 Alternatively, the following command will pull and install the latest commit from this repository, along with its Python dependencies:
 
     pip install https://github.com/jordimas/whisper-ctranslate2
+    
+# Usage
+
+Same command line that OpenAI whisper.
+
+To transcribe:
+
+    whisper-ctranslate2 inaguracio2011.mp3 --model medium
+    
+<img alt="image" src="https://user-images.githubusercontent.com/309265/226923541-8326c575-7f43-4bba-8235-2a4a8bdfb161.png">
+
+To translate:
+
+    whisper-ctranslate2 inaguracio2011.mp3 --model medium --task translate
+
+<img alt="image" src="https://user-images.githubusercontent.com/309265/226923535-b6583536-2486-4127-b17b-c58d85cdb90f.png">
+
+# Contact
+
+Jordi Mas <jmas@softcatala.org>

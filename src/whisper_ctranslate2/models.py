@@ -70,8 +70,6 @@ class Models:
                 model_bytes += f.read()
 
         got = hashlib.sha256(model_bytes).hexdigest()
-        print(f"expected: {expected_sha256}")
-        print(f"got: {got}")
         return got == expected_sha256
 
     def _download(self, model: str, url: str) -> str:
@@ -80,8 +78,6 @@ class Models:
 
         expected_sha256 = url.split("/")[-2].rsplit(".", 1)[0]
         download_target = os.path.join(model_path, os.path.basename(url))
-
-        print(f"*** Download {download_target}")
 
         if os.path.exists(download_target) and not os.path.isfile(download_target):
             raise RuntimeError(f"{download_target} exists and is not a regular file")
