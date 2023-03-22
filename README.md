@@ -10,7 +10,11 @@ Goals of the project:
 
 # Installation
 
-Just type:
+You need to install this dependency first:
+
+    pip install git+https://github.com/guillaumekln/faster-whisper
+
+And then, just type:
 
     pip install -U whisper-ctranslate2
 

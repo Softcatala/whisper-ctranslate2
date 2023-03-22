@@ -1,7 +1,12 @@
-from faster_whisper import WhisperModel
 from .writers import get_writer
 from typing import NamedTuple, Optional, List
 
+try:
+    from faster_whisper import WhisperModel
+except ModuleNotFoundError as e:
+    print("Error faster_whisper dependency not found")
+    print("Install faster_whisper dependency by typing: pip install git+https://github.com/guillaumekln/faster-whisper")
+    exit()
 
 class TranscriptionOptions(NamedTuple):
     beam_size: int
