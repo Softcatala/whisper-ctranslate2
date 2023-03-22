@@ -167,7 +167,7 @@ def read_command_line():
         "--compute_type",
         choices=["int8", "int8_float16", "int16", "float16"],
         default="int8",
-        help="Type of quantization to use",
+        help="Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html)",
     )
 
     return parser.parse_args().__dict__
