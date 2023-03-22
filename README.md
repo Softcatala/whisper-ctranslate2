@@ -1,3 +1,5 @@
+[![PyPI version](https://img.shields.io/pypi/v/whisper-ctranslate2.svg?logo=pypi&logoColor=FFE873)](https://pypi.org/project/whisper-ctranslate2/)
+
 # Introduction
 
 Whisper command line client compatible with original [OpenAI client](https://github.com/openai/whisper) based on CTranslate2.
