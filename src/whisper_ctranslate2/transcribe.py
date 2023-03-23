@@ -2,15 +2,7 @@ from .writers import get_writer, format_timestamp
 from typing import NamedTuple, Optional, List
 import tqdm
 import sys
-
-try:
-    from faster_whisper import WhisperModel
-except ModuleNotFoundError as e:
-    print("Error faster_whisper dependency not found")
-    print(
-        "Install faster_whisper dependency by typing: pip install git+https://github.com/guillaumekln/faster-whisper"
-    )
-    exit()
+from faster_whisper import WhisperModel
 
 system_encoding = sys.getdefaultencoding()
 
