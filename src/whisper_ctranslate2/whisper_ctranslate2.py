@@ -21,11 +21,6 @@ def optional_float(string):
     return None if string == "None" else float(string)
 
 
-def compression_ratio(text) -> float:
-    text_bytes = text.encode("utf-8")
-    return len(text_bytes) / len(zlib.compress(text_bytes))
-
-
 def read_command_line():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter

@@ -76,7 +76,6 @@ class Models:
         model_path = self.get_model_path(model)
         os.makedirs(model_path, exist_ok=True)
 
-        expected_sha256 = url.split("/")[-2].rsplit(".", 1)[0]
         download_target = os.path.join(model_path, os.path.basename(url))
 
         if os.path.exists(download_target) and not os.path.isfile(download_target):

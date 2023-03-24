@@ -2,10 +2,7 @@
 # Based on code from https://github.com/openai/whisper
 #
 
-import json
 import os
-import sys
-import zlib
 from typing import Callable, TextIO
 
 
