@@ -17,7 +17,7 @@ class Models:
         "small.en": "https://huggingface.co/jordimas/whisper-ct2/resolve/main/ee51a5c0132eb205931bfdd635fae2ada72f5580c812ab113ca2d735ea2707e9.small-en/",
         "medium": "https://huggingface.co/jordimas/whisper-ct2/resolve/main/309bb6f6fc40dedef3526916b4110288796ca6a873ed73dfc9f3b7bbbf5ecccd.medium/",
         "medium.en": "https://huggingface.co/jordimas/whisper-ct2/resolve/main/4f2c05f42abebfd9f5f9027e26966153b38995722a066ee8da14e6dbdc976622.medium-en/",
-        "large": "https://huggingface.co/jordimas/whisper-ct2/resolve/main/d2bb7bcdf195976460f6ba94f4222d3ba8d6b306d0a7d98447f3d58eecac4a28.large/",
+        "large-v2": "https://huggingface.co/jordimas/whisper-ct2/resolve/main/d2bb7bcdf195976460f6ba94f4222d3ba8d6b306d0a7d98447f3d58eecac4a28.large/",
     }
 
     _FILES = ["model.bin", "config.json", "vocabulary.txt"]
