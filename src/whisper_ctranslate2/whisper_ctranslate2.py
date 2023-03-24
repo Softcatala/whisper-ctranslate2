@@ -165,8 +165,8 @@ def read_command_line():
     # CTranslate2 specific parameters
     parser.add_argument(
         "--compute_type",
-        choices=["int8", "int8_float16", "int16", "float16"],
-        default="int8",
+        choices=["default", "auto", "int8", "int8_float16", "int16", "float16", "float32"],
+        default="auto",
         help="Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html)",
     )
 
