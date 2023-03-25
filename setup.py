@@ -9,7 +9,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="whisper-ctranslate2",
-    version="0.0.5",
+    version="0.0.6",
     description="Whisper command line client that uses CTranslate2",
     long_description=README,
     long_description_content_type="text/markdown",
