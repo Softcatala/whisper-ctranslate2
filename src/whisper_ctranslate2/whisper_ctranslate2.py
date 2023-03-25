@@ -3,6 +3,7 @@ import os
 from .transcribe import Transcribe, TranscriptionOptions
 from .models import Models
 from .languages import LANGUAGES, TO_LANGUAGE_CODE
+import numpy as np
 
 
 def optional_int(string):
@@ -79,10 +80,17 @@ def read_command_line():
         help="number of threads used for CPU inference",
     )
 
-    #    parser.add_argument("--model_dir", type=str, default=None, help="the path to save model files; uses ~/.cache/whisper by default")
     parser.add_argument(
         "--temperature", type=float, default=0, help="temperature to use for sampling"
     )
+
+    parser.add_argument(
+        "--temperature_increment_on_fallback",
+        type=optional_float,
+        default=0.2,
+        help="temperature to increase when falling back when the decoding fails to meet either of the thresholds below",
+    )
+
     parser.add_argument(
         "--best_of",
         type=optional_int,
@@ -126,7 +134,6 @@ def read_command_line():
         default=True,
         help="if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop",
     )
-    #   parser.add_argument("--temperature_increment_on_fallback", type=optional_float, default=0.2, help="temperature to increase when falling back when the decoding fails to meet either of the thresholds below")
     parser.add_argument(
         "--compression_ratio_threshold",
         type=optional_float,
@@ -160,7 +167,15 @@ def read_command_line():
     # CTranslate2 specific parameters
     parser.add_argument(
         "--compute_type",
-        choices=["default", "auto", "int8", "int8_float16", "int16", "float16", "float32"],
+        choices=[
+            "default",
+            "auto",
+            "int8",
+            "int8_float16",
+            "int16",
+            "float16",
+            "float32",
+        ],
         default="auto",
         help="Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html)",
     )
@@ -181,6 +196,12 @@ def main():
     compute_type: str = args.pop("compute_type")
     verbose: bool = args.pop("verbose")
 
+    temperature = args.pop("temperature")
+    if (increment := args.pop("temperature_increment_on_fallback")) is not None:
+        temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))
+    else:
+        temperature = [temperature]
+
     options = TranscriptionOptions(
         beam_size=args.pop("beam_size"),
         best_of=args.pop("best_of"),
@@ -190,7 +211,7 @@ def main():
         no_speech_threshold=args.pop("no_speech_threshold"),
         compression_ratio_threshold=args.pop("compression_ratio_threshold"),
         condition_on_previous_text=args.pop("condition_on_previous_text"),
-        temperatures=[args.pop("temperature")],
+        temperature=temperature,
         initial_prompt=args.pop("initial_prompt"),
         #        prefix = None,
         #        suppress_blank = None,

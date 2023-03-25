@@ -26,7 +26,7 @@ class TranscriptionOptions(NamedTuple):
     no_speech_threshold: Optional[float]
     compression_ratio_threshold: Optional[float]
     condition_on_previous_text: bool
-    temperatures: List[float]
+    temperature: List[float]
     initial_prompt: Optional[str]
     #    prefix: Optional[str]
     #    suppress_blank: bool
@@ -67,7 +67,7 @@ class Transcribe:
             best_of=options.best_of,
             patience=options.patience,
             length_penalty=options.length_penalty,
-            temperature=options.temperatures,
+            temperature=options.temperature,
             compression_ratio_threshold=options.compression_ratio_threshold,
             log_prob_threshold=options.log_prob_threshold,
             no_speech_threshold=options.no_speech_threshold,
