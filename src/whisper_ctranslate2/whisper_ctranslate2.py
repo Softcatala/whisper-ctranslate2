@@ -179,6 +179,12 @@ def read_command_line():
         default="auto",
         help="Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html)",
     )
+    parser.add_argument(
+        "--model_directory",
+        type=str,
+        default=None,
+        help="Directory where to find a CTranslate Whisper model (e.g. fine-tuned model)",
+    )
 
     return parser.parse_args().__dict__
 
@@ -195,6 +201,7 @@ def main():
     device: str = args.pop("device")
     compute_type: str = args.pop("compute_type")
     verbose: bool = args.pop("verbose")
+    model_directory: str = args.pop("model_directory")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -223,7 +230,13 @@ def main():
         #        append_punctuations = None
     )
 
-    model_dir = Models().get_model_dir(model)
+    if model_directory:
+        model_filename = os.path.join(model_directory, "model.bin")
+        if not os.path.exists(model_filename):
+            raise RuntimeError(f"Model file '{model_filename}' does not exists")
+        model_dir = model_directory
+    else:
+        model_dir = Models().get_model_dir(model)
 
     for audio_path in args.pop("audio"):
         Transcribe().inference(
