@@ -37,6 +37,25 @@ To translate:
 
 <img alt="image" src="https://user-images.githubusercontent.com/309265/226923535-b6583536-2486-4127-b17b-c58d85cdb90f.png">
 
+Additionally using:
+
+    whisper-ctranslate2 --help
+
+All the supported options with their help are shown.
+
+# CTranslate2 specific options
+
+On top of the OpenAI Whisper command line options, there are some specific CTranslate2 options.
+
+    --compute_type {default,auto,int8,int8_float16,int16,float16,float32}
+
+Type of [quantization](https://opennmt.net/CTranslate2/quantization.html) to use. On CPU _int8_ will give the best performance.
+
+    --model_directory MODEL_DIRECTORY
+
+Directory where to find a CTranslate Whisper model, for example a fine-tunned Whisper model. The model should be in CTranslate2 format.
+
+
 # Contact
 
 Jordi Mas <jmas@softcatala.org>
