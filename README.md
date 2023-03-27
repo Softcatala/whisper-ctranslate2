@@ -19,7 +19,7 @@ Just type:
 
 Alternatively, the following command will pull and install the latest commit from this repository, along with its Python dependencies:
 
-    pip install https://github.com/jordimas/whisper-ctranslate2
+    pip install git+https://github.com/jordimas/whisper-ctranslate2.git
     
 # Usage
 
