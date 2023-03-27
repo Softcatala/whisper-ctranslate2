@@ -202,6 +202,14 @@ def read_command_line():
         help="Directory where to find a CTranslate Whisper model (e.g. fine-tuned model)",
     )
 
+    # Whisper-ctranslate2 specific parameters
+    parser.add_argument(
+        "--print-colors",
+        type=str2bool,
+        default=False,
+        help="Print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
+    )
+
     return parser.parse_args().__dict__
 
 
@@ -269,6 +277,7 @@ def main():
         word_timestamps=args.pop("word_timestamps"),
         #        prepend_punctuations = None,
         #        append_punctuations = None
+        print_colors=args.pop("print_colors"),
     )
 
     if model_directory:

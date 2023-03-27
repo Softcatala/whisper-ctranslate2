@@ -34,6 +34,7 @@ class TranscriptionOptions(NamedTuple):
     #    without_timestamps: bool
     #    max_initial_timestamp: float
     word_timestamps: bool
+    print_colors: bool
 
 
 #    prepend_punctuations: str
@@ -41,6 +42,31 @@ class TranscriptionOptions(NamedTuple):
 
 
 class Transcribe:
+    def _get_colored_text(self, words):
+        k_colors = [
+            "\033[38;5;196m",
+            "\033[38;5;202m",
+            "\033[38;5;208m",
+            "\033[38;5;214m",
+            "\033[38;5;220m",
+            "\033[38;5;226m",
+            "\033[38;5;190m",
+            "\033[38;5;154m",
+            "\033[38;5;118m",
+            "\033[38;5;82m",
+        ]
+
+        text_words = ""
+
+        n_colors = len(k_colors)
+        for word in words:
+            p = word.probability
+            col = max(0, min(n_colors - 1, (int)(pow(p, 3) * n_colors)))
+            end_mark = "\033[0m"
+            text_words += f"{k_colors[col]}{word.word}{end_mark}"
+
+        return text_words
+
     def inference(
         self,
         audio: str,
@@ -79,7 +105,7 @@ class Transcribe:
             condition_on_previous_text=options.condition_on_previous_text,
             initial_prompt=options.initial_prompt,
             # suppress_tokens = options.suppress_tokens,
-            word_timestamps=options.word_timestamps,
+            word_timestamps=True if options.print_colors else options.word_timestamps,
         )
 
         print(
@@ -96,6 +122,12 @@ class Transcribe:
             for segment in segments:
                 if verbose:
                     start, end, text = segment.start, segment.end, segment.text
+
+                    if options.print_colors and segment.words:
+                        text = self._get_colored_text(segment.words)
+                    else:
+                        text = segment.text
+
                     line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
                     print(make_safe(line))
 

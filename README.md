@@ -43,7 +43,7 @@ Additionally using:
 
 All the supported options with their help are shown.
 
-# CTranslate2 specific options
+# Whisper-ctranslate2 specific options
 
 On top of the OpenAI Whisper command line options, there are some specific CTranslate2 options.
 
@@ -58,6 +58,12 @@ Directory where to find a CTranslate Whisper model, for example a fine-tunned Wh
     --device_index
 
 Device IDs where to place this model on
+
+    --print-colors
+
+Adding the `--print-colors` argument will print the transcribed text using an experimental color coding strategy based on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) to highlight words with high or low confidence:
+
+<img alt="image" src="https://user-images.githubusercontent.com/309265/228054378-48ac6af4-ce4b-44da-b4ec-70ce9f2f2a6c.png">
 
 # Contact
 
