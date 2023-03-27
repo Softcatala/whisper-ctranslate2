@@ -6,6 +6,7 @@ from .languages import LANGUAGES, TO_LANGUAGE_CODE
 import numpy as np
 import warnings
 
+
 def optional_int(string):
     return None if string == "None" else int(string)
 
@@ -34,6 +35,12 @@ def read_command_line():
         default="small",
         choices=Models().get_list(),
         help="name of the Whisper model to use",
+    )
+    parser.add_argument(
+        "--model_dir",
+        type=str,
+        default=None,
+        help="the path to save model files; uses ~/.cache/whisper-ctranslate2 by default",
     )
     parser.add_argument(
         "--output_dir",
@@ -212,6 +219,7 @@ def main():
     compute_type: str = args.pop("compute_type")
     verbose: bool = args.pop("verbose")
     model_directory: str = args.pop("model_directory")
+    cache_directory: str = args.pop("model_dir")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -221,13 +229,16 @@ def main():
 
     language = _from_language_to_iso_code(language)
 
-    if not model_directory and model.endswith(".en") and language not in {"en", "English"}:
+    if (
+        not model_directory
+        and model.endswith(".en")
+        and language not in {"en", "English"}
+    ):
         if language is not None:
             warnings.warn(
                 f"{model} is an English-only model but receipted '{language}'; using English instead."
             )
         language = "en"
-
 
     options = TranscriptionOptions(
         beam_size=args.pop("beam_size"),
@@ -256,7 +267,7 @@ def main():
             raise RuntimeError(f"Model file '{model_filename}' does not exists")
         model_dir = model_directory
     else:
-        model_dir = Models().get_model_dir(model)
+        model_dir = Models(cache_directory).get_model_dir(model)
 
     for audio_path in args.pop("audio"):
         Transcribe().inference(

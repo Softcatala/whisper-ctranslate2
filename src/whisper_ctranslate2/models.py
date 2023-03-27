@@ -22,11 +22,14 @@ class Models:
 
     _FILES = ["model.bin", "config.json", "vocabulary.txt", "tokenizer.json"]
 
-    def __init__(self):
-        default = os.path.join(os.path.expanduser("~"), ".cache")
-        self.download_root = os.path.join(
-            os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
-        )
+    def __init__(self, cache_directory=None):
+        if cache_directory:
+            self.download_root = cache_directory
+        else:
+            default = os.path.join(os.path.expanduser("~"), ".cache")
+            self.download_root = os.path.join(
+                os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
+            )
 
     def get_list(self) -> str:
         return list(self._MODELS.keys())
