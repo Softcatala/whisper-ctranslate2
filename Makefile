@@ -2,4 +2,4 @@
 
 run:
 	python3 setup.py sdist bdist_wheel
-	pip3 install --force-reinstall --user dist/whisper_ctranslate2-0.0.9-py3-none-any.whl
+	pip3 install --force-reinstall --user dist/whisper_ctranslate2-0.1.0-py3-none-any.whl
