@@ -5,6 +5,7 @@ from .models import Models
 from .languages import LANGUAGES, TO_LANGUAGE_CODE
 import numpy as np
 import warnings
+from typing import Union
 
 
 def optional_int(string):
@@ -173,6 +174,14 @@ def read_command_line():
 
     # CTranslate2 specific parameters
     parser.add_argument(
+        "--device_index",
+        nargs="*",
+        type=int,
+        default=0,
+        help="Device IDs where to place this model on",
+    )
+
+    parser.add_argument(
         "--compute_type",
         choices=[
             "default",
@@ -220,6 +229,7 @@ def main():
     verbose: bool = args.pop("verbose")
     model_directory: str = args.pop("model_directory")
     cache_directory: str = args.pop("model_dir")
+    device_index: Union[int, List[int]] = args.pop("device_index")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -279,6 +289,7 @@ def main():
             language,
             threads,
             device,
+            device_index,
             compute_type,
             verbose,
             options,

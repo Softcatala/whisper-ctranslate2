@@ -1,5 +1,5 @@
 from .writers import get_writer, format_timestamp
-from typing import NamedTuple, Optional, List
+from typing import NamedTuple, Optional, List, Union
 import tqdm
 import sys
 from faster_whisper import WhisperModel
@@ -51,12 +51,17 @@ class Transcribe:
         language: str,
         threads: int,
         device: str,
+        device_index: Union[int, List[int]],
         compute_type: str,
         verbose: bool,
         options: TranscriptionOptions,
     ):
         model = WhisperModel(
-            model_path, device=device, compute_type=compute_type, cpu_threads=threads
+            model_path,
+            device=device,
+            device_index=device_index,
+            compute_type=compute_type,
+            cpu_threads=threads,
         )
 
         segments, info = model.transcribe(
