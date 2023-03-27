@@ -55,7 +55,7 @@ Type of [quantization](https://opennmt.net/CTranslate2/quantization.html) to use
 
 Directory where to find a CTranslate Whisper model, for example a fine-tunned Whisper model. The model should be in CTranslate2 format.
 
-   --device_index
+    --device_index
 
 Device IDs where to place this model on
 
