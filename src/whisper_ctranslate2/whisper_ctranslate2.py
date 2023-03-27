@@ -4,7 +4,7 @@ from .transcribe import Transcribe, TranscriptionOptions
 from .models import Models
 from .languages import LANGUAGES, TO_LANGUAGE_CODE
 import numpy as np
-
+import warnings
 
 def optional_int(string):
     return None if string == "None" else int(string)
@@ -189,6 +189,16 @@ def read_command_line():
     return parser.parse_args().__dict__
 
 
+def _from_language_to_iso_code(language):
+    if language is not None:
+        language_name = language.lower()
+        if language_name not in LANGUAGES:
+            if language_name in TO_LANGUAGE_CODE:
+                language = TO_LANGUAGE_CODE[language_name]
+
+    return language
+
+
 def main():
     args = read_command_line()
     output_dir: str = args.pop("output_dir")
@@ -208,6 +218,16 @@ def main():
         temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))
     else:
         temperature = [temperature]
+
+    language = _from_language_to_iso_code(language)
+
+    if not model_directory and model.endswith(".en") and language not in {"en", "English"}:
+        if language is not None:
+            warnings.warn(
+                f"{model} is an English-only model but receipted '{language}'; using English instead."
+            )
+        language = "en"
+
 
     options = TranscriptionOptions(
         beam_size=args.pop("beam_size"),
