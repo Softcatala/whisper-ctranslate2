@@ -17,7 +17,8 @@ class Models:
         "small.en": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/e2c14bb0f6a8a69afe12fbe1d82fa0c41494d4bde9615bdf399da5665f43cbc4.small-en/",
         "medium": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/d8b91e278db3041c3b41bf879716281edf5cfa7b0025823cc174b5429877d2bc.medium/",
         "medium.en": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/22d42d3e69ce9149bfd52c07d357e4cb72b992fb602805d6bb39f331400d6742.mediu-en/",
-        "large-v2": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ea44e7a9609bd21a604b28880b85fc7dc2c373876c627a7553ce5440a8c406c1.large/",
+        "large-v1": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ea44e7a9609bd21a604b28880b85fc7dc2c373876c627a7553ce5440a8c406c1.large/",
+        "large-v2": "https://huggingface.co/datasets/jordimas/whisper-ct2-v2/resolve/main/ff9f410b63b3d996274c895f6209e9b9ab01d497815b21c2d35ae336ab7d7f20.large-v2/",
     }
 
     _FILES = ["model.bin", "config.json", "vocabulary.txt", "tokenizer.json"]
