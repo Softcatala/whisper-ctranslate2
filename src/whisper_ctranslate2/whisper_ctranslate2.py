@@ -166,8 +166,20 @@ def read_command_line():
         default=False,
         help="(experimental) extract word-level timestamps and refine the results based on them",
     )
-    #    parser.add_argument("--prepend_punctuations", type=str, default="\"\'“¿([{-", help="if word_timestamps is True, merge these punctuation symbols with the next word")
-    # parser.add_argument("--append_punctuations", type=str, default="\"\'.。,，!！?？:：”)]}、", help="if word_timestamps is True, merge these punctuation symbols with the previous word"
+
+    parser.add_argument(
+        "--prepend_punctuations",
+        type=str,
+        default="\"'“¿([{-",
+        help="if word_timestamps is True, merge these punctuation symbols with the next word",
+    )
+    parser.add_argument(
+        "--append_punctuations",
+        type=str,
+        default="\"'.。,，!！?？:：”)]}、",
+        help="if word_timestamps is True, merge these punctuation symbols with the previous word",
+    )
+
     parser.add_argument(
         "--device", default="auto", help="device to use for CTranslate2 inference"
     )
@@ -277,8 +289,8 @@ def main():
         #        without_timestamps = None,
         #        max_initial_timestamp =  None,
         word_timestamps=args.pop("word_timestamps"),
-        #        prepend_punctuations = None,
-        #        append_punctuations = None
+        prepend_punctuations=args.pop("prepend_punctuations"),
+        append_punctuations=args.pop("append_punctuations"),
         print_colors=args.pop("print_colors"),
     )
 

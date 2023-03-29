@@ -35,10 +35,8 @@ class TranscriptionOptions(NamedTuple):
     #    max_initial_timestamp: float
     word_timestamps: bool
     print_colors: bool
-
-
-#    prepend_punctuations: str
-#    append_punctuations: str
+    prepend_punctuations: str
+    append_punctuations: str
 
 
 class Transcribe:
@@ -106,6 +104,8 @@ class Transcribe:
             initial_prompt=options.initial_prompt,
             suppress_tokens=options.suppress_tokens,
             word_timestamps=True if options.print_colors else options.word_timestamps,
+            prepend_punctuations=options.prepend_punctuations,
+            append_punctuations=options.append_punctuations,
         )
 
         print(
