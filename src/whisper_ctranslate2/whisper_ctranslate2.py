@@ -204,7 +204,7 @@ def read_command_line():
 
     # Whisper-ctranslate2 specific parameters
     parser.add_argument(
-        "--print-colors",
+        "--print_colors",
         type=str2bool,
         default=False,
         help="Print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
