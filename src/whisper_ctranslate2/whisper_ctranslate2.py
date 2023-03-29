@@ -238,6 +238,7 @@ def main():
     model_directory: str = args.pop("model_directory")
     cache_directory: str = args.pop("model_dir")
     device_index: Union[int, List[int]] = args.pop("device_index")
+    suppress_tokens: str = args.pop("suppress_tokens")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -258,6 +259,7 @@ def main():
             )
         language = "en"
 
+    suppress_tokens = [int(t) for t in suppress_tokens.split(",")]
     options = TranscriptionOptions(
         beam_size=args.pop("beam_size"),
         best_of=args.pop("best_of"),
@@ -271,7 +273,7 @@ def main():
         initial_prompt=args.pop("initial_prompt"),
         #        prefix = None,
         #        suppress_blank = None,
-        suppress_tokens=args.pop("suppress_tokens"),
+        suppress_tokens=suppress_tokens,
         #        without_timestamps = None,
         #        max_initial_timestamp =  None,
         word_timestamps=args.pop("word_timestamps"),

@@ -104,7 +104,7 @@ class Transcribe:
             no_speech_threshold=options.no_speech_threshold,
             condition_on_previous_text=options.condition_on_previous_text,
             initial_prompt=options.initial_prompt,
-            # suppress_tokens = options.suppress_tokens,
+            suppress_tokens=options.suppress_tokens,
             word_timestamps=True if options.print_colors else options.word_timestamps,
         )
 
