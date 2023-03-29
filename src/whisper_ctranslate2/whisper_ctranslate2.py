@@ -280,6 +280,11 @@ def main():
         print_colors=args.pop("print_colors"),
     )
 
+    if verbose and not language:
+        print(
+            "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
+        )
+
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
