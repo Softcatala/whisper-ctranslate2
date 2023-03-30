@@ -294,10 +294,16 @@ def main():
         print_colors=args.pop("print_colors"),
     )
 
-    if verbose and not language:
-        print(
-            "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
-        )
+    if verbose:
+        if options.print_colors and output_dir:
+            print(
+                "Print colors requires word-level time stamps. Generated files in output directory will have word-level timestamps"
+            )
+
+        if not language:
+            print(
+                "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
+            )
 
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
