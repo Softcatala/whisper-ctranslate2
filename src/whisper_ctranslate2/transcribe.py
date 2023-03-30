@@ -3,6 +3,7 @@ from typing import NamedTuple, Optional, List, Union
 import tqdm
 import sys
 from faster_whisper import WhisperModel
+from .languages import LANGUAGES
 
 system_encoding = sys.getdefaultencoding()
 
@@ -108,9 +109,10 @@ class Transcribe:
             append_punctuations=options.append_punctuations,
         )
 
+
         print(
             "Detected language '%s' with probability %f"
-            % (info.language, info.language_probability)
+            % ( LANGUAGES[info.language].title(), info.language_probability)
         )
 
         list_segments = []
