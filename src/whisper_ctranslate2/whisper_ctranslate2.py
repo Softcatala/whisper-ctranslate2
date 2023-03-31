@@ -195,7 +195,7 @@ def read_command_line():
     parser.add_argument(
         "--vad_min_silence_duration_ms",
         type=float,
-        default=None,
+        default=300,
         help="When `vad_filter` is enabled, audio segments without speech for at least this number of milliseconds will be ignored.",
     )
 
