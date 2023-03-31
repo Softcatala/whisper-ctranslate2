@@ -9,7 +9,7 @@ It uses [CTranslate2](https://github.com/OpenNMT/CTranslate2/) and [Faster-whisp
 
 Goals of the project:
 * Provide an easy way to use the CTranslate2 Whisper implementation
-* Easy the migration for people using OpenAI Whisper CLI
+* Ease the migration for people using OpenAI Whisper CLI
 
 # Installation
 
