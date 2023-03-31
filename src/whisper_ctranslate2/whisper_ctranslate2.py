@@ -6,6 +6,7 @@ from .languages import LANGUAGES, TO_LANGUAGE_CODE
 import numpy as np
 import warnings
 from typing import Union
+from .writers import get_writer
 
 
 def optional_int(string):
@@ -55,7 +56,7 @@ def read_command_line():
         "-f",
         type=str,
         default="all",
-        choices=["txt", "vtt", "srt", "tsv", "all"],
+        choices=["txt", "vtt", "srt", "tsv", "json", "all"],
         help="format of the output file; if not specified, all available formats will be produced",
     )
 
@@ -314,7 +315,7 @@ def main():
         model_dir = Models(cache_directory).get_model_dir(model)
 
     for audio_path in args.pop("audio"):
-        Transcribe().inference(
+        result = Transcribe().inference(
             audio_path,
             model_dir,
             output_dir,
@@ -328,6 +329,8 @@ def main():
             verbose,
             options,
         )
+        writer = get_writer(output_format, output_dir)
+        writer(result, audio_path)
 
 
 if __name__ == "__main__":

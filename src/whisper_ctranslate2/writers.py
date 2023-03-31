@@ -3,6 +3,7 @@
 #
 
 import os
+import json
 from typing import Callable, TextIO
 
 
@@ -53,17 +54,17 @@ class SubtitlesWriter(ResultWriter):
 
     def iterate_result(self, result: dict):
         for segment in result["segments"]:
-            segment_start = self.format_timestamp(segment.start)
-            segment_end = self.format_timestamp(segment.end)
-            segment_text = segment.text.strip().replace("-->", "->")
+            segment_start = self.format_timestamp(segment["start"])
+            segment_end = self.format_timestamp(segment["end"])
+            segment_text = segment["text"].strip().replace("-->", "->")
 
-            if word_timings := segment.words:
-                all_words = [timing.word for timing in word_timings]
+            if word_timings := segment["words"]:
+                all_words = [timing["word"] for timing in word_timings]
                 all_words[0] = all_words[0].strip()  # remove the leading space, if any
                 last = segment_start
                 for i, this_word in enumerate(word_timings):
-                    start = self.format_timestamp(this_word.start)
-                    end = self.format_timestamp(this_word.end)
+                    start = self.format_timestamp(this_word["start"])
+                    end = self.format_timestamp(this_word["end"])
                     if last != start:
                         yield last, start, segment_text
 
@@ -93,7 +94,7 @@ class WriteTXT(ResultWriter):
 
     def write_result(self, result: dict, file: TextIO):
         for segment in result["segments"]:
-            print(segment.text.strip(), file=file, flush=True)
+            print(segment["text"].strip(), file=file, flush=True)
 
 
 class WriteSRT(SubtitlesWriter):
@@ -132,9 +133,16 @@ class WriteTSV(ResultWriter):
     def write_result(self, result: dict, file: TextIO):
         print("start", "end", "text", sep="\t", file=file)
         for segment in result["segments"]:
-            print(round(1000 * segment.start), file=file, end="\t")
-            print(round(1000 * segment.end), file=file, end="\t")
-            print(segment.text.strip().replace("\t", " "), file=file, flush=True)
+            print(round(1000 * segment["start"]), file=file, end="\t")
+            print(round(1000 * segment["end"]), file=file, end="\t")
+            print(segment["text"].strip().replace("\t", " "), file=file, flush=True)
+
+
+class WriteJSON(ResultWriter):
+    extension: str = "json"
+
+    def write_result(self, result: dict, file: TextIO):
+        json.dump(result, file)
 
 
 def get_writer(output_format: str, output_dir: str) -> Callable[[dict, TextIO], None]:
@@ -143,6 +151,7 @@ def get_writer(output_format: str, output_dir: str) -> Callable[[dict, TextIO], 
         "vtt": WriteVTT,
         "srt": WriteSRT,
         "tsv": WriteTSV,
+        "json": WriteJSON,
     }
 
     if output_format == "all":

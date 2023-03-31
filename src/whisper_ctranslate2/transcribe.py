@@ -109,15 +109,16 @@ class Transcribe:
             append_punctuations=options.append_punctuations,
         )
 
-
+        language_name = LANGUAGES[info.language].title()
         print(
             "Detected language '%s' with probability %f"
-            % ( LANGUAGES[info.language].title(), info.language_probability)
+            % (language_name, info.language_probability)
         )
 
         list_segments = []
         last_pos = 0
         accumated_inc = 0
+        all_text = ""
         with tqdm.tqdm(
             total=info.duration, unit="seconds", disable=verbose is not False
         ) as pbar:
@@ -130,10 +131,15 @@ class Transcribe:
                     else:
                         text = segment.text
 
+                    all_text += text
                     line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
                     print(make_safe(line))
 
-                list_segments.append(segment)
+                segment_dict = segment._asdict()
+                if segment.words:
+                    segment_dict["words"] = [word._asdict() for word in segment.words]
+
+                list_segments.append(segment_dict)
                 duration = segment.end - last_pos
                 increment = (
                     duration
@@ -144,7 +150,8 @@ class Transcribe:
                 last_pos = segment.end
                 pbar.update(increment)
 
-        writer = get_writer(output_format, output_dir)
-        results = {}
-        results["segments"] = list_segments
-        writer(results, audio)
+        return dict(
+            text=all_text,
+            segments=list_segments,
+            language=language_name,
+        )
