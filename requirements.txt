@@ -1,4 +1,4 @@
 numpy
-faster-whisper
+faster-whisper>=0.4
 ctranslate2
 tqdm
