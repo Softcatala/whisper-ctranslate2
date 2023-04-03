@@ -185,6 +185,20 @@ def read_command_line():
         "--device", default="auto", help="device to use for CTranslate2 inference"
     )
 
+    parser.add_argument(
+        "--vad_filter",
+        type=bool,
+        default=False,
+        help="Enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.",
+    )
+
+    parser.add_argument(
+        "--vad_min_silence_duration_ms",
+        type=float,
+        default=300,
+        help="When `vad_filter` is enabled, audio segments without speech for at least this number of milliseconds will be ignored.",
+    )
+
     # CTranslate2 specific parameters
     parser.add_argument(
         "--device_index",
@@ -279,6 +293,8 @@ def main():
         prepend_punctuations=args.pop("prepend_punctuations"),
         append_punctuations=args.pop("append_punctuations"),
         print_colors=args.pop("print_colors"),
+        vad_filter=args.pop("vad_filter"),
+        vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms")
     )
 
     if verbose:

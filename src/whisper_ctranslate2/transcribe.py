@@ -38,6 +38,8 @@ class TranscriptionOptions(NamedTuple):
     print_colors: bool
     prepend_punctuations: str
     append_punctuations: str
+    vad_filter: bool
+    vad_min_silence_duration_ms: Optional[float]
 
 
 class Transcribe:
@@ -107,6 +109,8 @@ class Transcribe:
             word_timestamps=True if options.print_colors else options.word_timestamps,
             prepend_punctuations=options.prepend_punctuations,
             append_punctuations=options.append_punctuations,
+            vad_filter=options.vad_filter,
+            vad_min_silence_duration_ms=options.vad_min_silence_duration_ms
         )
 
         language_name = LANGUAGES[info.language].title()
