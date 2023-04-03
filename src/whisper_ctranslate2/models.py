@@ -32,7 +32,7 @@ class Models:
                 os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
             )
 
-    def get_list(self) -> str:
+    def get_list(self) -> list[str]:
         return list(self._MODELS.keys())
 
     def get_model_path(self, model) -> str:
@@ -76,7 +76,7 @@ class Models:
         got = hashlib.sha256(model_bytes).hexdigest()
         return got == expected_sha256
 
-    def _download(self, model: str, url: str) -> str:
+    def _download(self, model: str, url: str):
         model_path = self.get_model_path(model)
         os.makedirs(model_path, exist_ok=True)
 
