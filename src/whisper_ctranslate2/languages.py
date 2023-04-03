@@ -118,3 +118,13 @@ TO_LANGUAGE_CODE = {
     "sinhalese": "si",
     "castilian": "es",
 }
+
+
+def from_language_to_iso_code(language):
+    if language is not None:
+        language_name = language.lower()
+        if language_name not in LANGUAGES:
+            if language_name in TO_LANGUAGE_CODE:
+                language = TO_LANGUAGE_CODE[language_name]
+
+    return language

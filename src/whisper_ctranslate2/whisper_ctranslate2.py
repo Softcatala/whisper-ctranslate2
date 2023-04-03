@@ -2,7 +2,7 @@ import argparse
 import os
 from .transcribe import Transcribe, TranscriptionOptions
 from .models import Models
-from .languages import LANGUAGES, TO_LANGUAGE_CODE
+from .languages import LANGUAGES, TO_LANGUAGE_CODE, from_language_to_iso_code
 import numpy as np
 import warnings
 from typing import Union
@@ -226,16 +226,6 @@ def read_command_line():
     return parser.parse_args().__dict__
 
 
-def _from_language_to_iso_code(language):
-    if language is not None:
-        language_name = language.lower()
-        if language_name not in LANGUAGES:
-            if language_name in TO_LANGUAGE_CODE:
-                language = TO_LANGUAGE_CODE[language_name]
-
-    return language
-
-
 def main():
     args = read_command_line()
     output_dir: str = args.pop("output_dir")
@@ -259,7 +249,7 @@ def main():
     else:
         temperature = [temperature]
 
-    language = _from_language_to_iso_code(language)
+    language = from_language_to_iso_code(language)
 
     if (
         not model_directory
