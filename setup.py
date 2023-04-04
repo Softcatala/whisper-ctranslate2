@@ -23,7 +23,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
-        'Programming Language :: Python :: 3.11',
+        "Programming Language :: Python :: 3.11",
     ],
     packages=["src/whisper_ctranslate2"],
     include_package_data=True,
@@ -33,10 +33,15 @@ setup(
             open(os.path.join(os.path.dirname(__file__), "requirements.txt"))
         )
     ],
+    extras_require={
+        "dev": [
+            "flake8==6.*",
+            "black==23.*",
+        ],
+    },
     entry_points={
         "console_scripts": [
             "whisper-ctranslate2=src.whisper_ctranslate2.whisper_ctranslate2:main",
         ]
     },
 )
-
