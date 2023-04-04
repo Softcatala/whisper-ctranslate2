@@ -1,4 +1,4 @@
-from .writers import get_writer, format_timestamp
+from .writers import format_timestamp
 from typing import NamedTuple, Optional, List, Union
 import tqdm
 import sys
@@ -72,8 +72,6 @@ class Transcribe:
         self,
         audio: str,
         model_path: str,
-        output_dir: str,
-        output_format: str,
         task: str,
         language: str,
         threads: int,

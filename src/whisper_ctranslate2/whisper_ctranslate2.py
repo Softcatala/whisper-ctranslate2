@@ -5,7 +5,7 @@ from .models import Models
 from .languages import LANGUAGES, TO_LANGUAGE_CODE, from_language_to_iso_code
 import numpy as np
 import warnings
-from typing import Union
+from typing import Union, List
 from .writers import get_writer
 
 
@@ -320,8 +320,6 @@ def main():
         result = Transcribe().inference(
             audio_path,
             model_dir,
-            output_dir,
-            output_format,
             task,
             language,
             threads,
