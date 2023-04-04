@@ -32,7 +32,7 @@ class Models:
                 os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
             )
 
-    def get_list(self) -> list[str]:
+    def get_list(self):
         return list(self._MODELS.keys())
 
     def get_model_path(self, model) -> str:
