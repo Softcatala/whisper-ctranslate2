@@ -34,10 +34,7 @@ setup(
         )
     ],
     extras_require={
-        "dev": [
-            "flake8==6.*",
-            "black==23.*",
-        ],
+        "dev": ["flake8==6.*", "black==23.*", "nose2"],
     },
     entry_points={
         "console_scripts": [
