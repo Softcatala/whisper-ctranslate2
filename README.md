@@ -78,6 +78,10 @@ Adding the `--print_colors True` argument will print the transcribed text using 
 
 <img alt="image" src="https://user-images.githubusercontent.com/309265/228054378-48ac6af4-ce4b-44da-b4ec-70ce9f2f2a6c.png">
 
+# Need help?
+
+Check our [frequently asked questions](FAQ.md) for common questions.
+
 # Contact
 
 Jordi Mas <jmas@softcatala.org>
