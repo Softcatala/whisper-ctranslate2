@@ -11,6 +11,10 @@ class TestCmd(unittest.TestCase):
             del segment["avg_log_prob"]
             del segment["no_speech_prob"]
 
+            if segment["words"]:
+                for word in segment["words"]:
+                    del word["probability"]
+
         return str(_dict)
 
     def _check_ref_small(self, hyp_dir, _file, ref_dir, option):
@@ -41,6 +45,7 @@ class TestCmd(unittest.TestCase):
             "--verbose True",
             # "--print_colors True",
             "--print_colors False",
+            "--threads 4",
         ]
 
         for option in options:
@@ -49,7 +54,27 @@ class TestCmd(unittest.TestCase):
                 cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --compute_type float32 {option}"
                 os.system(cmd)
                 self._check_ref_small(
-                    f"{directory}", _file, "e2e-tests/ref-small-trascribe/", option
+                    f"{directory}", _file, "e2e-tests/ref-small-transcribe/", option
+                )
+
+    def test_options_transcribe_timestamps(self):
+        full_path = os.path.realpath(__file__)
+        path, filename = os.path.split(full_path)
+
+        options = [
+            "--word_timestamps True",
+        ]
+
+        for option in options:
+            with tempfile.TemporaryDirectory() as directory:
+                _file = "gossos"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --compute_type float32 {option}"
+                os.system(cmd)
+                self._check_ref_small(
+                    f"{directory}",
+                    _file,
+                    "e2e-tests/ref-small-transcribe-word-stamps/",
+                    option,
                 )
 
     def test_options_translate(self):
