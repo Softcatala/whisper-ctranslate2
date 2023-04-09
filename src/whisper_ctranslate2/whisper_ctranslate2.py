@@ -297,16 +297,18 @@ def main():
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
-    if verbose:
-        if options.print_colors and output_dir:
-            print(
-                "Print colors requires word-level time stamps. Generated files in output directory will have word-level timestamps"
-            )
+    if not verbose and options.print_colors:
+        raise RuntimeError("You cannot disable verbose and enable print colors")
 
-        if not language:
-            print(
-                "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
-            )
+    if verbose and not language:
+        print(
+            "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
+        )
+
+    if options.print_colors and output_dir and not options.word_timestamps:
+        print(
+            "Print colors requires word-level time stamps. Generated files in output directory will have word-level timestamps"
+        )
 
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")

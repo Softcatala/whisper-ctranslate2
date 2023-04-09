@@ -41,7 +41,7 @@ class TestCmd(unittest.TestCase):
         options = [
             "",
             "--model_dir tmp/",
-            # "--verbose False",
+            "--verbose False",
             "--verbose True",
             # "--print_colors True",
             "--print_colors False",
@@ -63,6 +63,7 @@ class TestCmd(unittest.TestCase):
 
         options = [
             "--word_timestamps True",
+            "--print_colors True",
         ]
 
         for option in options:
@@ -84,7 +85,7 @@ class TestCmd(unittest.TestCase):
         options = [
             "",
             "--model_dir tmp/",
-            # "--verbose False",
+            "--verbose False",
             "--verbose True",
             # "--print_colors True",
             "--print_colors False",

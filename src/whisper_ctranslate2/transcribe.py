@@ -127,15 +127,15 @@ class Transcribe:
             total=info.duration, unit="seconds", disable=verbose is not False
         ) as pbar:
             for segment in segments:
-                if verbose:
-                    start, end, text = segment.start, segment.end, segment.text
+                start, end, text = segment.start, segment.end, segment.text
+                all_text += segment.text
 
+                if verbose or options.print_colors:
                     if options.print_colors and segment.words:
                         text = self._get_colored_text(segment.words)
                     else:
                         text = segment.text
 
-                    all_text += text
                     line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
                     print(make_safe(line))
 
