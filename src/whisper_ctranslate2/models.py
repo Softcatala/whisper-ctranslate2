@@ -61,9 +61,9 @@ class Models:
 
     def _are_localfile_checksums_correct(self, model: str, url: str) -> bool:
         model_path = self.get_model_path(model)
-        model_bytes = bytes()
         expected_sha256 = url.split("/")[-2].rsplit(".", 1)[0]
 
+        _hash = hashlib.sha256()
         for _file in self._FILES:
             _file = os.path.join(model_path, _file)
 
@@ -71,9 +71,10 @@ class Models:
                 return False
 
             with open(_file, "rb") as f:
-                model_bytes += f.read()
+                while chunk := f.read(8192):
+                    _hash.update(chunk)
 
-        got = hashlib.sha256(model_bytes).hexdigest()
+        got = _hash.hexdigest()
         return got == expected_sha256
 
     def _download(self, model: str, url: str):
