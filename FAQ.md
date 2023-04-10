@@ -1,5 +1,7 @@
 
-# Problems loading CUDA drivers.
+# Problems using GPUs and CUDA drivers
+
+GPU execution requires the NVIDIA libraries cuBLAS 11.x and cuDNN 8.x to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html).
 
 If executing whisper-ctranslate2 gives errors like:
 
@@ -17,3 +19,8 @@ If you execute whisper-ctranslate2 with or without the Vad filter options it pro
 
 This is expected since VAD will change the model input. 
 
+# Transcription file is not written
+
+If you have little memory the program can finish without showing any message.
+
+Trying using a smaller model or a shorter file and watch out your available memory.
