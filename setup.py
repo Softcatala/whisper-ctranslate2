@@ -7,9 +7,15 @@ HERE = pathlib.Path(__file__).parent
 
 README = (HERE / "README.md").read_text()
 
+
+def read_version(fname="src/whisper_ctranslate2/version.py"):
+    exec(compile(open(fname, encoding="utf-8").read(), fname, "exec"))
+    return locals()["__version__"]
+
+
 setup(
     name="whisper-ctranslate2",
-    version="0.1.6",
+    version=read_version(),
     description="Whisper command line client that uses CTranslate2",
     long_description=README,
     long_description_content_type="text/markdown",

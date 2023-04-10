@@ -7,6 +7,7 @@ import numpy as np
 import warnings
 from typing import Union, List
 from .writers import get_writer
+from .version import __version__
 
 
 def optional_int(string):
@@ -235,6 +236,13 @@ def read_command_line():
         type=str2bool,
         default=False,
         help="Print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s {version}".format(version=__version__),
+        help="Show program's version number and exit",
     )
 
     return parser.parse_args().__dict__
