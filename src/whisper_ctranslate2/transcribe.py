@@ -4,6 +4,9 @@ import tqdm
 import sys
 from faster_whisper import WhisperModel
 from .languages import LANGUAGES
+from typing import BinaryIO
+import numpy as np
+
 
 system_encoding = sys.getdefaultencoding()
 
@@ -70,7 +73,7 @@ class Transcribe:
 
     def inference(
         self,
-        audio: str,
+        audio: Union[str, BinaryIO, np.ndarray],
         model_path: str,
         task: str,
         language: str,
@@ -79,6 +82,7 @@ class Transcribe:
         device_index: Union[int, List[int]],
         compute_type: str,
         verbose: bool,
+        live: bool,
         options: TranscriptionOptions,
     ):
         model = WhisperModel(
@@ -114,17 +118,18 @@ class Transcribe:
         )
 
         language_name = LANGUAGES[info.language].title()
-        print(
-            "Detected language '%s' with probability %f"
-            % (language_name, info.language_probability)
-        )
+        if not live:
+            print(
+                "Detected language '%s' with probability %f"
+                % (language_name, info.language_probability)
+            )
 
         list_segments = []
         last_pos = 0
         accumated_inc = 0
         all_text = ""
         with tqdm.tqdm(
-            total=info.duration, unit="seconds", disable=verbose is not False
+            total=info.duration, unit="seconds", disable=verbose or live is not False
         ) as pbar:
             for segment in segments:
                 start, end, text = segment.start, segment.end, segment.text
@@ -136,8 +141,9 @@ class Transcribe:
                     else:
                         text = segment.text
 
-                    line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
-                    print(make_safe(line))
+                    if not live:
+                        line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
+                        print(make_safe(line))
 
                 segment_dict = segment._asdict()
                 if segment.words:

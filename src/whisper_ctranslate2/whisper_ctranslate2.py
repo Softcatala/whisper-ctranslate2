@@ -8,6 +8,8 @@ import warnings
 from typing import Union, List
 from .writers import get_writer
 from .version import __version__
+from .live import Live
+import sys
 
 
 def optional_int(string):
@@ -31,7 +33,7 @@ def read_command_line():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument(
-        "audio", nargs="+", type=str, help="audio file(s) to transcribe"
+        "audio", nargs="*", type=str, help="audio file(s) to transcribe"
     )
     parser.add_argument(
         "--model",
@@ -245,6 +247,10 @@ def read_command_line():
         help="Show program's version number and exit",
     )
 
+    parser.add_argument(
+        "--live_transcribe", type=str2bool, default=False, help="Live transcribe mode"
+    )
+
     return parser.parse_args().__dict__
 
 
@@ -264,6 +270,8 @@ def main():
     cache_directory: str = args.pop("model_dir")
     device_index: Union[int, List[int]] = args.pop("device_index")
     suppress_tokens: str = args.pop("suppress_tokens")
+    live_transcribe: bool = args.pop("live_transcribe")
+    audio: str = args.pop("audio")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -326,7 +334,26 @@ def main():
     else:
         model_dir = Models(cache_directory).get_model_dir(model)
 
-    for audio_path in args.pop("audio"):
+    if live_transcribe:
+        Live(
+            model_dir,
+            task,
+            language,
+            threads,
+            device,
+            device_index,
+            compute_type,
+            verbose,
+            options,
+        ).inference()
+
+        return
+
+    if len(audio) == 0:
+        sys.stderr.write("You need to specify one or more audio files\n")
+        return
+
+    for audio_path in audio:
         result = Transcribe().inference(
             audio_path,
             model_dir,
@@ -337,6 +364,7 @@ def main():
             device_index,
             compute_type,
             verbose,
+            False,
             options,
         )
         writer = get_writer(output_format, output_dir)

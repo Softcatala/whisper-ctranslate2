@@ -24,6 +24,7 @@ jobs:
 
       - name: Install module
         run: |
+          sudo apt-get install libportaudio2 -y        
           pip install wheel
           pip install -e .[dev]
 
