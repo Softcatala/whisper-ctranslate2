@@ -42,6 +42,9 @@ class TranscriptionOptions(NamedTuple):
     prepend_punctuations: str
     append_punctuations: str
     vad_filter: bool
+    vad_threshold: Optional[float]
+    vad_min_speech_duration_ms: Optional[int]
+    vad_max_speech_duration_s: Optional[int]
     vad_min_silence_duration_ms: Optional[int]
 
 
@@ -71,6 +74,27 @@ class Transcribe:
 
         return text_words
 
+    def _get_vad_parameters_dictionary(self, options):
+        vad_parameters = {}
+
+        if options.vad_threshold:
+            vad_parameters["threshold"] = options.vad_threshold
+
+        if options.vad_min_speech_duration_ms:
+            vad_parameters[
+                "min_speech_duration_ms"
+            ] = options.vad_min_speech_duration_ms
+
+        if options.vad_max_speech_duration_s:
+            vad_parameters["max_speech_duration_s"] = options.vad_max_speech_duration_s
+
+        if options.vad_min_silence_duration_ms:
+            vad_parameters[
+                "min_silence_duration_ms"
+            ] = options.vad_min_silence_duration_ms
+
+        return vad_parameters
+
     def inference(
         self,
         audio: Union[str, BinaryIO, np.ndarray],
@@ -93,6 +117,8 @@ class Transcribe:
             cpu_threads=threads,
         )
 
+        vad_parameters = self._get_vad_parameters_dictionary(options)
+
         segments, info = model.transcribe(
             audio=audio,
             language=language,
@@ -112,9 +138,7 @@ class Transcribe:
             prepend_punctuations=options.prepend_punctuations,
             append_punctuations=options.append_punctuations,
             vad_filter=options.vad_filter,
-            vad_parameters={
-                "min_silence_duration_ms": options.vad_min_silence_duration_ms
-            },
+            vad_parameters=vad_parameters,
         )
 
         language_name = LANGUAGES[info.language].title()

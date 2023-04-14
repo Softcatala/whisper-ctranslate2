@@ -196,10 +196,31 @@ def read_command_line():
     )
 
     parser.add_argument(
+        "--vad_threshold",
+        type=float,
+        default=None,
+        help="When `vad_filter` is enabled, probabilities above this value are considered as speech.",
+    )
+
+    parser.add_argument(
+        "--vad_min_speech_duration_ms",
+        type=int,
+        default=None,
+        help="When `vad_filter` is enabled, final speech chunks shorter min_speech_duration_ms are thrown out.",
+    )
+
+    parser.add_argument(
+        "--vad_max_speech_duration_s",
+        type=int,
+        default=None,
+        help="When `vad_filter` is enabled, Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.",
+    )
+
+    parser.add_argument(
         "--vad_min_silence_duration_ms",
         type=int,
-        default=2000,
-        help="When `vad_filter` is enabled, audio segments without speech for at least this number of milliseconds will be ignored.",
+        default=None,
+        help="When `vad_filter` is enabled, in the end of each speech chunk time to wait before separating it.",
     )
 
     # CTranslate2 specific parameters
@@ -310,6 +331,9 @@ def main():
         append_punctuations=args.pop("append_punctuations"),
         print_colors=args.pop("print_colors"),
         vad_filter=args.pop("vad_filter"),
+        vad_threshold=args.pop("vad_threshold"),
+        vad_min_speech_duration_ms=args.pop("vad_min_speech_duration_ms"),
+        vad_max_speech_duration_s=args.pop("vad_max_speech_duration_s"),
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
