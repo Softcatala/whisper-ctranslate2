@@ -1,7 +1,6 @@
 # Based on code from https://github.com/Nikorasu/LiveWhisper/blob/main/livewhisper.py
 
 import numpy as np
-import sounddevice as sd
 from .transcribe import Transcribe, TranscriptionOptions
 from typing import Union, List
 
@@ -11,6 +10,15 @@ Threshold = 0.2  # Minimum volume threshold to activate listening
 Vocals = [50, 1000]  # Frequency range to detect sounds that could be speech
 EndBlocks = 33 * 2  # Number of blocks to wait before sending (30 ms is block)
 FlushBlocks = 33 * 10  # Number of blocks to wait before sending
+
+try:
+    import sounddevice as sd
+
+    sounddevice_available = True
+
+except Exception as e:
+    sounddevice_available = False
+    sounddevice_exception = e
 
 
 class Live:
@@ -42,6 +50,14 @@ class Live:
         self.speaking = False
         self.blocks_speaking = 0
         self.buffers_to_process = []
+
+    @staticmethod
+    def is_available():
+        return sounddevice_available
+
+    @staticmethod
+    def force_not_available_exception():
+        raise (sounddevice_exception)
 
     def _is_there_voice(self, indata, frames):
         freq = np.argmax(np.abs(np.fft.rfft(indata[:, 0]))) * SampleRate / frames

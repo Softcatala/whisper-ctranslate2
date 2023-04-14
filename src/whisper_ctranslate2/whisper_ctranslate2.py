@@ -316,6 +316,9 @@ def main():
     if not verbose and options.print_colors:
         raise RuntimeError("You cannot disable verbose and enable print colors")
 
+    if live_transcribe and not Live.is_available():
+        Live.force_not_available_exception()
+
     if verbose and not language:
         print(
             "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
