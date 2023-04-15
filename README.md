@@ -20,6 +20,16 @@ To install the latest stable version, just type:
 Alternatively, if you are interested the latest development (non-stable) version from this repository, just tpe:
 
     pip install git+https://github.com/jordimas/whisper-ctranslate2.git
+
+# CPU and GPU support
+
+GPU and CPU support are provided by [CTranslate2](https://github.com/OpenNMT/CTranslate2/).
+
+It has compatibility with x86-64 and AArch64/ARM64 CPU and integrates multiple backends that are optimized for these platforms: Intel MKL, oneDNN, OpenBLAS, Ruy, and Apple Accelerate.
+
+GPU execution requires the NVIDIA libraries cuBLAS 11.x and cuDNN 8.x to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html)
+
+By default the best hardware available is selected for inference. You can use the options `--device` and `--device_index` to control manually the selection.
     
 # Usage
 
