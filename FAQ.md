@@ -6,7 +6,7 @@ If executing whisper-ctranslate2 gives errors like:
 
 *Could not load library cudnn_ops_infer64_8.dll. Error code 126*
 
-Make sure that the environment variable *LD_LIBRARY_PATH* includes the path where you libraries are installed.
+Make sure that the environment variable *LD_LIBRARY_PATH* includes the path where your libraries are installed.
 
 # Executing the program more than once produces different transcriptions
 
@@ -27,3 +27,9 @@ Trying using a smaller model or a shorter file and watch out your available memo
 # Live transcription does not work
 
 Make sure that your terminal has permissions to access the microphone. In some operating systems like mac OS access can be restricted because of privacy reasons.
+
+# OSError: PortAudio library not found
+
+This is a _sounddevice_ library dependency needed for the live transcription functionality. If you are running Ubuntu, you can install the necessary library by running:
+
+    sudo apt-get install libportaudio2
