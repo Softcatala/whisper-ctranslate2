@@ -13,17 +13,17 @@ Goals of the project:
 
 # Installation
 
-Just type:
+To install the latest stable version, just type:
 
     pip install -U whisper-ctranslate2
 
-Alternatively, the following command will pull and install the latest commit from this repository, along with its Python dependencies:
+Alternatively, if you are interested the latest development (non-stable) version from this repository, just tpe:
 
     pip install git+https://github.com/jordimas/whisper-ctranslate2.git
     
 # Usage
 
-Same command line that OpenAI whisper.
+Same command line that OpenAI Whisper.
 
 To transcribe:
 
@@ -45,42 +45,52 @@ All the supported options with their help are shown.
 
 # CTranslate2 specific options
 
-On top of the OpenAI Whisper command line options, there are some specific options provided by CTranslate2 .
+On top of the OpenAI Whisper command line options, there are some specific options provided by CTranslate2 or whiper-ctranslate2.
 
-    --compute_type {default,auto,int8,int8_float16,int16,float16,float32}
+## Quantization
 
-Type of [quantization](https://opennmt.net/CTranslate2/quantization.html) to use. On CPU _int8_ will give the best performance.
+`--compute_type` option which accepts _default,auto,int8,int8_float16,int16,float16,float32_ values indicates the type of [quantization](https://opennmt.net/CTranslate2/quantization.html) to use. On CPU _int8_ will give the best performance:
 
-    --model_directory MODEL_DIRECTORY
+    whisper-ctranslate2 myfile.mp3 --compute_type int8
 
-Directory where to find a CTranslate Whisper model, for example a fine-tunned Whisper model. The model should be in CTranslate2 format.
+## Loading the model from a directory
 
-    --device_index [DEVICE_INDEX ...]
+`--model_directory` option allows to specify the directory from which you want to load a CTranslate2 Whisper model. For example, if you want to load your own quantified [Whisper model](https://opennmt.net/CTranslate2/conversion.html) version or using your own [Whisper fine-tunned](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event) version. The model must be in CTranslate2 format.
 
-Device IDs where to place this model on
+## Using Voice Activity Detection (VAD) filter
 
-    --vad_filter VAD_FILTER
+`--vad_filter` option enables the voice activity detection (VAD) to filter out parts of the audio without speech. This step uses the [Silero VAD model](https://github.com/snakers4/silero-vad):
 
-Enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.
+    whisper-ctranslate2 myfile.mp3 --vad_filter True
 
-    --vad_min_silence_duration_ms VAD_MIN_SILENCE_DURATION_MS
+The VAD filter accepts multiple additional options to determine the filter behavior:
 
-When `vad_filter` is enabled, audio segments without speech for at least this number of milliseconds will be ignored.
+    --vad_threshold VALUE (float)
+
+Probabilities above this value are considered as speech.
+
+    --vad_min_speech_duration_ms (int)
+
+Final speech chunks shorter min_speech_duration_ms are thrown out.
+
+    --vad_max_speech_duration_s VALUE (int)
+
+Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.
 
 
-# Whisper-ctranslate2 specific options
+## Print colors
 
-On top of the OpenAI Whisper and CTranslate2, whisper-ctranslate2 provides some additional specific options:
+`--print_colors True` options prints the transcribed text using an experimental color coding strategy based on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) to highlight words with high or low confidence:
 
-    --print-colors PRINT_COLORS
-
-Adding the `--print_colors True` argument will print the transcribed text using an experimental color coding strategy based on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) to highlight words with high or low confidence:
+    whisper-ctranslate2 myfile.mp3 --print_colors True
 
 <img alt="image" src="https://user-images.githubusercontent.com/309265/228054378-48ac6af4-ce4b-44da-b4ec-70ce9f2f2a6c.png">
 
-    --live_transcribe
+## Live transcribe from your microphone
 
-Adding the `----live_transcribe True` will activate the live transcription mode from your microphone.
+`----live_transcribe True` option activates the live transcription mode from your microphone:
+
+    whisper-ctranslate2 myfile.mp3 --print_colors True
 
 https://user-images.githubusercontent.com/309265/231533784-e58c4b92-e9fb-4256-b4cd-12f1864131d9.mov
 
