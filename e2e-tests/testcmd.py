@@ -87,7 +87,6 @@ class TestCmd(unittest.TestCase):
             "--model_dir tmp/",
             "--verbose False",
             "--verbose True",
-            # "--print_colors True",
             "--print_colors False",
         ]
 
