@@ -185,7 +185,14 @@ def read_command_line():
     )
 
     parser.add_argument(
-        "--device", default="auto", help="device to use for CTranslate2 inference"
+        "--device",
+        choices=[
+            "auto",
+            "cpu",
+            "cuda",
+        ],
+        default="auto",
+        help="device to use for CTranslate2 inference",
     )
 
     parser.add_argument(
