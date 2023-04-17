@@ -10,6 +10,7 @@ from .writers import get_writer
 from .version import __version__
 from .live import Live
 import sys
+import logging
 
 
 def optional_int(string):
@@ -308,6 +309,10 @@ def main():
         temperature = [temperature]
 
     language = from_language_to_iso_code(language)
+    
+    if verbose:
+        logging.basicConfig()
+        logging.getLogger("faster_whisper").setLevel(logging.DEBUG)
 
     if (
         not model_directory
