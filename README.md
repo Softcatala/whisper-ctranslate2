@@ -100,9 +100,9 @@ Maximum duration of speech chunks in seconds. Longer will be split at the timest
 
 ## Live transcribe from your microphone
 
-`----live_transcribe True` option activates the live transcription mode from your microphone:
+`--live_transcribe True` option activates the live transcription mode from your microphone:
 
-    whisper-ctranslate2 myfile.mp3 --print_colors True
+    whisper-ctranslate2 --live_transcribe True --language en
 
 https://user-images.githubusercontent.com/309265/231533784-e58c4b92-e9fb-4256-b4cd-12f1864131d9.mov
 
