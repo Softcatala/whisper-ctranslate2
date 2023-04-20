@@ -47,6 +47,8 @@ To translate:
 
 <img alt="image" src="https://user-images.githubusercontent.com/309265/226923535-b6583536-2486-4127-b17b-c58d85cdb90f.png">
 
+Whisper translate task translates the transcription from the source language to English (the only target language supported).
+
 Additionally using:
 
     whisper-ctranslate2 --help
