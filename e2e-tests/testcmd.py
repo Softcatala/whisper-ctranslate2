@@ -8,8 +8,18 @@ class TestCmd(unittest.TestCase):
     def _remove_fields_from_json(self, json_file):
         _dict = json.loads(json_file)
         for segment in _dict["segments"]:
-            del segment["avg_log_prob"]
-            del segment["no_speech_prob"]
+            for del_item in [
+                "id",
+                "seek",
+                "tokens",
+                "temperature",
+                "avg_log_prob",
+                "avg_logprob",
+                "compression_ratio",
+                "no_speech_prob",
+            ]:
+                if del_item in segment:
+                    del segment[del_item]
 
             if segment["words"]:
                 for word in segment["words"]:
@@ -20,6 +30,7 @@ class TestCmd(unittest.TestCase):
     def _check_ref_small(self, hyp_dir, _file, ref_dir, option):
         extensions = [".txt", ".json", ".srt", ".tsv", ".vtt"]
 
+        self.maxDiff = None
         for ext in extensions:
             hyp = os.path.join(hyp_dir, _file) + ext
             ref = os.path.join(ref_dir, _file) + ext
@@ -31,7 +42,6 @@ class TestCmd(unittest.TestCase):
                 if ext == ".json":
                     r = self._remove_fields_from_json(r)
                     h = self._remove_fields_from_json(h)
-
                 self.assertEqual(r, h, f"failed {ext} on {option}")
 
     def test_options_transcribe(self):
@@ -43,7 +53,6 @@ class TestCmd(unittest.TestCase):
             "--model_dir tmp/",
             "--verbose False",
             "--verbose True",
-            # "--print_colors True",
             "--print_colors False",
             "--threads 4",
         ]
@@ -51,7 +60,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-small-transcribe/", option
@@ -69,7 +78,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}",
@@ -93,7 +102,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --task translate --model medium --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --task translate --model medium --compute_type float32 {option}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-medium-translate/", option

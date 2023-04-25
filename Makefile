@@ -5,6 +5,6 @@ run:
 	pip3 install --force-reinstall --user .
 	
 run-e2e-test:
-	pip install --force-reinstall ctranslate2==3.11
-	pip install --force-reinstall faster-whisper==0.4.1
+	pip install --force-reinstall ctranslate2==3.12
+	pip install --force-reinstall faster-whisper==0.5.0
 	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' nose2
