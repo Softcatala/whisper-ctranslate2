@@ -1,7 +1,6 @@
 import argparse
 import os
 from .transcribe import Transcribe, TranscriptionOptions
-from .models import Models
 from .languages import LANGUAGES, TO_LANGUAGE_CODE, from_language_to_iso_code
 import numpy as np
 import warnings
@@ -10,6 +9,19 @@ from .writers import get_writer
 from .version import __version__
 from .live import Live
 import sys
+
+MODEL_NAMES = [
+    "tiny",
+    "tiny.en",
+    "base",
+    "base.en",
+    "small",
+    "small.en",
+    "medium",
+    "medium.en",
+    "large-v1",
+    "large-v2",
+]
 
 
 def optional_int(string):
@@ -38,14 +50,14 @@ def read_command_line():
     parser.add_argument(
         "--model",
         default="small",
-        choices=Models().get_list(),
+        choices=MODEL_NAMES,
         help="name of the Whisper model to use",
     )
     parser.add_argument(
         "--model_dir",
         type=str,
         default=None,
-        help="the path to save model files; uses ~/.cache/whisper-ctranslate2 by default",
+        help="the path to save model files; uses ~/.cache/huggingface/ by default",
     )
     parser.add_argument(
         "--output_dir",
@@ -232,6 +244,13 @@ def read_command_line():
 
     # CTranslate2 specific parameters
     parser.add_argument(
+        "--local_files_only",
+        type=str2bool,
+        default=False,
+        help="Use models in cache without connecting to Internet to check if there are newer versions",
+    )
+
+    parser.add_argument(
         "--device_index",
         nargs="*",
         type=int,
@@ -282,6 +301,14 @@ def read_command_line():
     return parser.parse_args().__dict__
 
 
+def _does_old_cache_dir_has_files():
+    default = os.path.join(os.path.expanduser("~"), ".cache")
+    cache_dir = os.path.join(
+        os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
+    )
+    return cache_dir, os.path.exists(cache_dir)
+
+
 def main():
     args = read_command_line()
     output_dir: str = args.pop("output_dir")
@@ -300,6 +327,7 @@ def main():
     suppress_tokens: str = args.pop("suppress_tokens")
     live_transcribe: bool = args.pop("live_transcribe")
     audio: str = args.pop("audio")
+    local_files_only: bool = args.pop("local_files_only")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -344,6 +372,13 @@ def main():
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
+    if verbose:
+        cache_dir, exists = _does_old_cache_dir_has_files()
+        if exists:
+            print(
+                f"There are old cache files at `{cache_dir}` which are no longer used. Consider deleting them"
+            )
+
     if not verbose and options.print_colors:
         raise RuntimeError("You cannot disable verbose and enable print colors")
 
@@ -367,11 +402,12 @@ def main():
             raise RuntimeError(f"Model file '{model_filename}' does not exists")
         model_dir = model_directory
     else:
-        model_dir = Models(cache_directory).get_model_dir(model)
+        model_dir = model
 
     if live_transcribe:
         Live(
             model_dir,
+            cache_directory,
             task,
             language,
             threads,
@@ -392,6 +428,8 @@ def main():
         result = Transcribe().inference(
             audio_path,
             model_dir,
+            cache_directory,
+            local_files_only,
             task,
             language,
             threads,

@@ -7,7 +7,6 @@ from .languages import LANGUAGES
 from typing import BinaryIO
 import numpy as np
 
-
 system_encoding = sys.getdefaultencoding()
 
 if system_encoding != "utf-8":
@@ -99,6 +98,8 @@ class Transcribe:
         self,
         audio: Union[str, BinaryIO, np.ndarray],
         model_path: str,
+        cache_directory: str,
+        local_files_only: bool,
         task: str,
         language: str,
         threads: int,
@@ -115,6 +116,8 @@ class Transcribe:
             device_index=device_index,
             compute_type=compute_type,
             cpu_threads=threads,
+            download_root=cache_directory,
+            local_files_only=local_files_only,
         )
 
         vad_parameters = self._get_vad_parameters_dictionary(options)
