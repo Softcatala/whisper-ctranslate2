@@ -278,7 +278,7 @@ def read_command_line():
 
     vad_args.add_argument(
         "--vad_filter",
-        type=bool,
+        type=str2bool,
         default=False,
         help="enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.",
     )
