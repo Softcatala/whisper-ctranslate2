@@ -47,26 +47,51 @@ def read_command_line():
     parser.add_argument(
         "audio", nargs="*", type=str, help="audio file(s) to transcribe"
     )
-    parser.add_argument(
+
+    model_args = parser.add_argument_group("Model selection options")
+
+    model_args.add_argument(
         "--model",
         default="small",
         choices=MODEL_NAMES,
         help="name of the Whisper model to use",
     )
-    parser.add_argument(
+
+    model_args.add_argument(
+        "--model_directory",
+        type=str,
+        default=None,
+        help="directory where to find a CTranslate Whisper model (e.g. fine-tuned model)",
+    )
+
+    caching_args = parser.add_argument_group("Model caching control options")
+
+    caching_args.add_argument(
         "--model_dir",
         type=str,
         default=None,
         help="the path to save model files; uses ~/.cache/huggingface/ by default",
     )
-    parser.add_argument(
+
+    caching_args.add_argument(
+        "--local_files_only",
+        type=str2bool,
+        default=False,
+        help="use models in cache without connecting to Internet to check if there are newer versions",
+    )
+
+    outputs_args = parser.add_argument_group(
+        "Configuration options to control generated outputs"
+    )
+
+    outputs_args.add_argument(
         "--output_dir",
         "-o",
         type=str,
         default=".",
         help="directory to save the outputs",
     )
-    parser.add_argument(
+    outputs_args.add_argument(
         "--output_format",
         "-f",
         type=str,
@@ -75,128 +100,23 @@ def read_command_line():
         help="format of the output file; if not specified, all available formats will be produced",
     )
 
-    parser.add_argument(
+    outputs_args.add_argument(
+        "--print_colors",
+        type=str2bool,
+        default=False,
+        help="print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
+    )
+
+    outputs_args.add_argument(
         "--verbose",
         type=str2bool,
         default=True,
         help="whether to print out the progress and debug messages",
     )
 
-    parser.add_argument(
-        "--task",
-        type=str,
-        default="transcribe",
-        choices=["transcribe", "translate"],
-        help="whether to perform X->X speech recognition ('transcribe') or X->English translation ('translate')",
-    )
-    parser.add_argument(
-        "--language",
-        type=str,
-        default=None,
-        choices=sorted(LANGUAGES.keys())
-        + sorted([k.title() for k in TO_LANGUAGE_CODE.keys()]),
-        help="language spoken in the audio, specify None to perform language detection",
-    )
-    parser.add_argument(
-        "--threads",
-        type=optional_int,
-        default=0,
-        help="number of threads used for CPU inference",
-    )
+    computing_args = parser.add_argument_group("Computing configuration options")
 
-    parser.add_argument(
-        "--temperature", type=float, default=0, help="temperature to use for sampling"
-    )
-
-    parser.add_argument(
-        "--temperature_increment_on_fallback",
-        type=optional_float,
-        default=0.2,
-        help="temperature to increase when falling back when the decoding fails to meet either of the thresholds below",
-    )
-
-    parser.add_argument(
-        "--best_of",
-        type=optional_int,
-        default=5,
-        help="number of candidates when sampling with non-zero temperature",
-    )
-    parser.add_argument(
-        "--beam_size",
-        type=optional_int,
-        default=5,
-        help="number of beams in beam search, only applicable when temperature is zero",
-    )
-    parser.add_argument(
-        "--patience",
-        type=float,
-        default=1.0,
-        help="optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the default (1.0) is equivalent to conventional beam search",
-    )
-    parser.add_argument(
-        "--length_penalty",
-        type=float,
-        default=1.0,
-        help="optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses simple length normalization by default",
-    )
-
-    parser.add_argument(
-        "--suppress_tokens",
-        type=str,
-        default="-1",
-        help="comma-separated list of token ids to suppress during sampling; '-1' will suppress most special characters except common punctuations",
-    )
-    parser.add_argument(
-        "--initial_prompt",
-        type=str,
-        default=None,
-        help="optional text to provide as a prompt for the first window.",
-    )
-    parser.add_argument(
-        "--condition_on_previous_text",
-        type=str2bool,
-        default=True,
-        help="if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop",
-    )
-    parser.add_argument(
-        "--compression_ratio_threshold",
-        type=optional_float,
-        default=2.4,
-        help="if the gzip compression ratio is higher than this value, treat the decoding as failed",
-    )
-    parser.add_argument(
-        "--logprob_threshold",
-        type=optional_float,
-        default=-1.0,
-        help="if the average log probability is lower than this value, treat the decoding as failed",
-    )
-    parser.add_argument(
-        "--no_speech_threshold",
-        type=optional_float,
-        default=0.6,
-        help="if the probability of the <|nospeech|> token is higher than this value AND the decoding has failed due to `logprob_threshold`, consider the segment as silence",
-    )
-    parser.add_argument(
-        "--word_timestamps",
-        type=str2bool,
-        default=False,
-        help="(experimental) extract word-level timestamps and refine the results based on them",
-    )
-
-    parser.add_argument(
-        "--prepend_punctuations",
-        type=str,
-        default="\"'“¿([{-",
-        help="if word_timestamps is True, merge these punctuation symbols with the next word",
-    )
-    parser.add_argument(
-        "--append_punctuations",
-        type=str,
-        default="\"'.。,，!！?？:：”)]}、",
-        help="if word_timestamps is True, merge these punctuation symbols with the previous word",
-    )
-
-    parser.add_argument(
+    computing_args.add_argument(
         "--device",
         choices=[
             "auto",
@@ -207,58 +127,22 @@ def read_command_line():
         help="device to use for CTranslate2 inference",
     )
 
-    parser.add_argument(
-        "--vad_filter",
-        type=bool,
-        default=False,
-        help="Enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.",
+    computing_args.add_argument(
+        "--threads",
+        type=optional_int,
+        default=0,
+        help="number of threads used for CPU inference",
     )
 
-    parser.add_argument(
-        "--vad_threshold",
-        type=float,
-        default=None,
-        help="When `vad_filter` is enabled, probabilities above this value are considered as speech.",
-    )
-
-    parser.add_argument(
-        "--vad_min_speech_duration_ms",
-        type=int,
-        default=None,
-        help="When `vad_filter` is enabled, final speech chunks shorter min_speech_duration_ms are thrown out.",
-    )
-
-    parser.add_argument(
-        "--vad_max_speech_duration_s",
-        type=int,
-        default=None,
-        help="When `vad_filter` is enabled, Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.",
-    )
-
-    parser.add_argument(
-        "--vad_min_silence_duration_ms",
-        type=int,
-        default=None,
-        help="When `vad_filter` is enabled, in the end of each speech chunk time to wait before separating it.",
-    )
-
-    # CTranslate2 specific parameters
-    parser.add_argument(
-        "--local_files_only",
-        type=str2bool,
-        default=False,
-        help="Use models in cache without connecting to Internet to check if there are newer versions",
-    )
-
-    parser.add_argument(
+    computing_args.add_argument(
         "--device_index",
         nargs="*",
         type=int,
         default=0,
-        help="Device IDs where to place this model on",
+        help="device IDs where to place this model on",
     )
 
-    parser.add_argument(
+    computing_args.add_argument(
         "--compute_type",
         choices=[
             "default",
@@ -272,26 +156,159 @@ def read_command_line():
         default="auto",
         help="Type of quantization to use (see https://opennmt.net/CTranslate2/quantization.html)",
     )
-    parser.add_argument(
-        "--model_directory",
+
+    algorithm_args = parser.add_argument_group("Algorithm execution options")
+
+    algorithm_args.add_argument(
+        "--task",
+        type=str,
+        default="transcribe",
+        choices=["transcribe", "translate"],
+        help="whether to perform X->X speech recognition ('transcribe') or X->English translation ('translate')",
+    )
+    algorithm_args.add_argument(
+        "--language",
         type=str,
         default=None,
-        help="Directory where to find a CTranslate Whisper model (e.g. fine-tuned model)",
+        choices=sorted(LANGUAGES.keys())
+        + sorted([k.title() for k in TO_LANGUAGE_CODE.keys()]),
+        help="language spoken in the audio, specify None to perform language detection",
     )
 
-    # Whisper-ctranslate2 specific parameters
-    parser.add_argument(
-        "--print_colors",
+    algorithm_args.add_argument(
+        "--temperature", type=float, default=0, help="temperature to use for sampling"
+    )
+
+    algorithm_args.add_argument(
+        "--temperature_increment_on_fallback",
+        type=optional_float,
+        default=0.2,
+        help="temperature to increase when falling back when the decoding fails to meet either of the thresholds below",
+    )
+
+    algorithm_args.add_argument(
+        "--best_of",
+        type=optional_int,
+        default=5,
+        help="number of candidates when sampling with non-zero temperature",
+    )
+    algorithm_args.add_argument(
+        "--beam_size",
+        type=optional_int,
+        default=5,
+        help="number of beams in beam search, only applicable when temperature is zero",
+    )
+    algorithm_args.add_argument(
+        "--patience",
+        type=float,
+        default=1.0,
+        help="optional patience value to use in beam decoding, as in https://arxiv.org/abs/2204.05424, the default (1.0) is equivalent to conventional beam search",
+    )
+    algorithm_args.add_argument(
+        "--length_penalty",
+        type=float,
+        default=1.0,
+        help="optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses simple length normalization by default",
+    )
+
+    algorithm_args.add_argument(
+        "--suppress_tokens",
+        type=str,
+        default="-1",
+        help="comma-separated list of token ids to suppress during sampling; '-1' will suppress most special characters except common punctuations",
+    )
+    algorithm_args.add_argument(
+        "--initial_prompt",
+        type=str,
+        default=None,
+        help="optional text to provide as a prompt for the first window.",
+    )
+    algorithm_args.add_argument(
+        "--condition_on_previous_text",
+        type=str2bool,
+        default=True,
+        help="if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop",
+    )
+    algorithm_args.add_argument(
+        "--compression_ratio_threshold",
+        type=optional_float,
+        default=2.4,
+        help="if the gzip compression ratio is higher than this value, treat the decoding as failed",
+    )
+    algorithm_args.add_argument(
+        "--logprob_threshold",
+        type=optional_float,
+        default=-1.0,
+        help="if the average log probability is lower than this value, treat the decoding as failed",
+    )
+    algorithm_args.add_argument(
+        "--no_speech_threshold",
+        type=optional_float,
+        default=0.6,
+        help="if the probability of the <|nospeech|> token is higher than this value AND the decoding has failed due to `logprob_threshold`, consider the segment as silence",
+    )
+    algorithm_args.add_argument(
+        "--word_timestamps",
         type=str2bool,
         default=False,
-        help="Print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
+        help="(experimental) extract word-level timestamps and refine the results based on them",
+    )
+
+    algorithm_args.add_argument(
+        "--prepend_punctuations",
+        type=str,
+        default="\"'“¿([{-",
+        help="if word_timestamps is True, merge these punctuation symbols with the next word",
+    )
+    algorithm_args.add_argument(
+        "--append_punctuations",
+        type=str,
+        default="\"'.。,，!！?？:：”)]}、",
+        help="if word_timestamps is True, merge these punctuation symbols with the previous word",
+    )
+
+    vad_args = parser.add_argument_group("VAD filter arguments")
+
+    vad_args.add_argument(
+        "--vad_filter",
+        type=bool,
+        default=False,
+        help="enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.",
+    )
+
+    vad_args.add_argument(
+        "--vad_threshold",
+        type=float,
+        default=None,
+        help="when `vad_filter` is enabled, probabilities above this value are considered as speech.",
+    )
+
+    vad_args.add_argument(
+        "--vad_min_speech_duration_ms",
+        type=int,
+        default=None,
+        help="when `vad_filter` is enabled, final speech chunks shorter min_speech_duration_ms are thrown out.",
+    )
+
+    vad_args.add_argument(
+        "--vad_max_speech_duration_s",
+        type=int,
+        default=None,
+        help="when `vad_filter` is enabled, Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.",
+    )
+
+    vad_args.add_argument(
+        "--vad_min_silence_duration_ms",
+        type=int,
+        default=None,
+        help="when `vad_filter` is enabled, in the end of each speech chunk time to wait before separating it.",
     )
 
     parser.add_argument(
         "--version",
         action="version",
         version="%(prog)s {version}".format(version=__version__),
-        help="Show program's version number and exit",
+        help="show program's version number and exit",
     )
 
     parser.add_argument(
@@ -372,6 +389,13 @@ def main():
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
+    if len(audio) == 0:
+        sys.stderr.write("You need to specify one or more audio files\n")
+        sys.stderr.write(
+            "Use `whisper-ctranslate2 --help` to see the available options.\n"
+        )
+        return
+
     if verbose:
         cache_dir, exists = _does_old_cache_dir_has_files()
         if exists:
@@ -418,10 +442,6 @@ def main():
             options,
         ).inference()
 
-        return
-
-    if len(audio) == 0:
-        sys.stderr.write("You need to specify one or more audio files\n")
         return
 
     for audio_path in audio:
