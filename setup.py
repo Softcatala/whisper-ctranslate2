@@ -19,7 +19,7 @@ setup(
     description="Whisper command line client that uses CTranslate2",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/jordimas/whisper-ctranslate2",
+    url="https://github.com/Softcatala/whisper-ctranslate2",
     author="Jordi Mas",
     author_email="jmas@softcatala.org",
     license="MIT",
