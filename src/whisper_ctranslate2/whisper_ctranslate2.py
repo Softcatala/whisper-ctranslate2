@@ -397,7 +397,7 @@ def main():
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
-    if len(audio) == 0:
+    if not live_transcribe and len(audio) == 0:
         sys.stderr.write("You need to specify one or more audio files\n")
         sys.stderr.write(
             "Use `whisper-ctranslate2 --help` to see the available options.\n"
@@ -444,6 +444,7 @@ def main():
         Live(
             model_dir,
             cache_directory,
+            local_files_only,
             task,
             language,
             threads,

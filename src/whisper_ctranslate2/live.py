@@ -25,6 +25,8 @@ class Live:
     def __init__(
         self,
         model_path: str,
+        cache_directory: str,
+        local_files_only: bool,
         task: str,
         language: str,
         threads: int,
@@ -35,6 +37,8 @@ class Live:
         options: TranscriptionOptions,
     ):
         self.model_path = model_path
+        self.cache_directory = cache_directory
+        self.local_files_only = local_files_only
         self.task = task
         self.language = language
         self.threads = threads
@@ -115,6 +119,8 @@ class Live:
             result = Transcribe().inference(
                 audio=_buffer.flatten(),
                 model_path=self.model_path,
+                cache_directory=self.cache_directory,
+                local_files_only=self.local_files_only,
                 task=self.task,
                 language=self.language,
                 threads=self.threads,
