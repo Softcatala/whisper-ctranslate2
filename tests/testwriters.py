@@ -38,7 +38,7 @@ class TestCmd(unittest.TestCase):
 
         filename, dirname = self._get_temp_file_name_dir()
         subtitlesWriter = WriteTXT(output_dir=dirname)
-        subtitlesWriter(results, filename)
+        subtitlesWriter(results, filename, dict())
 
         r = self._read_subtitles(filename + ".txt")
 
@@ -55,7 +55,7 @@ class TestCmd(unittest.TestCase):
 
         filename, dirname = self._get_temp_file_name_dir()
         subtitlesWriter = WriteSRT(output_dir=dirname)
-        subtitlesWriter(results, filename)
+        subtitlesWriter(results, filename, {})
         r = self._read_subtitles(filename + ".srt")
 
         self.assertEqual(8, len(r), "text")
@@ -77,7 +77,7 @@ class TestCmd(unittest.TestCase):
 
         filename, dirname = self._get_temp_file_name_dir()
         subtitlesWriter = WriteTSV(output_dir=dirname)
-        subtitlesWriter(results, filename)
+        subtitlesWriter(results, filename, {})
         r = self._read_subtitles(filename + ".tsv")
         self.assertEqual(3, len(r), "text")
         self.assertEqual("start\tend\ttext\n", r[0], "text")
@@ -93,7 +93,7 @@ class TestCmd(unittest.TestCase):
 
         filename, dirname = self._get_temp_file_name_dir()
         subtitlesWriter = WriteVTT(output_dir=dirname)
-        subtitlesWriter(results, filename)
+        subtitlesWriter(results, filename, {})
         r = self._read_subtitles(filename + ".vtt")
         self.assertEqual(8, len(r), "text")
         self.assertEqual("WEBVTT\n", r[0], "text")
@@ -116,7 +116,7 @@ class TestCmd(unittest.TestCase):
 
         filename, dirname = self._get_temp_file_name_dir()
         subtitlesWriter = WriteSRT(output_dir=dirname)
-        subtitlesWriter(results, filename)
+        subtitlesWriter(results, filename, {"highlight_words": True})
         r = self._read_subtitles(filename + ".srt")
 
         self.assertEqual(8, len(r), "text")

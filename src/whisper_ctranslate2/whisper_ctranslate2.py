@@ -114,6 +114,13 @@ def read_command_line():
         help="whether to print out the progress and debug messages",
     )
 
+    outputs_args.add_argument(
+        "--highlight_words",
+        type=str2bool,
+        default=False,
+        help="underline each word as it is spoken in srt and vtt (requires --word_timestamps True)",
+    )
+
     computing_args = parser.add_argument_group("Computing configuration options")
 
     computing_args.add_argument(
@@ -345,6 +352,7 @@ def main():
     live_transcribe: bool = args.pop("live_transcribe")
     audio: str = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
+    highlight_words: bool = args.pop("highlight_words")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -396,6 +404,10 @@ def main():
         )
         return
 
+    if not options.word_timestamps and highlight_words:
+        sys.stderr.write("--highlight_words requires --word_timestamps True\n")
+        return
+
     if verbose:
         cache_dir, exists = _does_old_cache_dir_has_files()
         if exists:
@@ -444,6 +456,8 @@ def main():
 
         return
 
+    writer_args = {"highlight_words": highlight_words}
+
     for audio_path in audio:
         result = Transcribe().inference(
             audio_path,
@@ -461,7 +475,7 @@ def main():
             options,
         )
         writer = get_writer(output_format, output_dir)
-        writer(result, audio_path)
+        writer(result, audio_path, writer_args)
 
     if verbose:
         print(f"Transcription results written to '{output_dir}' directory")

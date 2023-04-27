@@ -34,7 +34,7 @@ class ResultWriter:
     def __init__(self, output_dir: str):
         self.output_dir = output_dir
 
-    def __call__(self, result: dict, audio_path: str):
+    def __call__(self, result: dict, audio_path: str, options: dict):
         audio_basename = os.path.basename(audio_path)
         audio_basename = os.path.splitext(audio_basename)[0]
         output_path = os.path.join(
@@ -42,9 +42,9 @@ class ResultWriter:
         )
 
         with open(output_path, "w", encoding="utf-8") as f:
-            self.write_result(result, file=f)
+            self.write_result(result, f, options)
 
-    def write_result(self, result: dict, file: TextIO):
+    def write_result(self, result: dict, file: TextIO, options: dict):
         raise NotImplementedError
 
 
@@ -52,11 +52,12 @@ class SubtitlesWriter(ResultWriter):
     always_include_hours: bool
     decimal_marker: str
 
-    def iterate_result(self, result: dict):
+    def iterate_result(self, result: dict, options: dict):
         for segment in result["segments"]:
             segment_start = self.format_timestamp(segment["start"])
             segment_end = self.format_timestamp(segment["end"])
             segment_text = segment["text"].strip().replace("-->", "->")
+            highlight = options.get("highlight_words", False)
 
             if word_timings := segment["words"]:
                 all_words = [timing["word"] for timing in word_timings]
@@ -70,7 +71,7 @@ class SubtitlesWriter(ResultWriter):
 
                     yield start, end, "".join(
                         [
-                            f"<u>{word}</u>" if j == i else word
+                            f"<u>{word}</u>" if j == i and highlight else word
                             for j, word in enumerate(all_words)
                         ]
                     )
@@ -92,7 +93,7 @@ class SubtitlesWriter(ResultWriter):
 class WriteTXT(ResultWriter):
     extension: str = "txt"
 
-    def write_result(self, result: dict, file: TextIO):
+    def write_result(self, result: dict, file: TextIO, options: dict):
         for segment in result["segments"]:
             print(segment["text"].strip(), file=file, flush=True)
 
@@ -102,8 +103,10 @@ class WriteSRT(SubtitlesWriter):
     always_include_hours: bool = True
     decimal_marker: str = ","
 
-    def write_result(self, result: dict, file: TextIO):
-        for i, (start, end, text) in enumerate(self.iterate_result(result), start=1):
+    def write_result(self, result: dict, file: TextIO, options: dict):
+        for i, (start, end, text) in enumerate(
+            self.iterate_result(result, options), start=1
+        ):
             print(f"{i}\n{start} --> {end}\n{text}\n", file=file, flush=True)
 
 
@@ -112,9 +115,9 @@ class WriteVTT(SubtitlesWriter):
     always_include_hours: bool = False
     decimal_marker: str = "."
 
-    def write_result(self, result: dict, file: TextIO):
+    def write_result(self, result: dict, file: TextIO, options: dict):
         print("WEBVTT\n", file=file)
-        for start, end, text in self.iterate_result(result):
+        for start, end, text in self.iterate_result(result, options):
             print(f"{start} --> {end}\n{text}\n", file=file, flush=True)
 
 
@@ -130,7 +133,7 @@ class WriteTSV(ResultWriter):
 
     extension: str = "tsv"
 
-    def write_result(self, result: dict, file: TextIO):
+    def write_result(self, result: dict, file: TextIO, options: dict):
         print("start", "end", "text", sep="\t", file=file)
         for segment in result["segments"]:
             print(round(1000 * segment["start"]), file=file, end="\t")
@@ -141,11 +144,13 @@ class WriteTSV(ResultWriter):
 class WriteJSON(ResultWriter):
     extension: str = "json"
 
-    def write_result(self, result: dict, file: TextIO):
+    def write_result(self, result: dict, file: TextIO, options: dict):
         json.dump(result, file)
 
 
-def get_writer(output_format: str, output_dir: str) -> Callable[[dict, TextIO], None]:
+def get_writer(
+    output_format: str, output_dir: str
+) -> Callable[[dict, TextIO, dict], None]:
     writers = {
         "txt": WriteTXT,
         "vtt": WriteVTT,
@@ -157,9 +162,9 @@ def get_writer(output_format: str, output_dir: str) -> Callable[[dict, TextIO], 
     if output_format == "all":
         all_writers = [writer(output_dir) for writer in writers.values()]
 
-        def write_all(result: dict, file: TextIO):
+        def write_all(result: dict, file: TextIO, options: dict):
             for writer in all_writers:
-                writer(result, file)
+                writer(result, file, options)
 
         return write_all
 
