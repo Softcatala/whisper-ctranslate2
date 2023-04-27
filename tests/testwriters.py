@@ -1,6 +1,6 @@
 import unittest
 import os
-from src.whisper_ctranslate2.writers import WriteTXT, WriteSRT
+from src.whisper_ctranslate2.writers import WriteTXT, WriteSRT, WriteTSV, WriteVTT
 from tempfile import NamedTemporaryFile
 from faster_whisper.transcribe import Segment, Word
 
@@ -46,7 +46,7 @@ class TestCmd(unittest.TestCase):
         self.assertEqual("Hello my friends.\n", r[0], "text")
         self.assertEqual("How are you?\n", r[1], "text")
 
-    def test_writesrt(self):
+    def test_write_srt(self):
         segments = [
             self._get_segment("Hello my friends.", start=1, end=5),
             self._get_segment("How are you?", start=6.5, end=8),
@@ -68,7 +68,44 @@ class TestCmd(unittest.TestCase):
         self.assertEqual("How are you?\n", r[6], "text")
         self.assertEqual("\n", r[7], "text")
 
-    def test_writesrt_words(self):
+    def test_write_tsv(self):
+        segments = [
+            self._get_segment("Hello my friends.", start=1, end=5),
+            self._get_segment("How are you?", start=6.5, end=8),
+        ]
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteTSV(output_dir=dirname)
+        subtitlesWriter(results, filename)
+        r = self._read_subtitles(filename + ".tsv")
+        self.assertEqual(3, len(r), "text")
+        self.assertEqual("start\tend\ttext\n", r[0], "text")
+        self.assertEqual("1000\t5000\tHello my friends.\n", r[1], "text")
+        self.assertEqual("6500\t8000\tHow are you?\n", r[2], "text")
+
+    def test_write_vtt(self):
+        segments = [
+            self._get_segment("Hello my friends.", start=1, end=5),
+            self._get_segment("How are you?", start=6.5, end=8),
+        ]
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteVTT(output_dir=dirname)
+        subtitlesWriter(results, filename)
+        r = self._read_subtitles(filename + ".vtt")
+        self.assertEqual(8, len(r), "text")
+        self.assertEqual("WEBVTT\n", r[0], "text")
+        self.assertEqual("\n", r[1], "text")
+        self.assertEqual("00:01.000 --> 00:05.000\n", r[2], "text")
+        self.assertEqual("Hello my friends.\n", r[3], "text")
+        self.assertEqual("\n", r[4], "text")
+        self.assertEqual("00:06.500 --> 00:08.000\n", r[5], "text")
+        self.assertEqual("How are you?\n", r[6], "text")
+        self.assertEqual("\n", r[7], "text")
+
+    def test_write_srt_words(self):
         segment = self._get_segment("Hello my friends.", start=1, end=5)
         segments = [segment]
         segments[0]["words"] = [
@@ -81,7 +118,6 @@ class TestCmd(unittest.TestCase):
         subtitlesWriter = WriteSRT(output_dir=dirname)
         subtitlesWriter(results, filename)
         r = self._read_subtitles(filename + ".srt")
-        print(r)
 
         self.assertEqual(8, len(r), "text")
         self.assertEqual("1\n", r[0], "text")
