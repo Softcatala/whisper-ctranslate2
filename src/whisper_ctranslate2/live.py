@@ -6,7 +6,6 @@ from typing import Union, List
 
 SampleRate = 16000  # Stream device recording frequency per second
 BlockSize = 30  # Block size in milliseconds
-Threshold = 0.2  # Minimum volume threshold to activate listening
 Vocals = [50, 1000]  # Frequency range to detect sounds that could be speech
 EndBlocks = 33 * 2  # Number of blocks to wait before sending (30 ms is block)
 FlushBlocks = 33 * 10  # Number of blocks to wait before sending
@@ -34,6 +33,7 @@ class Live:
         device_index: Union[int, List[int]],
         compute_type: str,
         verbose: bool,
+        threshold: float,
         options: TranscriptionOptions,
     ):
         self.model_path = model_path
@@ -46,6 +46,7 @@ class Live:
         self.device_index = device_index
         self.compute_type = compute_type
         self.verbose = verbose
+        self.threshold = threshold
         self.options = options
 
         self.running = True
@@ -67,7 +68,7 @@ class Live:
         freq = np.argmax(np.abs(np.fft.rfft(indata[:, 0]))) * SampleRate / frames
         volume = np.sqrt(np.mean(indata**2))
 
-        return volume > Threshold and Vocals[0] <= freq <= Vocals[1]
+        return volume > self.threshold and Vocals[0] <= freq <= Vocals[1]
 
     def _save_to_process(self):
         self.buffers_to_process.append(self.buffer.copy())

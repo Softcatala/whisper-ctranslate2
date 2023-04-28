@@ -15,6 +15,7 @@ class TestLive(unittest.TestCase):
             0,
             "int8",
             False,
+            0,
             None,
         )
 

@@ -318,8 +318,17 @@ def read_command_line():
         help="show program's version number and exit",
     )
 
-    parser.add_argument(
-        "--live_transcribe", type=str2bool, default=False, help="Live transcribe mode"
+    live_args = parser.add_argument_group("Live transcribe options")
+
+    live_args.add_argument(
+        "--live_transcribe", type=str2bool, default=False, help="live transcribe mode"
+    )
+
+    live_args.add_argument(
+        "--live_volume_threshold",
+        type=float,
+        default=0.2,
+        help="minimum volume threshold to activate listening in live transcribe mode",
     )
 
     return parser.parse_args().__dict__
@@ -353,6 +362,7 @@ def main():
     audio: str = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
     highlight_words: bool = args.pop("highlight_words")
+    live_volume_threshold: float = args.pop("live_volume_threshold")
 
     temperature = args.pop("temperature")
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
@@ -457,6 +467,7 @@ def main():
             device_index,
             compute_type,
             verbose,
+            live_volume_threshold,
             options,
         ).inference()
 
