@@ -422,9 +422,14 @@ def main():
         Live.force_not_available_exception()
 
     if verbose and not language:
-        print(
-            "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
-        )
+        if live_transcribe:
+            print(
+                "Consider specifying the language using `--language`. It improves significantly prediction in live transcription."
+            )
+        else:
+            print(
+                "Detecting language using up to the first 30 seconds. Use `--language` to specify the language"
+            )
 
     if options.print_colors and output_dir and not options.word_timestamps:
         print(
