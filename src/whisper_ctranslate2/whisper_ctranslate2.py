@@ -118,20 +118,20 @@ def read_command_line():
         "--highlight_words",
         type=str2bool,
         default=False,
-        help="underline each word as it is spoken in srt and vtt (requires --word_timestamps True)",
+        help="underline each word as it is spoken in srt and vtt output formats (requires --word_timestamps True)",
     )
 
     outputs_args.add_argument(
         "--max_line_width",
         type=optional_int,
         default=None,
-        help="the maximum number of characters in a line before breaking the line in srt/vtt output formats (requires --word_timestamps True)",
+        help="the maximum number of characters in a line before breaking the line in srt and vtt output formats (requires --word_timestamps True)",
     )
     outputs_args.add_argument(
         "--max_line_count",
         type=optional_int,
         default=None,
-        help="the maximum number of lines in a segment the srt/vtt output formats (requires --word_timestamps True)",
+        help="the maximum number of lines in a segment in srt and vtt output formats (requires --word_timestamps True)",
     )
 
     computing_args = parser.add_argument_group("Computing configuration options")
