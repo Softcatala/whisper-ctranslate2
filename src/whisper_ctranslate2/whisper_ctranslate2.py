@@ -445,7 +445,8 @@ def main():
             )
 
     if not verbose and options.print_colors:
-        raise RuntimeError("You cannot disable verbose and enable print colors")
+        sys.stderr.write("You cannot disable verbose and enable print colors\n")
+        return
 
     if live_transcribe and not Live.is_available():
         Live.force_not_available_exception()
