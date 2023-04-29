@@ -118,7 +118,20 @@ def read_command_line():
         "--highlight_words",
         type=str2bool,
         default=False,
-        help="underline each word as it is spoken in srt and vtt (requires --word_timestamps True)",
+        help="underline each word as it is spoken in srt and vtt output formats (requires --word_timestamps True)",
+    )
+
+    outputs_args.add_argument(
+        "--max_line_width",
+        type=optional_int,
+        default=None,
+        help="the maximum number of characters in a line before breaking the line in srt and vtt output formats (requires --word_timestamps True)",
+    )
+    outputs_args.add_argument(
+        "--max_line_count",
+        type=optional_int,
+        default=None,
+        help="the maximum number of lines in a segment in srt and vtt output formats (requires --word_timestamps True)",
     )
 
     computing_args = parser.add_argument_group("Computing configuration options")
@@ -368,11 +381,10 @@ def main():
     live_transcribe: bool = args.pop("live_transcribe")
     audio: str = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
-    highlight_words: bool = args.pop("highlight_words")
     live_volume_threshold: float = args.pop("live_volume_threshold")
     live_input_device: int = args.pop('live_input_device')
-
     temperature = args.pop("temperature")
+
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
         temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))
     else:
@@ -422,9 +434,17 @@ def main():
         )
         return
 
-    if not options.word_timestamps and highlight_words:
-        sys.stderr.write("--highlight_words requires --word_timestamps True\n")
-        return
+    word_options = ["highlight_words", "max_line_count", "max_line_width"]
+    if not options.word_timestamps:
+        for option in word_options:
+            if args[option]:
+                sys.stderr.write(f"--{option} requires --word_timestamps True\n")
+                return
+
+    if args["max_line_count"] and not args["max_line_width"]:
+        warnings.warn("--max_line_count has no effect without --max_line_width")
+
+    writer_args = {arg: args.pop(arg) for arg in word_options}
 
     if verbose:
         cache_dir, exists = _does_old_cache_dir_has_files()
@@ -434,7 +454,8 @@ def main():
             )
 
     if not verbose and options.print_colors:
-        raise RuntimeError("You cannot disable verbose and enable print colors")
+        sys.stderr.write("You cannot disable verbose and enable print colors\n")
+        return
 
     if live_transcribe and not Live.is_available():
         Live.force_not_available_exception()
@@ -481,8 +502,6 @@ def main():
         ).inference()
 
         return
-
-    writer_args = {"highlight_words": highlight_words}
 
     for audio_path in audio:
         result = Transcribe().inference(

@@ -106,7 +106,7 @@ class TestCmd(unittest.TestCase):
         self.assertEqual("\n", r[7], "text")
 
     def test_write_srt_words(self):
-        segment = self._get_segment("Hello my friends.", start=1, end=5)
+        segment = self._get_segment("Hello", start=1, end=5)
         segments = [segment]
         segments[0]["words"] = [
             Word(start=1, end=2, word="Hello", probability=0)._asdict(),
@@ -119,10 +119,55 @@ class TestCmd(unittest.TestCase):
         subtitlesWriter(results, filename, {"highlight_words": True})
         r = self._read_subtitles(filename + ".srt")
 
-        self.assertEqual(8, len(r), "text")
+        self.assertEqual(4, len(r), "text")
         self.assertEqual("1\n", r[0], "text")
         self.assertEqual("00:00:01,000 --> 00:00:02,000\n", r[1], "text")
         self.assertEqual("<u>Hello</u>\n", r[2], "text")
+
+    def test_write_srt_words_max_line_width(self):
+        segment = self._get_segment("Hello friends", start=1, end=5)
+        segments = [segment]
+        segments[0]["words"] = [
+            Word(start=1, end=2, word="Hello", probability=0)._asdict(),
+            Word(start=4, end=6, word="friends", probability=0)._asdict(),
+        ]
+
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteSRT(output_dir=dirname)
+        subtitlesWriter(results, filename, {"max_line_width": 5})
+        r = self._read_subtitles(filename + ".srt")
+        self.assertEqual(5, len(r), "text")
+        self.assertEqual("1\n", r[0], "text")
+        self.assertEqual("00:00:01,000 --> 00:00:06,000\n", r[1], "text")
+        self.assertEqual("Hello\n", r[2], "text")
+        self.assertEqual("friends\n", r[3], "text")
+        self.assertEqual("\n", r[4], "text")
+
+    def test_write_srt_words_max_line_count(self):
+        segment = self._get_segment("Hello friends", start=1, end=5)
+        segments = [segment]
+        segments[0]["words"] = [
+            Word(start=1, end=2, word="Hello", probability=0)._asdict(),
+            Word(start=4, end=6, word="friends", probability=0)._asdict(),
+        ]
+
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteSRT(output_dir=dirname)
+        subtitlesWriter(results, filename, {"max_line_width": 5, "max_line_count": 1})
+        r = self._read_subtitles(filename + ".srt")
+        self.assertEqual(8, len(r), "text")
+        self.assertEqual("1\n", r[0], "text")
+        self.assertEqual("00:00:01,000 --> 00:00:02,000\n", r[1], "text")
+        self.assertEqual("Hello\n", r[2], "text")
+        self.assertEqual("\n", r[3], "text")
+        self.assertEqual("2\n", r[4], "text")
+        self.assertEqual("00:00:04,000 --> 00:00:06,000\n", r[5], "text")
+        self.assertEqual("friends\n", r[6], "text")
+        self.assertEqual("\n", r[7], "text")
 
 
 if __name__ == "__main__":

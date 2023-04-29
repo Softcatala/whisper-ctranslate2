@@ -4,7 +4,8 @@
 
 import os
 import json
-from typing import Callable, TextIO
+import re
+from typing import Callable, TextIO, Optional
 
 
 def format_timestamp(
@@ -49,6 +50,95 @@ class ResultWriter:
 
 
 class SubtitlesWriter(ResultWriter):
+    always_include_hours: bool
+    decimal_marker: str
+
+    def iterate_result(self, result: dict, options: dict):
+        raw_max_line_width: Optional[int] = options.get("max_line_width", None)
+        max_line_count: Optional[int] = options.get("max_line_count", None)
+        highlight_words = options.get("highlight_words", False)
+        max_line_width = 1000 if raw_max_line_width is None else raw_max_line_width
+        preserve_segments = max_line_count is None or raw_max_line_width is None
+
+        def iterate_subtitles():
+            line_len = 0
+            line_count = 1
+            # the next subtitle to yield (a list of word timings with whitespace)
+            subtitle: list[dict] = []
+            last = result["segments"][0]["words"][0]["start"]
+            for segment in result["segments"]:
+                for i, original_timing in enumerate(segment["words"]):
+                    timing = original_timing.copy()
+                    long_pause = not preserve_segments and timing["start"] - last > 3.0
+                    has_room = line_len + len(timing["word"]) <= max_line_width
+                    seg_break = i == 0 and len(subtitle) > 0 and preserve_segments
+                    if line_len > 0 and has_room and not long_pause and not seg_break:
+                        # line continuation
+                        line_len += len(timing["word"])
+                    else:
+                        # new line
+                        timing["word"] = timing["word"].strip()
+                        if (
+                            len(subtitle) > 0
+                            and max_line_count is not None
+                            and (long_pause or line_count >= max_line_count)
+                            or seg_break
+                        ):
+                            # subtitle break
+                            yield subtitle
+                            subtitle = []
+                            line_count = 1
+                        elif line_len > 0:
+                            # line break
+                            line_count += 1
+                            timing["word"] = "\n" + timing["word"]
+                        line_len = len(timing["word"].strip())
+                    subtitle.append(timing)
+                    last = timing["start"]
+            if len(subtitle) > 0:
+                yield subtitle
+
+        if "words" in result["segments"][0] and result["segments"][0]["words"]:
+            for subtitle in iterate_subtitles():
+                subtitle_start = self.format_timestamp(subtitle[0]["start"])
+                subtitle_end = self.format_timestamp(subtitle[-1]["end"])
+                subtitle_text = "".join([word["word"] for word in subtitle])
+                if highlight_words:
+                    last = subtitle_start
+                    all_words = [timing["word"] for timing in subtitle]
+                    for i, this_word in enumerate(subtitle):
+                        start = self.format_timestamp(this_word["start"])
+                        end = self.format_timestamp(this_word["end"])
+                        if last != start:
+                            yield last, start, subtitle_text
+
+                        yield start, end, "".join(
+                            [
+                                re.sub(r"^(\s*)(.*)$", r"\1<u>\2</u>", word)
+                                if j == i
+                                else word
+                                for j, word in enumerate(all_words)
+                            ]
+                        )
+                        last = end
+                else:
+                    yield subtitle_start, subtitle_end, subtitle_text
+        else:
+            for segment in result["segments"]:
+                segment_start = self.format_timestamp(segment["start"])
+                segment_end = self.format_timestamp(segment["end"])
+                segment_text = segment["text"].strip().replace("-->", "->")
+                yield segment_start, segment_end, segment_text
+
+    def format_timestamp(self, seconds: float):
+        return format_timestamp(
+            seconds=seconds,
+            always_include_hours=self.always_include_hours,
+            decimal_marker=self.decimal_marker,
+        )
+
+
+class SubtitlesWriter_ref(ResultWriter):
     always_include_hours: bool
     decimal_marker: str
 
