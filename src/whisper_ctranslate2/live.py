@@ -34,7 +34,7 @@ class Live:
         compute_type: str,
         verbose: bool,
         threshold: float,
-        live_device: int,
+        input_device: int,
         options: TranscriptionOptions,
     ):
         self.model_path = model_path
@@ -48,7 +48,7 @@ class Live:
         self.compute_type = compute_type
         self.verbose = verbose
         self.threshold = threshold
-        self.live_device = live_device
+        self.input_device = input_device
         self.options = options
 
         self.running = True
@@ -139,14 +139,14 @@ class Live:
                 print("")
 
     def listen(self):
-        print(f"\033[32mLive stream device: \033[37m{sd.query_devices(device=self.live_device or sd.default.device[1])['name']}\033[0m")
+        print(f"\033[32mLive stream device: \033[37m{sd.query_devices(device=self.input_device or sd.default.device[1])['name']}\033[0m")
         print("\033[32mListening.. \033[37m(Ctrl+C to Quit)\033[0m")
         with sd.InputStream(
             channels=1,
             callback=self.callback,
             blocksize=int(SampleRate * BlockSize / 1000),
             samplerate=SampleRate,
-            device=self.live_device,
+            device=self.input_device,
         ):
             while self.running:
                 self.process()
