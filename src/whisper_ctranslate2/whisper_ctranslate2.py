@@ -344,6 +344,13 @@ def read_command_line():
         help="minimum volume threshold to activate listening in live transcribe mode",
     )
 
+    live_args.add_argument(
+        "--live_input_device",
+        type=int,
+        default=None,
+        help="Set live stream input device (python -m sounddevice)",
+    )
+
     return parser.parse_args().__dict__
 
 
@@ -375,7 +382,9 @@ def main():
     audio: str = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
     live_volume_threshold: float = args.pop("live_volume_threshold")
+    live_input_device: int = args.pop('live_input_device')
     temperature = args.pop("temperature")
+
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
         temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))
     else:
@@ -488,6 +497,7 @@ def main():
             compute_type,
             verbose,
             live_volume_threshold,
+            live_input_device,
             options,
         ).inference()
 
