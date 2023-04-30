@@ -382,7 +382,7 @@ def main():
     audio: str = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
     live_volume_threshold: float = args.pop("live_volume_threshold")
-    live_input_device: int = args.pop('live_input_device')
+    live_input_device: int = args.pop("live_input_device")
     temperature = args.pop("temperature")
 
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
