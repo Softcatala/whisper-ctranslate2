@@ -5,18 +5,19 @@ from src.whisper_ctranslate2.live import Live
 class TestLive(unittest.TestCase):
     def test_constructor(self):
         Live(
-            "path",
-            True,
-            False,
-            "translate",
-            "ca",
-            "10",
-            "auto",
-            0,
-            "int8",
-            False,
-            0,
-            None,
+            model_path="path",
+            cache_directory=True,
+            local_files_only=False,
+            task="translate",
+            language="ca",
+            threads="10",
+            device="auto",
+            device_index=0,
+            compute_type="int8",
+            verbose=False,
+            threshold=0.2,
+            input_device=0,
+            options=None,
         )
 
 
