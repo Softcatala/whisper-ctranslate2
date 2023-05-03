@@ -235,7 +235,12 @@ class WriteJSON(ResultWriter):
     extension: str = "json"
 
     def write_result(self, result: dict, file: TextIO, options: dict):
-        json.dump(result, file)
+        pretty_json: bool = options.get("pretty_json", False)
+
+        if pretty_json:
+            json.dump(result, file, indent=4, ensure_ascii=False)
+        else:
+            json.dump(result, file)
 
 
 def get_writer(

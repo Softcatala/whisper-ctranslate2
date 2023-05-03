@@ -1,6 +1,13 @@
 import unittest
 import os
-from src.whisper_ctranslate2.writers import WriteTXT, WriteSRT, WriteTSV, WriteVTT
+import json
+from src.whisper_ctranslate2.writers import (
+    WriteTXT,
+    WriteSRT,
+    WriteTSV,
+    WriteVTT,
+    WriteJSON,
+)
 from tempfile import NamedTemporaryFile
 from faster_whisper.transcribe import Segment, Word
 
@@ -168,6 +175,51 @@ class TestCmd(unittest.TestCase):
         self.assertEqual("00:00:04,000 --> 00:00:06,000\n", r[5], "text")
         self.assertEqual("friends\n", r[6], "text")
         self.assertEqual("\n", r[7], "text")
+
+    def test_write_json(self):
+        segment = self._get_segment("Hello", start=0, end=0)
+        segments = [segment]
+
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteJSON(output_dir=dirname)
+        subtitlesWriter(results, filename, {"highlight_words": True})
+
+        with open(filename + ".json") as json_file:
+            json_data = json.load(json_file)
+
+        self.assertEqual("all text", json_data["text"])
+        self.assertEqual(1, len(json_data["segments"]))
+        self.assertEqual(0, len(json_data["segments"][0]["words"]))
+
+    def test_write_words_json(self):
+        WORD_START = 1
+        WORD_END = 5
+        WORD = "Hello"
+        segment = self._get_segment("Hello", start=0, end=0)
+        segments = [segment]
+        segments[0]["words"] = [
+            Word(start=WORD_START, end=WORD_END, word=WORD, probability=0)._asdict(),
+        ]
+
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteJSON(output_dir=dirname)
+        subtitlesWriter(results, filename, {"highlight_words": True})
+
+        with open(filename + ".json") as json_file:
+            json_data = json.load(json_file)
+
+        self.assertEqual("all text", json_data["text"])
+        self.assertEqual(1, len(json_data["segments"]))
+        self.assertEqual(1, len(json_data["segments"][0]["words"]))
+
+        word_dict = json_data["segments"][0]["words"][0]
+        self.assertEqual(WORD, word_dict["word"])
+        self.assertEqual(WORD_START, word_dict["start"])
+        self.assertEqual(WORD_END, word_dict["end"])
 
 
 if __name__ == "__main__":

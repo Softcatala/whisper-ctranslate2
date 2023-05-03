@@ -101,6 +101,14 @@ def read_command_line():
     )
 
     outputs_args.add_argument(
+        "--pretty_json",
+        "-p",
+        type=str2bool,
+        default=False,
+        help="produce json in a human redable format",
+    )
+
+    outputs_args.add_argument(
         "--print_colors",
         type=str2bool,
         default=False,
@@ -444,7 +452,9 @@ def main():
     if args["max_line_count"] and not args["max_line_width"]:
         warnings.warn("--max_line_count has no effect without --max_line_width")
 
-    writer_args = {arg: args.pop(arg) for arg in word_options}
+    writer_options = list(word_options)
+    writer_options.append("pretty_json")
+    writer_args = {arg: args.pop(arg) for arg in writer_options}
 
     if verbose:
         cache_dir, exists = _does_old_cache_dir_has_files()
