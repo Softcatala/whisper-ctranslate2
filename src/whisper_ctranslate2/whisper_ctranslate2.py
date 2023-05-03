@@ -29,9 +29,9 @@ def optional_int(string):
 
 
 def str2bool(string):
-    str2val = {"True": True, "False": False}
-    if string in str2val:
-        return str2val[string]
+    str2val = {"true": True, "false": False}
+    if string and string.lower() in str2val:
+        return str2val[string.lower()]
     else:
         raise ValueError(f"Expected one of {set(str2val.keys())}, got {string}")
 
