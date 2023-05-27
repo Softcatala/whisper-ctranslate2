@@ -1,4 +1,4 @@
-.PHONY: run run-e2e-test run-tests
+.PHONY: run run-e2e-test run-tests publish-release
 
 run:
 	python3 setup.py sdist bdist_wheel
@@ -11,3 +11,8 @@ run-e2e-tests:
 
 run-tests:
 	nose2 -s tests
+
+publish-release:
+	rm dist/ -r -f
+	python3 setup.py sdist bdist_wheel
+	python3 -m  twine upload -u "${PYPI_USERNAME}" -p "${PYPI_PASSWORD}" --repository-url https://upload.pypi.org/legacy/ dist/*
