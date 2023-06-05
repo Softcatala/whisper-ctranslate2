@@ -94,23 +94,17 @@ class Transcribe:
 
         return vad_parameters
 
-    def inference(
+    def __init__(
         self,
-        audio: Union[str, BinaryIO, np.ndarray],
         model_path: str,
-        cache_directory: str,
-        local_files_only: bool,
-        task: str,
-        language: str,
-        threads: int,
         device: str,
         device_index: Union[int, List[int]],
         compute_type: str,
-        verbose: bool,
-        live: bool,
-        options: TranscriptionOptions,
+        threads: int,
+        cache_directory: str,
+        local_files_only: bool,
     ):
-        model = WhisperModel(
+        self.model = WhisperModel(
             model_path,
             device=device,
             device_index=device_index,
@@ -120,9 +114,18 @@ class Transcribe:
             local_files_only=local_files_only,
         )
 
+    def inference(
+        self,
+        audio: Union[str, BinaryIO, np.ndarray],
+        task: str,
+        language: str,
+        verbose: bool,
+        live: bool,
+        options: TranscriptionOptions,
+    ):
         vad_parameters = self._get_vad_parameters_dictionary(options)
 
-        segments, info = model.transcribe(
+        segments, info = self.model.transcribe(
             audio=audio,
             language=language,
             task=task,
