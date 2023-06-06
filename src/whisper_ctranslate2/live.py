@@ -57,6 +57,7 @@ class Live:
         self.speaking = False
         self.blocks_speaking = 0
         self.buffers_to_process = []
+        self.transcribe = None
 
     @staticmethod
     def is_available():
@@ -119,17 +120,21 @@ class Live:
             if self.verbose:
                 print("\n\033[90mTranscribing..\033[0m")
 
-            result = Transcribe().inference(
+            if not self.transcribe:
+                self.transcribe = Transcribe(
+                    self.model_path,
+                    self.device,
+                    self.device_index,
+                    self.compute_type,
+                    self.threads,
+                    self.cache_directory,
+                    self.local_files_only,
+                )
+
+            result = self.transcribe.inference(
                 audio=_buffer.flatten(),
-                model_path=self.model_path,
-                cache_directory=self.cache_directory,
-                local_files_only=self.local_files_only,
                 task=self.task,
                 language=self.language,
-                threads=self.threads,
-                device=self.device,
-                device_index=self.device_index,
-                compute_type=self.compute_type,
                 verbose=self.verbose,
                 live=True,
                 options=self.options,

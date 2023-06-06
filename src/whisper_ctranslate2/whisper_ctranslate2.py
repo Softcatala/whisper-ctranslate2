@@ -513,18 +513,21 @@ def main():
 
         return
 
+    transcribe = Transcribe(
+        model_dir,
+        device,
+        device_index,
+        compute_type,
+        threads,
+        cache_directory,
+        local_files_only,
+    )
+
     for audio_path in audio:
-        result = Transcribe().inference(
+        result = transcribe.inference(
             audio_path,
-            model_dir,
-            cache_directory,
-            local_files_only,
             task,
             language,
-            threads,
-            device,
-            device_index,
-            compute_type,
             verbose,
             False,
             options,
