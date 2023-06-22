@@ -132,7 +132,7 @@ class Live:
                 )
 
             result = self.transcribe.inference(
-                audio=_buffer.flatten(),
+                audio=_buffer.flatten().astype("float32"),
                 task=self.task,
                 language=self.language,
                 verbose=self.verbose,
