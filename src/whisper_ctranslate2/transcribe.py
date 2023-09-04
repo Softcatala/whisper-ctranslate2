@@ -25,10 +25,13 @@ class TranscriptionOptions(NamedTuple):
     best_of: int
     patience: float
     length_penalty: float
+    repetition_penalty: float
+    no_repeat_ngram_size: int
     log_prob_threshold: Optional[float]
     no_speech_threshold: Optional[float]
     compression_ratio_threshold: Optional[float]
     condition_on_previous_text: bool
+    prompt_reset_on_temperature: float
     temperature: List[float]
     initial_prompt: Optional[str]
     #    prefix: Optional[str]
@@ -133,11 +136,14 @@ class Transcribe:
             best_of=options.best_of,
             patience=options.patience,
             length_penalty=options.length_penalty,
+            repetition_penalty=options.repetition_penalty,
+            no_repeat_ngram_size=options.no_repeat_ngram_size,
             temperature=options.temperature,
             compression_ratio_threshold=options.compression_ratio_threshold,
             log_prob_threshold=options.log_prob_threshold,
             no_speech_threshold=options.no_speech_threshold,
             condition_on_previous_text=options.condition_on_previous_text,
+            prompt_reset_on_temperature=options.prompt_reset_on_temperature,
             initial_prompt=options.initial_prompt,
             suppress_tokens=options.suppress_tokens,
             word_timestamps=True if options.print_colors else options.word_timestamps,

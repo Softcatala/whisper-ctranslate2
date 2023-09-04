@@ -215,6 +215,13 @@ def read_command_line():
     )
 
     algorithm_args.add_argument(
+        "--prompt_reset_on_temperature",
+        type=int,
+        default=0,
+        help="resets prompt if temperature is above this value. Arg has effect only if condition_on_previous_text is True",
+    )
+
+    algorithm_args.add_argument(
         "--best_of",
         type=optional_int,
         default=5,
@@ -294,7 +301,18 @@ def read_command_line():
         default="\"'.。,，!！?？:：”)]}、",
         help="if word_timestamps is True, merge these punctuation symbols with the previous word",
     )
-
+    algorithm_args.add_argument(
+        "--repetition_penalty",
+        type=float,
+        default=1.0,
+        help="prevent repetitions of ngrams with this size (set 0 to disable)",
+    )
+    algorithm_args.add_argument(
+        "--no_repeat_ngram_size",
+        type=int,
+        default=0,
+        help="Penalty applied to the score of previously generated tokens (set > 1 to penalize)",
+    )
     vad_args = parser.add_argument_group("VAD filter arguments")
 
     vad_args.add_argument(
@@ -417,11 +435,14 @@ def main():
         best_of=args.pop("best_of"),
         patience=args.pop("patience"),
         length_penalty=args.pop("length_penalty"),
+        repetition_penalty=args.pop("repetition_penalty"),
+        no_repeat_ngram_size=args.pop("no_repeat_ngram_size"),
         log_prob_threshold=args.pop("logprob_threshold"),
         no_speech_threshold=args.pop("no_speech_threshold"),
         compression_ratio_threshold=args.pop("compression_ratio_threshold"),
         condition_on_previous_text=args.pop("condition_on_previous_text"),
         temperature=temperature,
+        prompt_reset_on_temperature=args.pop("prompt_reset_on_temperature"),
         initial_prompt=args.pop("initial_prompt"),
         suppress_tokens=suppress_tokens,
         word_timestamps=args.pop("word_timestamps"),
