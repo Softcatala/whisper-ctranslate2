@@ -305,13 +305,13 @@ def read_command_line():
         "--repetition_penalty",
         type=float,
         default=1.0,
-        help="prevent repetitions of ngrams with this size (set 0 to disable)",
+        help="penalty applied to the score of previously generated tokens (set > 1 to penalize)",
     )
     algorithm_args.add_argument(
         "--no_repeat_ngram_size",
         type=int,
         default=0,
-        help="Penalty applied to the score of previously generated tokens (set > 1 to penalize)",
+        help="prevent repetitions of ngrams with this size (set 0 to disable)",
     )
     vad_args = parser.add_argument_group("VAD filter arguments")
 
