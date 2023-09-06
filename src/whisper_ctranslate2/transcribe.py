@@ -35,9 +35,8 @@ class TranscriptionOptions(NamedTuple):
     temperature: List[float]
     initial_prompt: Optional[str]
     #    prefix: Optional[str]
-    #    suppress_blank: bool
+    suppress_blank: bool
     suppress_tokens: Optional[List[int]]
-    #    without_timestamps: bool
     #    max_initial_timestamp: float
     word_timestamps: bool
     print_colors: bool
@@ -145,6 +144,7 @@ class Transcribe:
             condition_on_previous_text=options.condition_on_previous_text,
             prompt_reset_on_temperature=options.prompt_reset_on_temperature,
             initial_prompt=options.initial_prompt,
+            suppress_blank=options.suppress_blank,
             suppress_tokens=options.suppress_tokens,
             word_timestamps=True if options.print_colors else options.word_timestamps,
             prepend_punctuations=options.prepend_punctuations,

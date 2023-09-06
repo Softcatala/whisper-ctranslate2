@@ -245,7 +245,12 @@ def read_command_line():
         default=1.0,
         help="optional token length penalty coefficient (alpha) as in https://arxiv.org/abs/1609.08144, uses simple length normalization by default",
     )
-
+    algorithm_args.add_argument(
+        "--suppress_blank",
+        type=str2bool,
+        default="True",
+        help="suppress blank outputs at the beginning of the sampling",
+    )
     algorithm_args.add_argument(
         "--suppress_tokens",
         type=str,
@@ -444,6 +449,7 @@ def main():
         temperature=temperature,
         prompt_reset_on_temperature=args.pop("prompt_reset_on_temperature"),
         initial_prompt=args.pop("initial_prompt"),
+        suppress_blank=args.pop("suppress_blank"),
         suppress_tokens=suppress_tokens,
         word_timestamps=args.pop("word_timestamps"),
         prepend_punctuations=args.pop("prepend_punctuations"),
