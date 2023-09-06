@@ -46,7 +46,7 @@ class TestCmd(unittest.TestCase):
 
     def test_options_transcribe(self):
         full_path = os.path.realpath(__file__)
-        path, filename = os.path.split(full_path)
+        path, _ = os.path.split(full_path)
 
         options = [
             "",
@@ -68,7 +68,7 @@ class TestCmd(unittest.TestCase):
 
     def test_options_transcribe_timestamps(self):
         full_path = os.path.realpath(__file__)
-        path, filename = os.path.split(full_path)
+        path, _ = os.path.split(full_path)
 
         options = [
             "--word_timestamps True",
@@ -89,7 +89,7 @@ class TestCmd(unittest.TestCase):
 
     def test_options_translate(self):
         full_path = os.path.realpath(__file__)
-        path, filename = os.path.split(full_path)
+        path, _ = os.path.split(full_path)
 
         options = [
             "",
