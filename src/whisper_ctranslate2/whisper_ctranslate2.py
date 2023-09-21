@@ -551,6 +551,9 @@ def main():
     )
 
     for audio_path in audio:
+        if verbose:
+            print(f"\nFile: '{audio_path}'")
+
         result = transcribe.inference(
             audio_path,
             task,
