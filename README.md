@@ -17,7 +17,7 @@ To install the latest stable version, just type:
 
     pip install -U whisper-ctranslate2
 
-Alternatively, if you are interested the latest development (non-stable) version from this repository, just tpe:
+Alternatively, if you are interested in the latest development (non-stable) version from this repository, just type:
 
     pip install git+https://github.com/jordimas/whisper-ctranslate2.git
 
@@ -33,7 +33,7 @@ By default the best hardware available is selected for inference. You can use th
     
 # Usage
 
-Same command line that OpenAI Whisper.
+Same command line as OpenAI Whisper.
 
 To transcribe:
 
