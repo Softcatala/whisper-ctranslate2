@@ -24,12 +24,15 @@ setup(
     author_email="jmas@softcatala.org",
     license="MIT",
     classifiers=[
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12"
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     packages=["src/whisper_ctranslate2"],
     include_package_data=True,
