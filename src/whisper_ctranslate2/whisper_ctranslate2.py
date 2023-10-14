@@ -61,7 +61,7 @@ def read_command_line():
         "--model_directory",
         type=str,
         default=None,
-        help="directory where to find a CTranslate Whisper model (e.g. fine-tuned model)",
+        help="directory where to find a CTranslate2 Whisper model (e.g. fine-tuned model)",
     )
 
     caching_args = parser.add_argument_group("Model caching control options")
@@ -105,7 +105,7 @@ def read_command_line():
         "-p",
         type=str2bool,
         default=False,
-        help="produce json in a human redable format",
+        help="produce json in a human readable format",
     )
 
     outputs_args.add_argument(
