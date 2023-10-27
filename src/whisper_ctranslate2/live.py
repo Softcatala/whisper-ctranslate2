@@ -1,14 +1,16 @@
 # Based on code from https://github.com/Nikorasu/LiveWhisper/blob/main/livewhisper.py
 
 import numpy as np
-from .transcribe import Transcribe, TranscriptionOptions
+from transcribe import Transcribe, TranscriptionOptions
 from typing import Union, List
+from collections import deque
 
 SampleRate = 16000  # Stream device recording frequency per second
 BlockSize = 30  # Block size in milliseconds
 Vocals = [50, 1000]  # Frequency range to detect sounds that could be speech
-EndBlocks = 33 * 2  # Number of blocks to wait before sending (30 ms is block)
-FlushBlocks = 33 * 10  # Number of blocks to wait before sending
+EndBlocks = 30  # Number of blocks to wait before sending (30 ms is block)
+FlushBlocks = 333  # Number of blocks to wait before sending - 10s
+PreBufferedBlockSize = 15 # Number of blocks to be buffered continuously. Example 15 * BlockSize (30) = 450ms
 
 try:
     import sounddevice as sd
@@ -53,11 +55,12 @@ class Live:
 
         self.running = True
         self.waiting = 0
-        self.prevblock = self.buffer = np.zeros((0, 1))
+        self.buffer = np.zeros((0, 1))
         self.speaking = False
         self.blocks_speaking = 0
-        self.buffers_to_process = []
+        self.buffers_to_process = deque()
         self.transcribe = None
+        self.preBufferedBlocks = deque(maxlen=PreBufferedBlockSize)
 
     @staticmethod
     def is_available():
@@ -74,7 +77,7 @@ class Live:
         return volume > self.threshold and Vocals[0] <= freq <= Vocals[1]
 
     def _save_to_process(self):
-        self.buffers_to_process.append(self.buffer.copy())
+        self.buffers_to_process.appendleft(self.buffer.copy())
         self.buffer = np.zeros((0, 1))
         self.speaking = False
 
@@ -86,19 +89,19 @@ class Live:
 
         # Silence and no nobody has started speaking
         if not voice and not self.speaking:
+            self.preBufferedBlocks.appendleft(indata)
             return
 
         if voice:  # User speaking
             if self.verbose:
                 print(".", end="", flush=True)
-            if self.waiting < 1:
-                self.buffer = self.prevblock.copy()
+            if not self.speaking:
+                self.blocks_speaking = FlushBlocks
+                while len(self.preBufferedBlocks) > 0:
+                    np.concatenate((self.buffer, self.preBufferedBlocks.pop()))
 
             self.buffer = np.concatenate((self.buffer, indata))
             self.waiting = EndBlocks
-
-            if not self.speaking:
-                self.blocks_speaking = FlushBlocks
 
             self.speaking = True
         else:  # Silence after user has spoken

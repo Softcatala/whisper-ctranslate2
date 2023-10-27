@@ -1,9 +1,9 @@
-from .writers import format_timestamp
+from writers import format_timestamp
 from typing import NamedTuple, Optional, List, Union
 import tqdm
 import sys
 from faster_whisper import WhisperModel
-from .languages import LANGUAGES
+from languages import LANGUAGES
 from typing import BinaryIO
 import numpy as np
 
