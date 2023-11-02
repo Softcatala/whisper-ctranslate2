@@ -1,7 +1,7 @@
 # Based on code from https://github.com/Nikorasu/LiveWhisper/blob/main/livewhisper.py
 
 import numpy as np
-from transcribe import Transcribe, TranscriptionOptions
+from .transcribe import Transcribe, TranscriptionOptions
 from typing import Union, List
 from collections import deque
 
