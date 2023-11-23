@@ -478,9 +478,6 @@ def main():
             with tempfile.NamedTemporaryFile(mode='wb', delete=False) as temp_file:
                 temp_file.write(pipe_data)
                 audio = [temp_file.name]
-                print(audio)
-
-    print(audio)
 
 
     word_options = ["highlight_words", "max_line_count", "max_line_width"]
@@ -568,7 +565,7 @@ def main():
     for audio_path in audio:
         if verbose and len(audio) > 1:
             print(f"\nFile: '{audio_path}'")
-        print(f"\nFile: '{audio_path}'")
+            
         result = transcribe.inference(
             audio_path,
             task,
