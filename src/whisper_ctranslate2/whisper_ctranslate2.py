@@ -1,5 +1,6 @@
 import argparse
 import os
+import tempfile
 from .transcribe import Transcribe, TranscriptionOptions
 from .languages import LANGUAGES, TO_LANGUAGE_CODE, from_language_to_iso_code
 import numpy as np
@@ -465,7 +466,6 @@ def main():
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
     )
 
-    pipe_data: BinaryIO = sys.stdin.buffer.read()
     if not live_transcribe and len(audio) == 0:
         pipe_data: BinaryIO = sys.stdin.buffer.read()
         if len(pipe_data) == 0:
@@ -474,6 +474,14 @@ def main():
                 "Use `whisper-ctranslate2 --help` to see the available options.\n"
             )
             return
+        else:
+            with tempfile.NamedTemporaryFile(mode='wb', delete=False) as temp_file:
+                temp_file.write(pipe_data)
+                audio = [temp_file.name]
+                print(audio)
+
+    print(audio)
+
 
     word_options = ["highlight_words", "max_line_count", "max_line_width"]
     if not options.word_timestamps:
@@ -556,23 +564,11 @@ def main():
         local_files_only,
     )
 
-    if len(pipe_data) > 0:
-        if verbose and len(audio) > 1:
-            print(f"\nPipe Data")
-
-        result = transcribe.inference(
-            pipe_data,
-            task,
-            language,
-            verbose,
-            False,
-            options,
-        )
 
     for audio_path in audio:
         if verbose and len(audio) > 1:
             print(f"\nFile: '{audio_path}'")
-
+        print(f"\nFile: '{audio_path}'")
         result = transcribe.inference(
             audio_path,
             task,
