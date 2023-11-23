@@ -16,7 +16,7 @@ def read_version(fname="src/whisper_ctranslate2/version.py"):
 setup(
     name="whisper-ctranslate2",
     version=read_version(),
-    description="Whisper command line client that uses CTranslate2",
+    description="Whisper command line client that uses CTranslate2 and faster-whisper",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/Softcatala/whisper-ctranslate2",
