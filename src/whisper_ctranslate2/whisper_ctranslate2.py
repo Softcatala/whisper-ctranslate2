@@ -388,14 +388,6 @@ def read_command_line():
     return parser.parse_args().__dict__
 
 
-def _does_old_cache_dir_has_files():
-    default = os.path.join(os.path.expanduser("~"), ".cache")
-    cache_dir = os.path.join(
-        os.getenv("XDG_CACHE_HOME", default), "whisper-ctranslate2"
-    )
-    return cache_dir, os.path.exists(cache_dir)
-
-
 def main():
     args = read_command_line()
     output_dir: str = args.pop("output_dir")
@@ -485,13 +477,6 @@ def main():
     writer_options = list(word_options)
     writer_options.append("pretty_json")
     writer_args = {arg: args.pop(arg) for arg in writer_options}
-
-    if verbose:
-        cache_dir, exists = _does_old_cache_dir_has_files()
-        if exists:
-            print(
-                f"There are old cache files at `{cache_dir}` which are no longer used. Consider deleting them"
-            )
 
     if not verbose and options.print_colors:
         sys.stderr.write("You cannot disable verbose and enable print colors\n")
