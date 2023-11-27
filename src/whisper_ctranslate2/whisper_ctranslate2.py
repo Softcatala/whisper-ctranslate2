@@ -21,6 +21,7 @@ MODEL_NAMES = [
     "medium.en",
     "large-v1",
     "large-v2",
+    "large-v3",
 ]
 
 
