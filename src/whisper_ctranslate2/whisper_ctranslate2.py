@@ -505,7 +505,8 @@ def main():
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
-            raise RuntimeError(f"Model file '{model_filename}' does not exists")
+            sys.stderr.write(f"Model file '{model_filename}' does not exists\n")
+            return
         model_dir = model_directory
     else:
         model_dir = model
