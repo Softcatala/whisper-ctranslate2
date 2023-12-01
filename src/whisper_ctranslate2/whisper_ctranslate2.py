@@ -220,8 +220,8 @@ def read_command_line():
 
     algorithm_args.add_argument(
         "--prompt_reset_on_temperature",
-        type=int,
-        default=0,
+        type=float,
+        default=0.5,
         help="resets prompt if temperature is above this value. Arg has effect only if condition_on_previous_text is True",
     )
 
