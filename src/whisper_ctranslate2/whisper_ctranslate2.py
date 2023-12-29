@@ -165,10 +165,9 @@ def read_command_line():
 
     computing_args.add_argument(
         "--device_index",
-        nargs="*",
         type=int,
         default=0,
-        help="device IDs where to place this model on",
+        help="device ID where to place this model on",
     )
 
     computing_args.add_argument(
