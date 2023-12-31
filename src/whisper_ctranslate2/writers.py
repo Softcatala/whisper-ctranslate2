@@ -142,48 +142,6 @@ class SubtitlesWriter(ResultWriter):
         )
 
 
-class SubtitlesWriter_ref(ResultWriter):
-    always_include_hours: bool
-    decimal_marker: str
-
-    def iterate_result(self, result: dict, options: dict):
-        for segment in result["segments"]:
-            segment_start = self.format_timestamp(segment["start"])
-            segment_end = self.format_timestamp(segment["end"])
-            segment_text = segment["text"].strip().replace("-->", "->")
-            highlight = options.get("highlight_words", False)
-
-            if word_timings := segment["words"]:
-                all_words = [timing["word"] for timing in word_timings]
-                all_words[0] = all_words[0].strip()  # remove the leading space, if any
-                last = segment_start
-                for i, this_word in enumerate(word_timings):
-                    start = self.format_timestamp(this_word["start"])
-                    end = self.format_timestamp(this_word["end"])
-                    if last != start:
-                        yield last, start, segment_text
-
-                    yield start, end, "".join(
-                        [
-                            f"<u>{word}</u>" if j == i and highlight else word
-                            for j, word in enumerate(all_words)
-                        ]
-                    )
-                    last = end
-
-                if last != segment_end:
-                    yield last, segment_end, segment_text
-            else:
-                yield segment_start, segment_end, segment_text
-
-    def format_timestamp(self, seconds: float):
-        return format_timestamp(
-            seconds=seconds,
-            always_include_hours=self.always_include_hours,
-            decimal_marker=self.decimal_marker,
-        )
-
-
 class WriteTXT(ResultWriter):
     extension: str = "txt"
 
