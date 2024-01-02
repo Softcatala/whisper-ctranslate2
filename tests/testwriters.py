@@ -12,7 +12,7 @@ from tempfile import NamedTemporaryFile
 from faster_whisper.transcribe import Segment, Word
 
 
-class TestCmd(unittest.TestCase):
+class TestWriters(unittest.TestCase):
     def _get_segment(self, text, start=0, end=1):
         return Segment(
             start=start,
