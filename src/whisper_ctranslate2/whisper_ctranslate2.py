@@ -1,10 +1,11 @@
 import argparse
 import os
+import tempfile
 from .transcribe import Transcribe, TranscriptionOptions
 from .languages import LANGUAGES, TO_LANGUAGE_CODE, from_language_to_iso_code
 import numpy as np
 import warnings
-from typing import Union, List
+from typing import BinaryIO, Union, List
 from .writers import get_writer
 from .version import __version__
 from .live import Live
@@ -458,11 +459,18 @@ def main():
     )
 
     if not live_transcribe and len(audio) == 0:
-        sys.stderr.write("You need to specify one or more audio files\n")
-        sys.stderr.write(
-            "Use `whisper-ctranslate2 --help` to see the available options.\n"
-        )
-        return
+        pipe_data: BinaryIO = sys.stdin.buffer.read()
+        if len(pipe_data) == 0:
+            sys.stderr.write("You need to specify one or more audio files or pipe in audio data\n")
+            sys.stderr.write(
+                "Use `whisper-ctranslate2 --help` to see the available options.\n"
+            )
+            return
+        else:
+            with tempfile.NamedTemporaryFile(mode='wb', delete=False) as temp_file:
+                temp_file.write(pipe_data)
+                audio = [temp_file.name]
+
 
     word_options = ["highlight_words", "max_line_count", "max_line_width"]
     if not options.word_timestamps:
@@ -539,10 +547,11 @@ def main():
         local_files_only,
     )
 
+
     for audio_path in audio:
         if verbose and len(audio) > 1:
             print(f"\nFile: '{audio_path}'")
-
+            
         result = transcribe.inference(
             audio_path,
             task,
