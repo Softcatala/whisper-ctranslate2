@@ -106,6 +106,28 @@ Maximum duration of speech chunks in seconds. Longer will be split at the timest
 
 https://user-images.githubusercontent.com/309265/231533784-e58c4b92-e9fb-4256-b4cd-12f1864131d9.mov
 
+## Diarization (speaker identification)
+
+There is experimental diarization support using [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) to identify speakers. At the moment, the support is a segment level.
+
+To enable diarization you need to follow these steps:
+
+1. Install [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) with `pip install pyannote.audio`
+2. Accept [`pyannote/segmentation-3.0`](https://hf.co/pyannote/segmentation-3.0) user conditions
+3. Accept [`pyannote/speaker-diarization-3.1`](https://hf.co/pyannote/speaker-diarization-3.1) user conditions
+4. Create access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
+
+And then execute passing the HuggingFace API token as parameter to enable diarization:
+
+    whisper-ctranslate2 --hf_token YOUR_HF_TOKEN
+
+and then the name of the speaker is added in the output files (e.g. JSON, VTT and STR files):
+
+_[SPEAKER_00]: There is a lot of people in this room_
+
+The option `--speaker_name SPEAKER_NAME` allows to use your own string to identify the speaker.
+
+
 # Need help?
 
 Check our [frequently asked questions](FAQ.md) for common questions.

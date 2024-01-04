@@ -67,6 +67,8 @@ class SubtitlesWriter(ResultWriter):
             subtitle: list[dict] = []
             last = result["segments"][0]["words"][0]["start"]
             for segment in result["segments"]:
+                speaker = f"[{segment['speaker']}]: " if "speaker" in segment else ""
+
                 for i, original_timing in enumerate(segment["words"]):
                     timing = original_timing.copy()
                     long_pause = not preserve_segments and timing["start"] - last > 3.0
@@ -77,7 +79,8 @@ class SubtitlesWriter(ResultWriter):
                         line_len += len(timing["word"])
                     else:
                         # new line
-                        timing["word"] = timing["word"].strip()
+                        timing["word"] = speaker + timing["word"].strip()
+                        speaker = ""
                         if (
                             len(subtitle) > 0
                             and max_line_count is not None
@@ -129,9 +132,10 @@ class SubtitlesWriter(ResultWriter):
                     yield subtitle_start, subtitle_end, subtitle_text
         else:
             for segment in result["segments"]:
+                speaker = f"[{segment['speaker']}]: " if "speaker" in segment else ""
                 segment_start = self.format_timestamp(segment["start"])
                 segment_end = self.format_timestamp(segment["end"])
-                segment_text = segment["text"].strip().replace("-->", "->")
+                segment_text = speaker + segment["text"].strip().replace("-->", "->")
                 yield segment_start, segment_end, segment_text
 
     def format_timestamp(self, seconds: float):

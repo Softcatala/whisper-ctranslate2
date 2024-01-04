@@ -131,6 +131,22 @@ class TestWriters(unittest.TestCase):
         self.assertEqual("00:00:01,000 --> 00:00:02,000\n", r[1], "text")
         self.assertEqual("<u>Hello</u>\n", r[2], "text")
 
+    def test_write_srt_words_speaker(self):
+        segment = self._get_segment("Hello", start=1, end=5)
+        segment["speaker"] = "John"
+        segments = [segment]
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteSRT(output_dir=dirname)
+        subtitlesWriter(results, filename, {"highlight_words": True})
+        r = self._read_subtitles(filename + ".srt")
+
+        self.assertEqual(4, len(r), "text")
+        self.assertEqual("1\n", r[0], "text")
+        self.assertEqual("00:00:01,000 --> 00:00:05,000\n", r[1], "text")
+        self.assertEqual("[John]: Hello\n", r[2], "text")
+
     def test_write_srt_words_max_line_width(self):
         segment = self._get_segment("Hello friends", start=1, end=5)
         segments = [segment]

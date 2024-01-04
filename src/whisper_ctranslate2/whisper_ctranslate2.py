@@ -9,6 +9,7 @@ from .writers import get_writer
 from .version import __version__
 from .live import Live
 import sys
+import datetime
 
 MODEL_NAMES = [
     "tiny",
@@ -365,6 +366,21 @@ def read_command_line():
         help="show program's version number and exit",
     )
 
+    diarization_args = parser.add_argument_group("Diarization options")
+    diarization_args.add_argument(
+        "--hf_token",
+        type=str,
+        default="",
+        help="HuggingFace token which enables to download the diarization models.",
+    )
+
+    diarization_args.add_argument(
+        "--speaker_name",
+        type=str,
+        default="SPEAKER",
+        help="Name to use to identify the speaker (e.g. SPEAKER_00).",
+    )
+
     live_args = parser.add_argument_group("Live transcribe options")
 
     live_args.add_argument(
@@ -386,6 +402,22 @@ def read_command_line():
     )
 
     return parser.parse_args().__dict__
+
+
+def get_diarization(audio, diarize_model, verbose):
+    diarization_output = {}
+    for audio_path in audio:
+        if verbose and len(audio) > 1:
+            print(f"\nFile: '{audio_path}' (diarization)")
+
+        start_time = datetime.datetime.now()
+        diarize_segments = diarize_model.run_model(audio_path)
+        diarization_output[audio_path] = diarize_segments
+        if verbose:
+            print(f"Time used for diarization: {datetime.datetime.now() - start_time}")
+
+    diarize_model.unload_model()
+    return diarization_output
 
 
 def main():
@@ -410,6 +442,8 @@ def main():
     live_volume_threshold: float = args.pop("live_volume_threshold")
     live_input_device: int = args.pop("live_input_device")
     temperature = args.pop("temperature")
+    hf_token = args.pop("hf_token")
+    speaker_name = args.pop("speaker_name")
 
     if (increment := args.pop("temperature_increment_on_fallback")) is not None:
         temperature = tuple(np.arange(temperature, 1.0 + 1e-6, increment))
@@ -539,10 +573,28 @@ def main():
         local_files_only,
     )
 
+    diarization = len(hf_token) > 0
+
+    if diarization:
+        # Import is done here then dependencies like torch are only imported if we really need diarization
+        from .diarization import Diarization
+
+        diarization_device = "cpu" if device == "auto" else device
+        diarize_model = Diarization(use_auth_token=hf_token, device=diarization_device)
+        if threads > 0:
+            diarize_model.set_threads(threads)
+
+    diarization_output = {}
+    if diarization:
+        diarization_output = get_diarization(audio, diarize_model, verbose)
+
+    # We need to do first the diarization of all files because CTranslate2 and torch
+    # use incompatible CUDA versions and once CTranslate2 is used torch will not work
     for audio_path in audio:
         if verbose and len(audio) > 1:
-            print(f"\nFile: '{audio_path}'")
+            print(f"\nFile: '{audio_path} ({task})'")
 
+        start_time = datetime.datetime.now()
         result = transcribe.inference(
             audio_path,
             task,
@@ -551,6 +603,16 @@ def main():
             False,
             options,
         )
+
+        if diarization:
+            if verbose:
+                print(
+                    f"Time used for transcription: {datetime.datetime.now() - start_time}"
+                )
+            result = diarize_model.assign_speakers_to_segments(
+                diarization_output[audio_path], result, speaker_name
+            )
+
         writer = get_writer(output_format, output_dir)
         writer(result, audio_path, writer_args)
 
