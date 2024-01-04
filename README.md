@@ -5,7 +5,7 @@
 
 Whisper command line client compatible with original [OpenAI client](https://github.com/openai/whisper) based on CTranslate2.
 
-It uses [CTranslate2](https://github.com/OpenNMT/CTranslate2/) and [Faster-whisper](https://github.com/guillaumekln/faster-whisper) Whisper implementation that is up to 4 times faster than openai/whisper for the same accuracy while using less memory.  
+It uses [CTranslate2](https://github.com/OpenNMT/CTranslate2/) and [Faster-whisper](https://github.com/SYSTRAN/faster-whisper) Whisper implementation that is up to 4 times faster than openai/whisper for the same accuracy while using less memory.
 
 Goals of the project:
 * Provide an easy way to use the CTranslate2 Whisper implementation
@@ -19,7 +19,7 @@ To install the latest stable version, just type:
 
 Alternatively, if you are interested in the latest development (non-stable) version from this repository, just type:
 
-    pip install git+https://github.com/jordimas/whisper-ctranslate2.git
+    pip install git+https://github.com/Softcatala/whisper-ctranslate2
 
 # CPU and GPU support
 
