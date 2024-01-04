@@ -2,6 +2,7 @@ import tempfile
 import unittest
 import os
 import json
+import shutil
 
 
 class TestCmd(unittest.TestCase):
@@ -107,6 +108,25 @@ class TestCmd(unittest.TestCase):
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-medium-translate/", option
                 )
+
+    def test_transcribe_two_files(self):
+        full_path = os.path.realpath(__file__)
+        path, _ = os.path.split(full_path)
+
+        with tempfile.TemporaryDirectory() as directory:
+            _file = "gossos"
+            _file2 = "temp_file"
+            copied_file = os.path.join(directory, f"{_file2}.mp3")
+            shutil.copyfile(f"{path}/{_file}.mp3", copied_file)
+            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 {copied_file} --device cpu --compute_type float32"
+            os.system(cmd)
+            self._check_ref_small(
+                f"{directory}", _file, "e2e-tests/ref-small-transcribe/", ""
+            )
+
+            self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.srt")))
+            self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
+            self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
 
 
 if __name__ == "__main__":
