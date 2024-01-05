@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+  schedule:
+    - cron: "0 0 * * 0"
+
 jobs:
   check-code-format:
     runs-on: ubuntu-latest
@@ -30,19 +33,23 @@ jobs:
           flake8 .
 
   run-tests:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+         os: [ ubuntu-latest, windows-latest ]
+         python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+      - name: Install Ubuntu dependency
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get install libportaudio2 -y
 
       - name: Install module
         run: |
-          sudo apt-get install libportaudio2 -y
           pip install wheel
           pip install -e .[dev]
           
