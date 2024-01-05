@@ -4,9 +4,9 @@ from src.whisper_ctranslate2.live import Live
 
 class TestLive(unittest.TestCase):
     def test_constructor(self):
-        Live(
+        live = Live(
             model_path="path",
-            cache_directory=True,
+            cache_directory="directory",
             local_files_only=False,
             task="translate",
             language="ca",
@@ -19,6 +19,7 @@ class TestLive(unittest.TestCase):
             input_device=0,
             options=None,
         )
+        self.assertNotEqual(None, live)
 
 
 if __name__ == "__main__":
