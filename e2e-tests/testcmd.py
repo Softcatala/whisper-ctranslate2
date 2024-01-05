@@ -61,7 +61,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-small-transcribe/", option
@@ -79,7 +79,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}",
@@ -103,7 +103,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --task translate --model medium --compute_type float32 {option}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --task translate --model medium --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-medium-translate/", option
@@ -118,7 +118,7 @@ class TestCmd(unittest.TestCase):
             _file2 = "temp_file"
             copied_file = os.path.join(directory, f"{_file2}.mp3")
             shutil.copyfile(f"{path}/{_file}.mp3", copied_file)
-            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 {copied_file} --device cpu --compute_type float32"
+            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 {copied_file} --device cpu --compute_type float32 --output_dir {directory}"
             os.system(cmd)
             self._check_ref_small(
                 f"{directory}", _file, "e2e-tests/ref-small-transcribe/", ""
