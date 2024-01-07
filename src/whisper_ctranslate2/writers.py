@@ -151,7 +151,8 @@ class WriteTXT(ResultWriter):
 
     def write_result(self, result: dict, file: TextIO, options: dict):
         for segment in result["segments"]:
-            print(segment["text"].strip(), file=file, flush=True)
+            speaker = f"[{segment['speaker']}]: " if "speaker" in segment else ""
+            print(speaker + segment["text"].strip(), file=file, flush=True)
 
 
 class WriteSRT(SubtitlesWriter):
