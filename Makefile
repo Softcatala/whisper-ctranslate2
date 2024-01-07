@@ -1,4 +1,4 @@
-.PHONY: run run-e2e-test run-tests publish-release
+.PHONY: run install-dependencies-e2e-tests run-e2e-tests run-tests publish-release
 
 run:
 	python3 setup.py sdist bdist_wheel
