@@ -3,10 +3,13 @@
 run:
 	python3 setup.py sdist bdist_wheel
 	pip3 install --force-reinstall .
-	
-run-e2e-tests:
+
+install-dependencies-e2e-tests:
 	pip install --force-reinstall ctranslate2==3.22.0
 	pip install --force-reinstall faster-whisper==0.10.0
+	pip install --force-reinstall pyannote.audio==3.1.1
+
+run-e2e-tests:
 	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' nose2 -s e2e-tests
 
 run-tests:

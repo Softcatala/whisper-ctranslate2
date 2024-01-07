@@ -128,6 +128,20 @@ class TestCmd(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
 
+    def test_transcribe_diariation(self):
+        full_path = os.path.realpath(__file__)
+        path, _ = os.path.split(full_path)
+        hf_token = os.environ.get("HF_TOKEN")
+        self.assertNotEqual(None, hf_token)
+
+        with tempfile.TemporaryDirectory() as directory:
+            _file = "dosparlants"
+            cmd = f"whisper-ctranslate2 {path}/{_file}.mp3 --device cpu  --model medium --compute_type float32 --output_dir {directory} --hf_token {hf_token}"
+            os.system(cmd)
+            self._check_ref_small(
+                f"{directory}", _file, "e2e-tests/ref-medium-diarization/", ""
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
