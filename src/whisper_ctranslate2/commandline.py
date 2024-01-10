@@ -397,7 +397,7 @@ class CommandLine:
             "--live_input_device",
             type=int,
             default=None,
-            help="Set live stream input device (python -m sounddevice)",
+            help="Set live stream input device ID (see python -m sounddevice for a list)",
         )
 
         return parser.parse_args().__dict__
