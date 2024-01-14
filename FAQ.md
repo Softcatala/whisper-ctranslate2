@@ -26,7 +26,9 @@ Trying using a smaller model or a shorter file and watch out your available memo
 
 # Live transcription does not work
 
-Make sure that your terminal has permissions to access the microphone. In some operating systems like mac OS access can be restricted because of privacy reasons.
+Make sure that your terminal has permissions to access the microphone. In macOS, go to Security & Privacy -> Privacy -> Microphone and make sure that the Terminal application has permissions.
+
+Additionally, you can try with a lower volume threshold using *--live_volume_threshold* argument.
 
 # OSError: PortAudio library not found
 
