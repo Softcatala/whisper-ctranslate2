@@ -116,7 +116,7 @@ class Live:
 
     def process(self):
         if len(self.buffers_to_process) > 0:
-            _buffer = self.buffers_to_process.pop()
+            _buffer = self.buffers_to_process.pop(0)
             if self.verbose:
                 print("\n\033[90mTranscribing..\033[0m")
 
