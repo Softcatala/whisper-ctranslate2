@@ -15,6 +15,14 @@ run-e2e-tests:
 run-tests:
 	nose2 -s tests
 
+E2E_COMMAND=CT2_USE_MKL="False" CT2_FORCE_CPU_ISA="GENERIC" whisper-ctranslate2
+update-e2e-tests:
+	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --word_timestamps True --output_dir e2e-tests/ref-small-transcribe-word-stamps/
+	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --task translate --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-translate/
+	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu  --compute_type float32 --output_dir e2e-tests/ref-small-transcribe/
+	$(E2E_COMMAND) e2e-tests/dosparlants.mp3 --device cpu --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-diarization/ --hf_token ${HF_TOKEN}
+
+
 publish-release:
 	rm dist/ -r -f
 	python3 setup.py sdist bdist_wheel
