@@ -88,6 +88,21 @@ class TestCmd(unittest.TestCase):
                     option,
                 )
 
+    def test_options_transcribe_line_max_words(self):
+        full_path = os.path.realpath(__file__)
+        path, _ = os.path.split(full_path)
+
+        with tempfile.TemporaryDirectory() as directory:
+            _file = "gossos"
+            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir {directory}"
+            os.system(cmd)
+            self._check_ref_small(
+                f"{directory}",
+                _file,
+                "e2e-tests/ref-small-transcribe-line-max-words/",
+                "",
+            )
+
     def test_options_translate(self):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)

@@ -183,6 +183,36 @@ class TestWriters(unittest.TestCase):
         self.assertEqual("friends\n", r[3], "text")
         self.assertEqual("\n", r[4], "text")
 
+    def test_write_srt_max_words_per_line(self):
+        segment = self._get_segment("Hello friends", start=1, end=5)
+        segments = [segment]
+        segments[0]["words"] = [
+            Word(start=1, end=2, word="Hello", probability=0)._asdict(),
+            Word(start=4, end=6, word=" all", probability=0)._asdict(),
+            Word(start=7, end=9, word=" my", probability=0)._asdict(),
+            Word(start=10, end=15, word=" friends", probability=0)._asdict(),
+            Word(start=16, end=17, word=" here", probability=0)._asdict(),
+        ]
+
+        results = {"text": "all text", "segments": segments}
+
+        filename, dirname = self._get_temp_file_name_dir()
+        subtitlesWriter = WriteSRT(output_dir=dirname)
+        subtitlesWriter(results, filename, {"max_words_per_line": 2})
+        r = self._read_subtitles(filename + ".srt")
+        self.assertEqual(12, len(r), "text")
+        self.assertEqual("1\n", r[0], "text")
+        self.assertEqual("00:00:01,000 --> 00:00:06,000\n", r[1], "text")
+        self.assertEqual("Hello all\n", r[2], "text")
+        self.assertEqual("\n", r[3], "text")
+        self.assertEqual("2\n", r[4], "text")
+        self.assertEqual("00:00:07,000 --> 00:00:15,000\n", r[5], "text")
+        self.assertEqual("my friends\n", r[6], "text")
+        self.assertEqual("\n", r[7], "text")
+        self.assertEqual("00:00:16,000 --> 00:00:17,000\n", r[9], "text")
+        self.assertEqual("here\n", r[10], "text")
+        self.assertEqual("\n", r[11], "text")
+
     def test_write_srt_words_max_line_count(self):
         segment = self._get_segment("Hello friends", start=1, end=5)
         segments = [segment]

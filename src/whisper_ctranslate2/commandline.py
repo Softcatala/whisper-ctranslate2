@@ -136,7 +136,12 @@ class CommandLine:
             default=None,
             help="the maximum number of lines in a segment in srt and vtt output formats (requires --word_timestamps True)",
         )
-
+        outputs_args.add_argument(
+            "--max_words_per_line",
+            type=CommandLine()._optional_int,
+            default=None,
+            help="(requires --word_timestamps True, no effect with --max_line_width) the maximum number of words in a segment",
+        )
         computing_args = parser.add_argument_group("Computing configuration options")
 
         computing_args.add_argument(

@@ -116,7 +116,12 @@ def main():
         )
         return
 
-    word_options = ["highlight_words", "max_line_count", "max_line_width"]
+    word_options = [
+        "highlight_words",
+        "max_line_count",
+        "max_line_width",
+        "max_words_per_line",
+    ]
     if not options.word_timestamps:
         for option in word_options:
             if args[option]:
@@ -125,6 +130,9 @@ def main():
 
     if args["max_line_count"] and not args["max_line_width"]:
         warnings.warn("--max_line_count has no effect without --max_line_width")
+
+    if args["max_words_per_line"] and args["max_line_width"]:
+        warnings.warn("--max_words_per_line has no effect with --max_line_width")
 
     writer_options = list(word_options)
     writer_options.append("pretty_json")
