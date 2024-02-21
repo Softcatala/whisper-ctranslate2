@@ -128,7 +128,7 @@ class TestCmd(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
 
-    def test_transcribe_diariation(self):
+    def test_transcribe_diarization(self):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)
         hf_token = os.environ.get("HF_TOKEN")
