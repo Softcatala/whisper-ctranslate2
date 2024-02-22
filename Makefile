@@ -6,7 +6,7 @@ run:
 
 install-dependencies-e2e-tests:
 	echo ctranslate2==3.22.0 > constraints.txt
-	pip install --force-reinstall -c constraints.txt https://github.com/SYSTRAN/faster-whisper/archive/refs/tags/0.10.0.tar.gz faster-whisper
+	pip install --force-reinstall -c constraints.txt faster-whisper==0.10.1
 	pip install --force-reinstall pyannote.audio==3.1.1
 
 run-e2e-tests:
