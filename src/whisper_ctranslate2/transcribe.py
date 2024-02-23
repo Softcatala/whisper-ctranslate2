@@ -42,6 +42,7 @@ class TranscriptionOptions(NamedTuple):
     print_colors: bool
     prepend_punctuations: str
     append_punctuations: str
+    hallucination_silence_threshold: Optional[float]
     vad_filter: bool
     vad_threshold: Optional[float]
     vad_min_speech_duration_ms: Optional[int]
@@ -149,6 +150,7 @@ class Transcribe:
             word_timestamps=True if options.print_colors else options.word_timestamps,
             prepend_punctuations=options.prepend_punctuations,
             append_punctuations=options.append_punctuations,
+            hallucination_silence_threshold=options.hallucination_silence_threshold,
             vad_filter=options.vad_filter,
             vad_parameters=vad_parameters,
         )

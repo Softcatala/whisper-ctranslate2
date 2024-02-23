@@ -58,6 +58,7 @@ def get_transcription_options(args):
         prepend_punctuations=args.pop("prepend_punctuations"),
         append_punctuations=args.pop("append_punctuations"),
         print_colors=args.pop("print_colors"),
+        hallucination_silence_threshold=args.pop("hallucination_silence_threshold"),
         vad_filter=args.pop("vad_filter"),
         vad_threshold=args.pop("vad_threshold"),
         vad_min_speech_duration_ms=args.pop("vad_min_speech_duration_ms"),
@@ -127,6 +128,12 @@ def main():
             if args[option]:
                 sys.stderr.write(f"--{option} requires --word_timestamps True\n")
                 return
+
+    if options.hallucination_silence_threshold and not options.word_timestamps:
+        sys.stderr.write(
+            "--hallucination_silence_threshold requires --word_timestamps True"
+        )
+        return
 
     if args["max_line_count"] and not args["max_line_width"]:
         warnings.warn("--max_line_count has no effect without --max_line_width")

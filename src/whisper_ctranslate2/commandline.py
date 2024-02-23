@@ -323,6 +323,12 @@ class CommandLine:
             default=0,
             help="prevent repetitions of ngrams with this size (set 0 to disable)",
         )
+        algorithm_args.add_argument(
+            "--hallucination_silence_threshold",
+            type=CommandLine()._optional_float,
+            default=None,
+            help="When word_timestamps is True, skip silent periods longer than this threshold (in seconds) when a possible hallucination is detected",
+        )
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(
