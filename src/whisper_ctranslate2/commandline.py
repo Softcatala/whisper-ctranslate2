@@ -14,6 +14,9 @@ MODEL_NAMES = [
     "large-v1",
     "large-v2",
     "large-v3",
+    "distil-large-v2",
+    "distil-medium.en",
+    "distil-small.en",
 ]
 
 
