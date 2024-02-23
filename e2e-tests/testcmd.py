@@ -151,7 +151,7 @@ class TestCmd(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "dosparlants"
-            cmd = f"whisper-ctranslate2 {path}/{_file}.mp3 --device cpu  --model medium --compute_type float32 --output_dir {directory} --hf_token {hf_token}"
+            cmd = f"whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --temperature_increment_on_fallback None  --model medium --compute_type float32 --output_dir {directory} --hf_token {hf_token}"
             os.system(cmd)
             self._check_ref_small(
                 f"{directory}", _file, "e2e-tests/ref-medium-diarization/", ""

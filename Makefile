@@ -5,8 +5,8 @@ run:
 	pip3 install --force-reinstall .
 
 install-dependencies-e2e-tests:
-	echo ctranslate2==3.22.0 > constraints.txt
-	pip install --force-reinstall -c constraints.txt faster-whisper==0.10.1
+	echo ctranslate2==4.0.0 > constraints.txt
+	pip install --force-reinstall -c constraints.txt faster-whisper==1.0.0
 	pip install --force-reinstall pyannote.audio==3.1.1
 
 run-e2e-tests:
@@ -20,7 +20,8 @@ update-e2e-tests:
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --word_timestamps True --output_dir e2e-tests/ref-small-transcribe-word-stamps/
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --task translate --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-translate/
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu  --compute_type float32 --output_dir e2e-tests/ref-small-transcribe/
-	$(E2E_COMMAND) e2e-tests/dosparlants.mp3 --device cpu --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-diarization/ --hf_token ${HF_TOKEN}
+	$(E2E_COMMAND) e2e-tests/dosparlants.mp3 --temperature_increment_on_fallback None  --device cpu --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-diarization/ --hf_token ${HF_TOKEN}
+	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir e2e-tests/ref-small-transcribe-line-max-words/
 
 
 publish-release:
