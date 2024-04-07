@@ -32,9 +32,15 @@ class Diarization:
     def _load_model(self):
         model_name = "pyannote/speaker-diarization-3.1"
         device = torch.device(self.device)
-        self.model = Pipeline.from_pretrained(
+        model_handle = Pipeline.from_pretrained(
             model_name, use_auth_token=self.use_auth_token
-        ).to(device)
+        )
+        if model_handle is None:
+            raise ValueError(
+                f"The token Hugging Face token '{self.use_auth_token}' for diarization is not valid or you did not accept the EULA"
+            )
+
+        self.model = model_handle.to(device)
 
     def run_model(self, audio: str):
         self._load_model()
