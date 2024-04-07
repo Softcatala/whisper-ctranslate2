@@ -83,17 +83,17 @@ class Transcribe:
             vad_parameters["threshold"] = options.vad_threshold
 
         if options.vad_min_speech_duration_ms:
-            vad_parameters[
-                "min_speech_duration_ms"
-            ] = options.vad_min_speech_duration_ms
+            vad_parameters["min_speech_duration_ms"] = (
+                options.vad_min_speech_duration_ms
+            )
 
         if options.vad_max_speech_duration_s:
             vad_parameters["max_speech_duration_s"] = options.vad_max_speech_duration_s
 
         if options.vad_min_silence_duration_ms:
-            vad_parameters[
-                "min_silence_duration_ms"
-            ] = options.vad_min_silence_duration_ms
+            vad_parameters["min_silence_duration_ms"] = (
+                options.vad_min_silence_duration_ms
+            )
 
         return vad_parameters
 
