@@ -10,7 +10,7 @@ install-dependencies-e2e-tests:
 	pip install --force-reinstall pyannote.audio==3.1.1
 
 run-e2e-tests:
-	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' nose2 -s e2e-tests
+	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' KMP_DUPLICATE_LIB_OK="TRUE" nose2 -s e2e-tests
 
 run-tests:
 	nose2 -s tests
