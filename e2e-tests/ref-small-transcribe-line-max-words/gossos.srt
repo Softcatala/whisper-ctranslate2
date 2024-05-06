@@ -27,19 +27,19 @@ i dents per caçar, aguantar
 i estripar les preses.
 
 8
-00:00:16,000 --> 00:00:18,600
+00:00:16,000 --> 00:00:18,760
 L'esquelet ancestral dels gossos
 
 9
-00:00:18,600 --> 00:00:21,100
+00:00:18,760 --> 00:00:21,160
 els permet córrer i saltar.
 
 10
-00:00:21,940 --> 00:00:23,400
+00:00:21,940 --> 00:00:23,420
 Les seves potes s'han
 
 11
-00:00:23,400 --> 00:00:26,480
+00:00:23,420 --> 00:00:26,480
 desenvolupat per impulsar-los ràpidament
 
 12
@@ -47,7 +47,7 @@ desenvolupat per impulsar-los ràpidament
 cap endavant, saltant quan cal,
 
 13
-00:00:29,180 --> 00:00:30,560
+00:00:29,140 --> 00:00:30,560
 per acassar i atrapar les
 
 14
