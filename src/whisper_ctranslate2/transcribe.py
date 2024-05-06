@@ -201,5 +201,5 @@ class Transcribe:
         return dict(
             text=all_text,
             segments=list_segments,
-            language=language_name,
+            language=info.language,
         )
