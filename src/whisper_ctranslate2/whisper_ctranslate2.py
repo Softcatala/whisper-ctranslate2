@@ -224,30 +224,37 @@ def main():
     # We need to do first the diarization of all files because CTranslate2 and torch
     # use incompatible CUDA versions and once CTranslate2 is used torch will not work
     for audio_path in audio:
-        if verbose and len(audio) > 1:
-            print(f"\nFile: '{audio_path} ({task})'")
+        try:
+            if verbose and len(audio) > 1:
+                print(f"\nFile: '{audio_path} ({task})'")
 
-        start_time = datetime.datetime.now()
-        result = transcribe.inference(
-            audio_path,
-            task,
-            language,
-            verbose,
-            False,
-            options,
-        )
-
-        if diarization:
-            if verbose:
-                print(
-                    f"Time used for transcription: {datetime.datetime.now() - start_time}"
-                )
-            result = diarize_model.assign_speakers_to_segments(
-                diarization_output[audio_path], result, speaker_name
+            start_time = datetime.datetime.now()
+            result = transcribe.inference(
+                audio_path,
+                task,
+                language,
+                verbose,
+                False,
+                options,
             )
 
-        writer = get_writer(output_format, output_dir)
-        writer(result, audio_path, writer_args)
+            if diarization:
+                if verbose:
+                    print(
+                        f"Time used for transcription: {datetime.datetime.now() - start_time}"
+                    )
+                result = diarize_model.assign_speakers_to_segments(
+                    diarization_output[audio_path], result, speaker_name
+                )
+
+            writer = get_writer(output_format, output_dir)
+            writer(result, audio_path, writer_args)
+
+        except Exception as e:
+            sys.stderr.write(
+                f"Error: unable to process file: {audio_path} with exception '{e}'\n"
+            )
+            continue
 
     if verbose:
         print(f"Transcription results written to '{output_dir}' directory")
