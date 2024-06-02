@@ -14,6 +14,7 @@ try:
     import sounddevice as sd
 
     sounddevice_available = True
+    sounddevice_exception = None
 
 except Exception as e:
     sounddevice_available = False
