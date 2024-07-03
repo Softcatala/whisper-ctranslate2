@@ -36,7 +36,11 @@ def get_transcription_options(args):
         temperature = [temperature]
 
     suppress_tokens: str = args.pop("suppress_tokens")
-    suppress_tokens = [int(t) for t in suppress_tokens.split(",")]
+
+    if suppress_tokens is None or len(suppress_tokens) == 0:
+        suppress_tokens = []
+    else:
+        suppress_tokens = [int(t) for t in suppress_tokens.split(",")]
 
     return TranscriptionOptions(
         beam_size=args.pop("beam_size"),
