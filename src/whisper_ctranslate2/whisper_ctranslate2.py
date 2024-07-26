@@ -9,7 +9,7 @@ from .live import Live
 import sys
 import datetime
 from .commandline import CommandLine
-
+from faster_whisper import WhisperModel, BatchedInferencePipeline
 
 def get_diarization(audio, diarize_model, verbose):
     diarization_output = {}

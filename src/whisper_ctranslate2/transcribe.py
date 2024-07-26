@@ -6,6 +6,7 @@ from faster_whisper import WhisperModel
 from .languages import LANGUAGES
 from typing import BinaryIO
 import numpy as np
+from faster_whisper import BatchedInferencePipeline
 
 system_encoding = sys.getdefaultencoding()
 
@@ -128,7 +129,10 @@ class Transcribe:
     ):
         vad_parameters = self._get_vad_parameters_dictionary(options)
 
-        segments, info = self.model.transcribe(
+        batched_model = BatchedInferencePipeline(model=self.model)
+#        segments, info = batched_model.transcribe(audio=audio, batch_size=16)
+
+        segments, info = batched_model.transcribe(
             audio=audio,
             language=language,
             task=task,
@@ -142,17 +146,17 @@ class Transcribe:
             compression_ratio_threshold=options.compression_ratio_threshold,
             log_prob_threshold=options.log_prob_threshold,
             no_speech_threshold=options.no_speech_threshold,
-            condition_on_previous_text=options.condition_on_previous_text,
-            prompt_reset_on_temperature=options.prompt_reset_on_temperature,
+#            condition_on_previous_text=options.condition_on_previous_text,
+#            prompt_reset_on_temperature=options.prompt_reset_on_temperature,
             initial_prompt=options.initial_prompt,
             suppress_blank=options.suppress_blank,
             suppress_tokens=options.suppress_tokens,
             word_timestamps=True if options.print_colors else options.word_timestamps,
             prepend_punctuations=options.prepend_punctuations,
             append_punctuations=options.append_punctuations,
-            hallucination_silence_threshold=options.hallucination_silence_threshold,
-            vad_filter=options.vad_filter,
-            vad_parameters=vad_parameters,
+#            hallucination_silence_threshold=options.hallucination_silence_threshold,
+#            vad_filter=options.vad_filter,
+#            vad_parameters=vad_parameters,
         )
 
         language_name = LANGUAGES[info.language].title()
