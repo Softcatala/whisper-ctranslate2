@@ -6,7 +6,7 @@ run:
 
 install-dependencies-e2e-tests:
 	echo ctranslate2==4.0.0 > constraints.txt
-	pip install --force-reinstall -c constraints.txt faster-whisper==1.0.2
+	pip install --force-reinstall -c constraints.txt faster-whisper==1.0.3
 	echo numpy==1.26 > constraints.txt
 	pip install --force-reinstall -c constraints.txt pyannote.audio==3.3.1
 
