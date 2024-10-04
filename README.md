@@ -11,6 +11,13 @@ Goals of the project:
 * Provide an easy way to use the CTranslate2 Whisper implementation
 * Ease the migration for people using OpenAI Whisper CLI
 
+# 🚀 **NEW PROJECT LAUNCHED!** 🚀
+
+**Open dubbing** is an AI dubbing system which uses machine learning models to automatically translate and synchronize audio dialogue into different languages ! 🎉
+
+### **🔥 Check it out now: [*open-dubbing*](https://github.com/jordimas/open-dubbing) 🔥**
+
+
 # Installation
 
 To install the latest stable version, just type:
