@@ -9,6 +9,7 @@ from .live import Live
 import sys
 import datetime
 from .commandline import CommandLine
+import traceback
 
 
 def get_diarization(audio, diarize_model, verbose):
@@ -255,8 +256,12 @@ def main():
             writer(result, audio_path, writer_args)
 
         except Exception as e:
+            error_details = traceback.format_exc()
             sys.stderr.write(
-                f"Error: unable to process file: {audio_path} with exception '{e}'\n"
+                f"Error: Unable to process file: {audio_path}\n"
+                f"Exception Type: {type(e).__name__}\n"
+                f"Exception Message: {e}\n"
+                f"Traceback:\n{error_details}\n"
             )
             continue
 
