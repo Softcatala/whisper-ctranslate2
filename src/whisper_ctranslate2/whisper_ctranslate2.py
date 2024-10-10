@@ -112,6 +112,9 @@ def main():
     hf_token = args.pop("hf_token")
     speaker_name = args.pop("speaker_name")
 
+    if model == "large-v3-turbo":
+        model = "deepdml/faster-whisper-large-v3-turbo-ct2"
+
     language = get_language(language, model_directory, model)
     options = get_transcription_options(args)
 
