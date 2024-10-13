@@ -15,7 +15,7 @@ on:
 
 jobs:
   check-code-format:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
     environment: CI/CD
     strategy:
       matrix:
-         os: [ ubuntu-latest, windows-latest ]
+         os: [ ubuntu-22.04, windows-latest ]
          python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     runs-on: ${{ matrix.os }}
