@@ -1,15 +1,18 @@
 import os
-from .transcribe import Transcribe, TranscriptionOptions
-from .languages import from_language_to_iso_code
-import numpy as np
-import warnings
-from typing import Union, List
-from .writers import get_writer
-from .live import Live
+import subprocess
 import sys
 import datetime
+import warnings
+from typing import Union, List
+import numpy as np
+
+from .transcribe import Transcribe, TranscriptionOptions
+from .languages import from_language_to_iso_code
+from .writers import get_writer
+from .live import Live
 from .commandline import CommandLine
 import traceback
+import aria2p
 
 
 def get_diarization(audio, diarize_model, verbose):
@@ -87,6 +90,33 @@ def get_language(language, model_directory, model):
         language = "en"
 
     return language
+
+
+def is_aria2_running():
+    try:
+        aria2 = aria2p.API(
+            aria2p.Client(
+                host="http://localhost",
+                port=6800,
+                secret=""
+            )
+        )
+        return aria2.get_version() is not None
+    except Exception:
+        return False
+
+
+def fetch_model_with_aria2(url, output_dir):
+    aria2 = aria2p.API(
+        aria2p.Client(
+            host="http://localhost",
+            port=6800,
+            secret=""
+        )
+    )
+    download = aria2.add_uris([url], {"dir": output_dir})
+    aria2.listen_to_notifications(threaded=True)
+    download.wait_for_complete()
 
 
 def main():
@@ -179,8 +209,14 @@ def main():
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
-            sys.stderr.write(f"Model file '{model_filename}' does not exists\n")
-            return
+            sys.stderr.write(f"Model file '{model_filename}' does not exist locally. Fetching with aria2.\n")
+            if not is_aria2_running():
+                sys.stderr.write("Aria2 daemon is not running. Launching aria2 daemon...\n")
+                subprocess.Popen(["aria2c", "--enable-rpc", "--rpc-listen-all=false", "--rpc-allow-origin-all"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            fetch_model_with_aria2("model_url_placeholder", model_directory)  # Replace "model_url_placeholder" with actual model URL
+            if not os.path.exists(model_filename):
+                sys.stderr.write(f"Failed to fetch model file '{model_filename}'\n")
+                return
         model_dir = model_directory
     else:
         model_dir = model
@@ -217,7 +253,6 @@ def main():
     diarization = len(hf_token) > 0
 
     if diarization:
-        # Import is done here then dependencies like torch are only imported if we really need diarization
         from .diarization import Diarization
 
         diarization_device = "cpu" if device == "auto" else device
@@ -229,8 +264,6 @@ def main():
     if diarization:
         diarization_output = get_diarization(audio, diarize_model, verbose)
 
-    # We need to do first the diarization of all files because CTranslate2 and torch
-    # use incompatible CUDA versions and once CTranslate2 is used torch will not work
     for audio_path in audio:
         try:
             if verbose and len(audio) > 1:
