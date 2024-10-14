@@ -77,7 +77,7 @@ class CommandLine:
             "--local_files_only",
             type=CommandLine()._str2bool,
             default=False,
-            help="use models in cache without connecting to Internet to check if there are newer versions",
+            help="use only models in cache without connecting to Internet to check if there are newer versions",
         )
 
         outputs_args = parser.add_argument_group(
