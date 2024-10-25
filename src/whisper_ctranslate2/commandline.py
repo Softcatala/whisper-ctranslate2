@@ -232,6 +232,13 @@ class CommandLine:
         )
 
         algorithm_args.add_argument(
+            "--prefix",
+            type=str,
+            default=None,
+            help="optional text to provide as a prefix for the first window",
+        )
+
+        algorithm_args.add_argument(
             "--best_of",
             type=CommandLine()._optional_int,
             default=5,
@@ -334,6 +341,13 @@ class CommandLine:
             default=None,
             help="When word_timestamps is True, skip silent periods longer than this threshold (in seconds) when a possible hallucination is detected",
         )
+        algorithm_args.add_argument(
+            "--hotwords",
+            type=str,
+            default=None,
+            help="Hotwords/hint phrases to the model. Useful for names you want the model to priotize",
+        )
+
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(

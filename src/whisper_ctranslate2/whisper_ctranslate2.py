@@ -57,6 +57,8 @@ def get_transcription_options(args):
         temperature=temperature,
         prompt_reset_on_temperature=args.pop("prompt_reset_on_temperature"),
         initial_prompt=args.pop("initial_prompt"),
+        prefix=args.pop("prefix"),
+        hotwords=args.pop("hotwords"),
         suppress_blank=args.pop("suppress_blank"),
         suppress_tokens=suppress_tokens,
         word_timestamps=args.pop("word_timestamps"),
