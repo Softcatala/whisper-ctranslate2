@@ -15,6 +15,7 @@ MODEL_NAMES = [
     "large-v2",
     "large-v3",
     "large-v3-turbo",
+    "turbo",
     "distil-large-v2",
     "distil-large-v3",
     "distil-medium.en",
