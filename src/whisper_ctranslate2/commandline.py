@@ -348,6 +348,13 @@ class CommandLine:
             help="Hotwords/hint phrases to the model. Useful for names you want the model to priotize",
         )
 
+        algorithm_args.add_argument(
+            "--batched",
+            type=CommandLine()._str2bool,
+            default="False",
+            help="Uses Batched transcription which can provide an additional 2x-3x speed increase",
+        )
+
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(

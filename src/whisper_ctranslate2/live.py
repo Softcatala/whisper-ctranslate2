@@ -130,6 +130,7 @@ class Live:
                     self.threads,
                     self.cache_directory,
                     self.local_files_only,
+                    False,
                 )
 
             result = self.transcribe.inference(

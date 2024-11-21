@@ -2,7 +2,7 @@ from .writers import format_timestamp
 from typing import NamedTuple, Optional, List, Union
 import tqdm
 import sys
-from faster_whisper import WhisperModel
+from faster_whisper import WhisperModel, BatchedInferencePipeline
 from .languages import LANGUAGES
 from typing import BinaryIO
 import numpy as np
@@ -107,6 +107,7 @@ class Transcribe:
         threads: int,
         cache_directory: str,
         local_files_only: bool,
+        batched: bool,
     ):
         self.model = WhisperModel(
             model_path,
@@ -117,6 +118,10 @@ class Transcribe:
             download_root=cache_directory,
             local_files_only=local_files_only,
         )
+        if batched:
+            self.batched_model = BatchedInferencePipeline(model=self.model)
+        else:
+            self.batched_model = None
 
     def inference(
         self,
@@ -129,7 +134,14 @@ class Transcribe:
     ):
         vad_parameters = self._get_vad_parameters_dictionary(options)
 
-        segments, info = self.model.transcribe(
+        if self.batched_model:
+            model = self.batched_model
+            vad = True
+        else:
+            model = self.model
+            vad = options.vad_filter
+
+        segments, info = model.transcribe(
             audio=audio,
             language=language,
             task=task,
@@ -154,7 +166,7 @@ class Transcribe:
             prepend_punctuations=options.prepend_punctuations,
             append_punctuations=options.append_punctuations,
             hallucination_silence_threshold=options.hallucination_silence_threshold,
-            vad_filter=options.vad_filter,
+            vad_filter=vad,
             vad_parameters=vad_parameters,
         )
 

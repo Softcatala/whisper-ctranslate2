@@ -113,6 +113,7 @@ def main():
     live_input_device: int = args.pop("live_input_device")
     hf_token = args.pop("hf_token")
     speaker_name = args.pop("speaker_name")
+    batched = args.pop("batched")
 
     if model == "large-v3-turbo":
         model = "deepdml/faster-whisper-large-v3-turbo-ct2"
@@ -214,6 +215,7 @@ def main():
         threads,
         cache_directory,
         local_files_only,
+        batched,
     )
 
     diarization = len(hf_token) > 0
