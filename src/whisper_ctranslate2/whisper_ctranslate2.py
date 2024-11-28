@@ -74,6 +74,7 @@ def get_transcription_options(args):
         vad_min_speech_duration_ms=args.pop("vad_min_speech_duration_ms"),
         vad_max_speech_duration_s=args.pop("vad_max_speech_duration_s"),
         vad_min_silence_duration_ms=args.pop("vad_min_silence_duration_ms"),
+        print_segment_as_json=args.pop("segments_as_json"),
     )
 
 

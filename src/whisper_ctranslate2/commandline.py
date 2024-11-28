@@ -118,6 +118,13 @@ class CommandLine:
         )
 
         outputs_args.add_argument(
+            "--segments_as_json",
+            type=CommandLine()._str2bool,
+            default=False,
+            help="print the transcribed segments as JSON",
+        )
+
+        outputs_args.add_argument(
             "--verbose",
             type=CommandLine._str2bool,
             default=True,
