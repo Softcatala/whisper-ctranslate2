@@ -37,7 +37,7 @@ It has compatibility with x86-64 and AArch64/ARM64 CPU and integrates multiple b
 GPU execution requires the NVIDIA libraries cuBLAS 11.x and cuDNN 8.x to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html)
 
 By default the best hardware available is selected for inference. You can use the options `--device` and `--device_index` to control manually the selection.
-    
+
 # Usage
 
 Same command line as OpenAI Whisper.
@@ -45,7 +45,7 @@ Same command line as OpenAI Whisper.
 To transcribe:
 
     whisper-ctranslate2 inaguracio2011.mp3 --model medium
-    
+
 <img alt="image" src="https://user-images.githubusercontent.com/309265/226923541-8326c575-7f43-4bba-8235-2a4a8bdfb161.png">
 
 To translate:
@@ -153,3 +153,11 @@ Check our [frequently asked questions](FAQ.md) for common questions.
 # Contact
 
 Jordi Mas <jmas@softcatala.org>
+
+
+# To build and run locally
+
+```bash
+pip install .
+python -m src.whisper_ctranslate2.whisper_ctranslate2 path/to/audio.mp3 --model distil-large-v3
+```
