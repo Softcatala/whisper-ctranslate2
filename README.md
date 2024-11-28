@@ -161,3 +161,16 @@ Jordi Mas <jmas@softcatala.org>
 pip install .
 python -m src.whisper_ctranslate2.whisper_ctranslate2 path/to/audio.mp3 --model distil-large-v3
 ```
+
+# To build package
+Install build package if not already installed
+
+```
+python -m pip install build
+```
+
+Build project
+
+```
+python -m build
+```

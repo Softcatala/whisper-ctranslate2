@@ -12,6 +12,8 @@ def read_version(fname="src/whisper_ctranslate2/version.py"):
     exec(compile(open(fname, encoding="utf-8").read(), fname, "exec"))
     return locals()["__version__"]
 
+with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as f:
+    requirements = f.read().splitlines()
 
 setup(
     name="whisper-ctranslate2",
@@ -37,12 +39,7 @@ setup(
     ],
     packages=["src/whisper_ctranslate2"],
     include_package_data=True,
-    install_requires=[
-        str(r)
-        for r in pkg_resources.parse_requirements(
-            open(os.path.join(os.path.dirname(__file__), "requirements.txt"))
-        )
-    ],
+    install_requires=requirements,
     extras_require={
         "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2"],
     },
