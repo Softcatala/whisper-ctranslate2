@@ -84,7 +84,7 @@ On top of the OpenAI Whisper command line options, there are some specific optio
 
 The VAD filter accepts multiple additional options to determine the filter behavior:
 
-    --vad_threshold VALUE (float)
+    --vad_onset VALUE (float)
 
 Probabilities above this value are considered as speech.
 
