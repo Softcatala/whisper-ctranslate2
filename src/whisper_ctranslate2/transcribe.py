@@ -45,7 +45,7 @@ class TranscriptionOptions(NamedTuple):
     append_punctuations: str
     hallucination_silence_threshold: Optional[float]
     vad_filter: bool
-    vad_threshold: Optional[float]
+    vad_onset: Optional[float]
     vad_min_speech_duration_ms: Optional[int]
     vad_max_speech_duration_s: Optional[int]
     vad_min_silence_duration_ms: Optional[int]
@@ -80,8 +80,8 @@ class Transcribe:
     def _get_vad_parameters_dictionary(self, options):
         vad_parameters = {}
 
-        if options.vad_threshold:
-            vad_parameters["threshold"] = options.vad_threshold
+        if options.vad_onset:
+            vad_parameters["onset"] = options.vad_onset
 
         if options.vad_min_speech_duration_ms:
             vad_parameters["min_speech_duration_ms"] = (

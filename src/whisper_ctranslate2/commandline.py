@@ -366,10 +366,10 @@ class CommandLine:
         )
 
         vad_args.add_argument(
-            "--vad_threshold",
+            "--vad_onset",
             type=float,
             default=None,
-            help="when `vad_filter` is enabled, probabilities above this value are considered as speech.",
+            help="when `vad_filter` is enabled, probabilities above this value are considered as speech. This parameter was called `vad_threshold` before",
         )
 
         vad_args.add_argument(
