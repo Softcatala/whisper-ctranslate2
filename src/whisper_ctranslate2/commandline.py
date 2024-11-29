@@ -76,7 +76,7 @@ class CommandLine:
 
         caching_args.add_argument(
             "--local_files_only",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="use only models in cache without connecting to Internet to check if there are newer versions",
         )
@@ -104,47 +104,47 @@ class CommandLine:
         outputs_args.add_argument(
             "--pretty_json",
             "-p",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="produce json in a human readable format",
         )
 
         outputs_args.add_argument(
             "--print_colors",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="print the transcribed text using an experimental color coding strategy to highlight words with high or low confidence",
         )
 
         outputs_args.add_argument(
             "--verbose",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=True,
             help="whether to print out the progress and debug messages",
         )
 
         outputs_args.add_argument(
             "--highlight_words",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="underline each word as it is spoken in srt and vtt output formats (requires --word_timestamps True)",
         )
 
         outputs_args.add_argument(
             "--max_line_width",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=None,
             help="the maximum number of characters in a line before breaking the line in srt and vtt output formats (requires --word_timestamps True)",
         )
         outputs_args.add_argument(
             "--max_line_count",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=None,
             help="the maximum number of lines in a segment in srt and vtt output formats (requires --word_timestamps True)",
         )
         outputs_args.add_argument(
             "--max_words_per_line",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=None,
             help="(requires --word_timestamps True, no effect with --max_line_width) the maximum number of words in a segment",
         )
@@ -163,7 +163,7 @@ class CommandLine:
 
         computing_args.add_argument(
             "--threads",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=0,
             help="number of threads used for CPU inference",
         )
@@ -220,7 +220,7 @@ class CommandLine:
 
         algorithm_args.add_argument(
             "--temperature_increment_on_fallback",
-            type=CommandLine()._optional_float,
+            type=CommandLine._optional_float,
             default=0.2,
             help="temperature to increase when falling back when the decoding fails to meet either of the thresholds below",
         )
@@ -241,13 +241,13 @@ class CommandLine:
 
         algorithm_args.add_argument(
             "--best_of",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=5,
             help="number of candidates when sampling with non-zero temperature",
         )
         algorithm_args.add_argument(
             "--beam_size",
-            type=CommandLine()._optional_int,
+            type=CommandLine._optional_int,
             default=5,
             help="number of beams in beam search, only applicable when temperature is zero",
         )
@@ -265,8 +265,8 @@ class CommandLine:
         )
         algorithm_args.add_argument(
             "--suppress_blank",
-            type=CommandLine()._str2bool,
-            default="True",
+            type=CommandLine._str2bool,
+            default=True,
             help="suppress blank outputs at the beginning of the sampling",
         )
         algorithm_args.add_argument(
@@ -283,31 +283,31 @@ class CommandLine:
         )
         algorithm_args.add_argument(
             "--condition_on_previous_text",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=True,
             help="if True, provide the previous output of the model as a prompt for the next window; disabling may make the text inconsistent across windows, but the model becomes less prone to getting stuck in a failure loop",
         )
         algorithm_args.add_argument(
             "--compression_ratio_threshold",
-            type=CommandLine()._optional_float,
+            type=CommandLine._optional_float,
             default=2.4,
             help="if the gzip compression ratio is higher than this value, treat the decoding as failed",
         )
         algorithm_args.add_argument(
             "--logprob_threshold",
-            type=CommandLine()._optional_float,
+            type=CommandLine._optional_float,
             default=-1.0,
             help="if the average log probability is lower than this value, treat the decoding as failed",
         )
         algorithm_args.add_argument(
             "--no_speech_threshold",
-            type=CommandLine()._optional_float,
+            type=CommandLine._optional_float,
             default=0.6,
             help="if the probability of the <|nospeech|> token is higher than this value AND the decoding has failed due to `logprob_threshold`, consider the segment as silence",
         )
         algorithm_args.add_argument(
             "--word_timestamps",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="(experimental) extract word-level timestamps and refine the results based on them",
         )
@@ -338,7 +338,7 @@ class CommandLine:
         )
         algorithm_args.add_argument(
             "--hallucination_silence_threshold",
-            type=CommandLine()._optional_float,
+            type=CommandLine._optional_float,
             default=None,
             help="When word_timestamps is True, skip silent periods longer than this threshold (in seconds) when a possible hallucination is detected",
         )
@@ -351,8 +351,8 @@ class CommandLine:
 
         algorithm_args.add_argument(
             "--batched",
-            type=CommandLine()._str2bool,
-            default="False",
+            type=CommandLine._str2bool,
+            default=False,
             help="Uses Batched transcription which can provide an additional 2x-3x speed increase",
         )
 
@@ -360,7 +360,7 @@ class CommandLine:
 
         vad_args.add_argument(
             "--vad_filter",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="enable the voice activity detection (VAD) to filter out parts of the audio without speech. This step is using the Silero VAD model https://github.com/snakers4/silero-vad.",
         )
@@ -419,7 +419,7 @@ class CommandLine:
 
         live_args.add_argument(
             "--live_transcribe",
-            type=CommandLine()._str2bool,
+            type=CommandLine._str2bool,
             default=False,
             help="live transcribe mode",
         )
