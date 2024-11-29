@@ -1,6 +1,8 @@
-import numpy as np
-from faster_whisper.audio import decode_audio
 from collections import OrderedDict
+
+import numpy as np
+
+from faster_whisper.audio import decode_audio
 
 try:
     import torch

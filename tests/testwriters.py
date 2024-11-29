@@ -1,15 +1,18 @@
-import unittest
-import os
 import json
+import os
+import unittest
+
+from tempfile import NamedTemporaryFile
+
+from faster_whisper.transcribe import Segment, Word
+
 from src.whisper_ctranslate2.writers import (
-    WriteTXT,
+    WriteJSON,
     WriteSRT,
     WriteTSV,
+    WriteTXT,
     WriteVTT,
-    WriteJSON,
 )
-from tempfile import NamedTemporaryFile
-from faster_whisper.transcribe import Segment, Word
 
 
 class TestWriters(unittest.TestCase):

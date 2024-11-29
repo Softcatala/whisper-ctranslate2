@@ -1,4 +1,5 @@
 import argparse
+
 from .languages import LANGUAGES, TO_LANGUAGE_CODE
 from .version import __version__
 

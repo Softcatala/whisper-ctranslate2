@@ -1,4 +1,5 @@
 import unittest
+
 from src.whisper_ctranslate2.diarization import Diarization
 
 

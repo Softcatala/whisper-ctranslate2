@@ -1,11 +1,14 @@
-from .writers import format_timestamp
-from typing import NamedTuple, Optional, List, Union
-import tqdm
 import sys
-from faster_whisper import WhisperModel, BatchedInferencePipeline
-from .languages import LANGUAGES
-from typing import BinaryIO
+
+from typing import BinaryIO, List, NamedTuple, Optional, Union
+
 import numpy as np
+import tqdm
+
+from faster_whisper import BatchedInferencePipeline, WhisperModel
+
+from .languages import LANGUAGES
+from .writers import format_timestamp
 
 system_encoding = sys.getdefaultencoding()
 

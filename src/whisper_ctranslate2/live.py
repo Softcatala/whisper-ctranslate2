@@ -1,8 +1,10 @@
 # Based on code from https://github.com/Nikorasu/LiveWhisper/blob/main/livewhisper.py
 
+from typing import List, Union
+
 import numpy as np
+
 from .transcribe import Transcribe, TranscriptionOptions
-from typing import Union, List
 
 SampleRate = 16000  # Stream device recording frequency per second
 BlockSize = 30  # Block size in milliseconds

@@ -1,4 +1,4 @@
-.PHONY: run install-dependencies-e2e-tests run-e2e-tests run-tests publish-release
+.PHONY: run install-dependencies-e2e-tests run-e2e-tests run-tests publish-release dev
 
 run:
 	python3 setup.py sdist bdist_wheel
@@ -24,6 +24,12 @@ update-e2e-tests:
 	$(E2E_COMMAND) e2e-tests/dosparlants.mp3 --temperature_increment_on_fallback None  --device cpu --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-diarization/ --hf_token ${HF_TOKEN}
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir e2e-tests/ref-small-transcribe-line-max-words/
 
+PATHS = src/ tests/ e2e-tests/
+
+dev:
+	python -m black $(PATHS)
+	python -m flake8 $(PATHS)
+	python -m isort $(PATHS)
 
 publish-release:
 	rm dist/ -r -f

@@ -1,8 +1,8 @@
+import json
+import os
+import shutil
 import tempfile
 import unittest
-import os
-import json
-import shutil
 
 
 class TestCmd(unittest.TestCase):

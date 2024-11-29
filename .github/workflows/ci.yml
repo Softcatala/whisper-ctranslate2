@@ -25,12 +25,17 @@ jobs:
 
       - name: Check code format with Black
         run: |
-          black --check .
+          black --check src/ tests/ e2e-tests/
 
       - name: Check code style with Flake8
         if: ${{ always() }}
         run: |
-          flake8 .
+          flake8 src/ tests/ e2e-tests/
+
+      - name: Check code style with isort
+        if: ${{ always() }}
+        run: |
+          isort --check-only src/ tests/ e2e-tests/
 
   run-tests:
     environment: CI/CD
