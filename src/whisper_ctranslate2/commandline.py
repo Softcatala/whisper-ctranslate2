@@ -354,7 +354,7 @@ class CommandLine:
             "--batched",
             type=CommandLine._str2bool,
             default=False,
-            help="Uses Batched transcription which can provide an additional 2x-3x speed increase",
+            help="Uses Batched transcription which can provide an additional 2x-4x speed increase",
         )
 
         vad_args = parser.add_argument_group("VAD filter arguments")

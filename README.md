@@ -66,6 +66,14 @@ All the supported options with their help are shown.
 
 On top of the OpenAI Whisper command line options, there are some specific options provided by CTranslate2 or whiper-ctranslate2.
 
+## Batched inference
+
+Batched inference transcribes each segment in-dependently which can provide an additional 2x-4x speed increase:
+
+    whisper-ctranslate2 inaguracio2011.mp3 --batched True
+
+Batched inference uses Voice Activity Detection (VAD) filter.
+
 ## Quantization
 
 `--compute_type` option which accepts _default,auto,int8,int8_float16,int16,float16,float32_ values indicates the type of [quantization](https://opennmt.net/CTranslate2/quantization.html) to use. On CPU _int8_ will give the best performance:
@@ -115,14 +123,14 @@ https://user-images.githubusercontent.com/309265/231533784-e58c4b92-e9fb-4256-b4
 
 ## Diarization (speaker identification)
 
-There is experimental diarization support using [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) to identify speakers. At the moment, the support is a segment level.
+There is experimental diarization support using [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) to identify speakers. At the moment, the support is at segment level.
 
 To enable diarization you need to follow these steps:
 
 1. Install [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) with `pip install pyannote.audio`
 2. Accept [`pyannote/segmentation-3.0`](https://hf.co/pyannote/segmentation-3.0) user conditions
 3. Accept [`pyannote/speaker-diarization-3.1`](https://hf.co/pyannote/speaker-diarization-3.1) user conditions
-4. Create access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
+4. Create an access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
 
 And then execute passing the HuggingFace API token as parameter to enable diarization:
 
