@@ -111,6 +111,7 @@ class Transcribe:
         cache_directory: str,
         local_files_only: bool,
         batched: bool,
+        batch_size: int = None,
     ):
         self.model = WhisperModel(
             model_path,
@@ -121,6 +122,8 @@ class Transcribe:
             download_root=cache_directory,
             local_files_only=local_files_only,
         )
+
+        self.batch_size = batch_size
         if batched:
             self.batched_model = BatchedInferencePipeline(model=self.model)
         else:
@@ -143,6 +146,10 @@ class Transcribe:
         else:
             model = self.model
             vad = options.vad_filter
+
+        batch_size = (
+            {"batch_size": self.batch_size} if self.batch_size is not None else {}
+        )
 
         segments, info = model.transcribe(
             audio=audio,
@@ -171,6 +178,7 @@ class Transcribe:
             hallucination_silence_threshold=options.hallucination_silence_threshold,
             vad_filter=vad,
             vad_parameters=vad_parameters,
+            **batch_size,
         )
 
         language_name = LANGUAGES[info.language].title()

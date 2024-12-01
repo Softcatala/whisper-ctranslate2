@@ -71,8 +71,11 @@ On top of the OpenAI Whisper command line options, there are some specific optio
 Batched inference transcribes each segment in-dependently which can provide an additional 2x-4x speed increase:
 
     whisper-ctranslate2 inaguracio2011.mp3 --batched True
+    
+You can additionally use the --batch_size to specify the maximum number of parallel requests to model for decoding.
 
-Batched inference uses Voice Activity Detection (VAD) filter.
+Batched inference uses Voice Activity Detection (VAD) filter and ignores the following paramters: compression_ratio_threshold, logprob_threshold,
+no_speech_threshold, condition_on_previous_text, prompt_reset_on_temperature, prefix, hallucination_silence_threshold.
 
 ## Quantization
 

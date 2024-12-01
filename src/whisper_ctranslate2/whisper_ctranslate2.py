@@ -117,6 +117,7 @@ def main():
     hf_token = args.pop("hf_token")
     speaker_name = args.pop("speaker_name")
     batched = args.pop("batched")
+    batch_size = args.pop("batch_size")
 
     language = get_language(language, model_directory, model)
     options = get_transcription_options(args)
@@ -144,6 +145,10 @@ def main():
         sys.stderr.write(
             "--hallucination_silence_threshold requires --word_timestamps True"
         )
+        return
+
+    if batch_size and not batched:
+        sys.stderr.write("--batched_size can only be used if-- batched is True")
         return
 
     if args["max_line_count"] and not args["max_line_width"]:
@@ -216,6 +221,7 @@ def main():
         cache_directory,
         local_files_only,
         batched,
+        batch_size,
     )
 
     diarization = len(hf_token) > 0

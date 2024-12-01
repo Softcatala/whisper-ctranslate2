@@ -357,6 +357,13 @@ class CommandLine:
             help="Uses Batched transcription which can provide an additional 2x-4x speed increase",
         )
 
+        algorithm_args.add_argument(
+            "--batch_size",
+            type=CommandLine._optional_int,
+            default=None,
+            help="When using Batched transcription the maximum number of parallel requests to model for decoding.",
+        )
+
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(
