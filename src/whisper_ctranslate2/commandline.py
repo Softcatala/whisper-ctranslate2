@@ -439,4 +439,11 @@ class CommandLine:
             help="Set live stream input device ID (see python -m sounddevice for a list)",
         )
 
+        live_args.add_argument(
+            "--live_input_device_sample_rate",
+            type=int,
+            default=16000,
+            help="Set live sample rate of input device",
+        )
+
         return parser.parse_args().__dict__
