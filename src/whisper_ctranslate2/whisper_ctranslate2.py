@@ -116,6 +116,7 @@ def main():
     live_input_device: int = args.pop("live_input_device")
     hf_token = args.pop("hf_token")
     speaker_name = args.pop("speaker_name")
+    speaker_num = args.pop("speaker_num")
     batched = args.pop("batched")
     batch_size = args.pop("batch_size")
 
@@ -231,7 +232,7 @@ def main():
         from .diarization import Diarization
 
         diarization_device = "cpu" if device == "auto" else device
-        diarize_model = Diarization(use_auth_token=hf_token, device=diarization_device)
+        diarize_model = Diarization(use_auth_token=hf_token, device=diarization_device, num_speakers=speaker_num)
         if threads > 0:
             diarize_model.set_threads(threads)
 
