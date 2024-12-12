@@ -6,7 +6,6 @@ import numpy as np
 
 from .transcribe import Transcribe, TranscriptionOptions
 
-SampleRate = 16000  # Stream device recording frequency per second
 BlockSize = 30  # Block size in milliseconds
 Vocals = [50, 1000]  # Frequency range to detect sounds that could be speech
 EndBlocks = 33 * 2  # Number of blocks to wait before sending (30 ms is block)
@@ -38,6 +37,7 @@ class Live:
         verbose: bool,
         threshold: float,
         input_device: int,
+        input_device_sample_rate: int,
         options: TranscriptionOptions,
     ):
         self.model_path = model_path
@@ -52,6 +52,7 @@ class Live:
         self.verbose = verbose
         self.threshold = threshold
         self.input_device = input_device
+        self.input_device_sample_rate = input_device_sample_rate
         self.options = options
 
         self.running = True
@@ -71,7 +72,11 @@ class Live:
         raise (sounddevice_exception)
 
     def _is_there_voice(self, indata, frames):
-        freq = np.argmax(np.abs(np.fft.rfft(indata[:, 0]))) * SampleRate / frames
+        freq = (
+            np.argmax(np.abs(np.fft.rfft(indata[:, 0])))
+            * self.input_device_sample_rate
+            / frames
+        )
         volume = np.sqrt(np.mean(indata**2))
 
         return volume > self.threshold and Vocals[0] <= freq <= Vocals[1]
@@ -158,8 +163,8 @@ class Live:
         with sd.InputStream(
             channels=1,
             callback=self.callback,
-            blocksize=int(SampleRate * BlockSize / 1000),
-            samplerate=SampleRate,
+            blocksize=int(self.input_device_sample_rate * BlockSize / 1000),
+            samplerate=self.input_device_sample_rate,
             device=self.input_device,
         ):
             while self.running:
