@@ -11,11 +11,16 @@ import numpy as np
 from .commandline import CommandLine
 from .languages import from_language_to_iso_code
 from .live import Live
+from .diarization import Diarization
 from .transcribe import Transcribe, TranscriptionOptions
 from .writers import get_writer
 
 
-def get_diarization(audio, diarize_model, verbose):
+def get_diarization(
+    audio: str,
+    diarize_model: Diarization,
+    verbose: bool
+):
     diarization_output = {}
     for audio_path in audio:
         if verbose and len(audio) > 1:
@@ -248,6 +253,11 @@ def main():
                 print(f"\nFile: '{audio_path} ({task})'")
 
             start_time = datetime.datetime.now()
+            maybe_diarization = diarization_output.get(
+                audio_path,
+                None
+            )
+
             result = transcribe.inference(
                 audio_path,
                 task,
@@ -255,6 +265,9 @@ def main():
                 verbose,
                 False,
                 options,
+                diarize_model if diarization else None,
+                diarization_output = maybe_diarization,
+                speaker_name = speaker_name,
             )
 
             if diarization:
@@ -263,7 +276,9 @@ def main():
                         f"Time used for transcription: {datetime.datetime.now() - start_time}"
                     )
                 result = diarize_model.assign_speakers_to_segments(
-                    diarization_output[audio_path], result, speaker_name
+                    maybe_diarization,
+                    result,
+                    speaker_name
                 )
 
             writer = get_writer(output_format, output_dir)
