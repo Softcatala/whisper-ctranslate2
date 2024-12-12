@@ -199,23 +199,10 @@ class Transcribe:
         last_pos = 0
         accumated_inc = 0
         all_text = ""
-        if diarization_output:
-            diarize_data = list(diarization_output.itertracks(yield_label=True))
-            diarize_df = np.array(
-                diarize_data,
-                dtype=[("segment", object), ("label", object), ("speaker", object)],
-            )
-
-            diarize_df = np.core.records.fromarrays(
-                [
-                    diarize_df["segment"],
-                    diarize_df["label"],
-                    diarize_df["speaker"],
-                    np.array([seg.start for seg in diarize_df["segment"]]),
-                    np.array([seg.end for seg in diarize_df["segment"]]),
-                    np.zeros(len(diarize_df)),
-                ],
-                names="segment, label, speaker, start, end, intersection",
+        diarize_df = None
+        if diarize_model:
+            diarize_df = diarize_model.diarize_chunks_to_records(
+                diarization_output
             )
 
         with tqdm.tqdm(
