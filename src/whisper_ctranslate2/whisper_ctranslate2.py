@@ -255,6 +255,9 @@ def main():
                 verbose,
                 False,
                 options,
+                diarize_model if diarization else None,
+                diarization_output=diarization_output[audio_path],
+                speaker_name=speaker_name,
             )
 
             if diarization:
@@ -263,7 +266,9 @@ def main():
                         f"Time used for transcription: {datetime.datetime.now() - start_time}"
                     )
                 result = diarize_model.assign_speakers_to_segments(
-                    diarization_output[audio_path], result, speaker_name
+                    diarization_output[audio_path],
+                    result,
+                    speaker_name
                 )
 
             writer = get_writer(output_format, output_dir)

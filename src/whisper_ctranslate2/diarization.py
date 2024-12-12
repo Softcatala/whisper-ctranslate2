@@ -54,18 +54,65 @@ class Diarization:
         segments = self.model(audio_data)
         return segments
 
-    def assign_speakers_to_segments(self, segments, transcript_result, speaker_name):
+    def assign_speakers_to_segments(
+        self,
+        segments,
+        transcript_result,
+        speaker_name
+    ):
         diarize_data = list(segments.itertracks(yield_label=True))
         return self._do_assign_speakers_to_segments(
             diarize_data, transcript_result, speaker_name
         )
 
+    def assign_speaker_to_segment(
+        self,
+        segment,
+        diarize_df,
+        speaker_name
+    ):
+        # Create a copy of the incoming segment
+        new_segment = segment.copy()
+
+        intersection = np.minimum(
+            diarize_df["end"],
+            segment["end"]) - np.maximum(diarize_df["start"],
+            segment["start"]
+        )
+        diarize_df["intersection"] = intersection
+        dia_segment = diarize_df[diarize_df["intersection"] > 0]
+        if len(dia_segment) > 0:
+            speakers = {}
+            for item in dia_segment:
+                speaker = item["speaker"]
+                old_i = speakers.get(speaker, 0)
+                speakers[speaker] = old_i + item["intersection"]
+
+            sorted_dict = OrderedDict(
+                sorted(speakers.items(), key=lambda x: x[1], reverse=True)
+            )
+            first_item = next(iter(sorted_dict.items()))
+            if first_item:
+                speaker = first_item[0]
+                if speaker_name:
+                    speaker = speaker.replace("SPEAKER", speaker_name)
+                new_segment["speaker"] = speaker
+
+        return new_segment
+
     def _do_assign_speakers_to_segments(
-        self, diarize_data, transcript_result, speaker_name
+        self,
+        diarize_data,
+        transcript_result,
+        speaker_name
     ):
         diarize_df = np.array(
             diarize_data,
-            dtype=[("segment", object), ("label", object), ("speaker", object)],
+            dtype=[
+                ("segment", object),
+                ("label", object),
+                ("speaker", object)
+            ],
         )
 
         diarize_df = np.core.records.fromarrays(
@@ -80,27 +127,14 @@ class Diarization:
             names="segment, label, speaker, start, end, intersection",
         )
 
+        diarized_segments = []
         for seg in transcript_result["segments"]:
-            intersection = np.minimum(diarize_df["end"], seg["end"]) - np.maximum(
-                diarize_df["start"], seg["start"]
+            new_segment = self.assign_speaker_to_segment(
+                seg,
+                diarize_df,
+                speaker_name
             )
-            diarize_df["intersection"] = intersection
-            dia_segment = diarize_df[diarize_df["intersection"] > 0]
-            if len(dia_segment) > 0:
-                speakers = {}
-                for item in dia_segment:
-                    speaker = item["speaker"]
-                    old_i = speakers.get(speaker, 0)
-                    speakers[speaker] = old_i + item["intersection"]
+            diarized_segments.append(new_segment)
 
-                sorted_dict = OrderedDict(
-                    sorted(speakers.items(), key=lambda x: x[1], reverse=True)
-                )
-                first_item = next(iter(sorted_dict.items()))
-                if first_item:
-                    speaker = first_item[0]
-                    if speaker_name:
-                        speaker = speaker.replace("SPEAKER", speaker_name)
-                    seg["speaker"] = speaker
-
+        transcript_result["segments"] = diarized_segments
         return transcript_result

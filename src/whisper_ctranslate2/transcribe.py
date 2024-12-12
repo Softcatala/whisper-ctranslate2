@@ -7,6 +7,8 @@ import tqdm
 
 from faster_whisper import BatchedInferencePipeline, WhisperModel
 
+from .diarization import Diarization
+
 from .languages import LANGUAGES
 from .writers import format_timestamp
 import json
@@ -139,6 +141,9 @@ class Transcribe:
         verbose: bool,
         live: bool,
         options: TranscriptionOptions,
+        diarize_model: Diarization | None = None,
+        diarization_output = None,
+        speaker_name = None,
     ):
         vad_parameters = self._get_vad_parameters_dictionary(options)
 
@@ -194,6 +199,25 @@ class Transcribe:
         last_pos = 0
         accumated_inc = 0
         all_text = ""
+        if diarization_output:
+            diarize_data = list(diarization_output.itertracks(yield_label=True))
+            diarize_df = np.array(
+                diarize_data,
+                dtype=[("segment", object), ("label", object), ("speaker", object)],
+            )
+
+            diarize_df = np.core.records.fromarrays(
+                [
+                    diarize_df["segment"],
+                    diarize_df["label"],
+                    diarize_df["speaker"],
+                    np.array([seg.start for seg in diarize_df["segment"]]),
+                    np.array([seg.end for seg in diarize_df["segment"]]),
+                    np.zeros(len(diarize_df)),
+                ],
+                names="segment, label, speaker, start, end, intersection",
+            )
+
         with tqdm.tqdm(
             total=info.duration, unit="seconds", disable=verbose or live is not False
         ) as pbar:
@@ -201,7 +225,14 @@ class Transcribe:
                 start, end, text = segment.start, segment.end, segment.text
                 all_text += segment.text
 
-                if options.print_segment_as_json:
+                if diarization_output:
+                    diarized_segment = diarize_model.assign_speaker_to_segment(
+                        segment._asdict(),
+                        diarize_df,
+                        speaker_name
+                    )
+                    print(json.dumps(diarized_segment))
+                elif options.print_segment_as_json:
                     print(json.dumps(segment._asdict()))
                 elif verbose or options.print_colors:
                     if options.print_colors and segment.words:
