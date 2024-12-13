@@ -20,7 +20,7 @@ class Diarization:
         self,
         use_auth_token=None,
         device: str = "cpu",
-        num_speakers = 2,
+        num_speakers=2,
     ):
         self.device = device
         self.use_auth_token = use_auth_token

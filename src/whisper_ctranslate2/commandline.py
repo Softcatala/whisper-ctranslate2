@@ -430,7 +430,6 @@ class CommandLine:
             help="Number of speakers to use for diarization.",
         )
 
-
         live_args = parser.add_argument_group("Live transcribe options")
 
         live_args.add_argument(
