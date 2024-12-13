@@ -147,7 +147,7 @@ class TestCmd(unittest.TestCase):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)
         hf_token = os.environ.get("HF_TOKEN")
-        self.assertNotEqual(None, hf_token)
+        self.assertTrue(hf_token, "HF_TOKEN should not be None or an empty string")
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "dosparlants"
