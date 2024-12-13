@@ -423,6 +423,13 @@ class CommandLine:
             help="Name to use to identify the speaker (e.g. SPEAKER_00).",
         )
 
+        diarization_args.add_argument(
+            "--speaker_num",
+            type=int,
+            default=2,
+            help="Number of speakers to use for diarization.",
+        )
+
         live_args = parser.add_argument_group("Live transcribe options")
 
         live_args.add_argument(
