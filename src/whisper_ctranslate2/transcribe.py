@@ -52,6 +52,7 @@ class TranscriptionOptions(NamedTuple):
     vad_min_speech_duration_ms: Optional[int]
     vad_max_speech_duration_s: Optional[int]
     vad_min_silence_duration_ms: Optional[int]
+    multilingual: bool
 
 
 class Transcribe:
@@ -179,6 +180,7 @@ class Transcribe:
             vad_filter=vad,
             vad_parameters=vad_parameters,
             **batch_size,
+            multilingual=options.multilingual,
         )
 
         language_name = LANGUAGES[info.language].title()
