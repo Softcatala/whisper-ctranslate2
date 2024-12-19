@@ -364,6 +364,13 @@ class CommandLine:
             help="When using Batched transcription the maximum number of parallel requests to model for decoding.",
         )
 
+        algorithm_args.add_argument(
+            "--multilingual",
+            type=CommandLine._str2bool,
+            default=False,
+            help="Perform language detection on every segment",
+        )
+
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(
