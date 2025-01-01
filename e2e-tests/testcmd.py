@@ -164,7 +164,7 @@ class TestCmd(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             _file = "gossos"
             cmd = (
-                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --vad_filter True --vad_onset 0.5"
+                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --vad_filter True --vad_threshold 0.5"
                 f" --vad_min_speech_duration_ms 2000 --vad_max_speech_duration_s 50000 --output_dir {directory}"
             )
             os.system(cmd)
