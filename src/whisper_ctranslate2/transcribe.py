@@ -141,7 +141,7 @@ class Transcribe:
         verbose: bool,
         live: bool,
         options: TranscriptionOptions,
-        diarize_model: Diarization | None = None,
+        diarize_model,
         diarization_output = None,
         speaker_name = None,
     ):
