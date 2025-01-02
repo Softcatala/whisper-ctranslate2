@@ -11,15 +11,14 @@ import numpy as np
 from .commandline import CommandLine
 from .languages import from_language_to_iso_code
 from .live import Live
-from .diarization import Diarization
 from .transcribe import Transcribe, TranscriptionOptions
 from .writers import get_writer
 
 
 def get_diarization(
-    audio: str,
-    diarize_model: Diarization,
-    verbose: bool
+    audio,
+    diarize_model,
+    verbose
 ):
     diarization_output = {}
     for audio_path in audio:
