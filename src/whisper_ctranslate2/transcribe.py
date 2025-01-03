@@ -7,8 +7,6 @@ import tqdm
 
 from faster_whisper import BatchedInferencePipeline, WhisperModel
 
-from .diarization import Diarization
-
 from .languages import LANGUAGES
 from .writers import format_timestamp
 import json
