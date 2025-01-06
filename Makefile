@@ -1,4 +1,11 @@
-.PHONY: run install-dependencies-e2e-tests run-e2e-tests run-tests publish-release dev
+.PHONY: run install-dependencies-e2e-tests run-e2e-tests run-tests publish-release dev docker-build docker-run
+
+docker-build:
+	docker build  -t whisper-ctranslate2 . -f Dockerfile
+	docker image ls | grep whisper-ctranslate2
+
+docker-run:
+	docker run --gpus "device=0" -v "$(shell pwd)":/srv/files/ -it --rm whisper-ctranslate2 /srv/files/e2e-tests/gossos.mp3 --output_dir /srv/files/
 
 run:
 	python3 setup.py sdist bdist_wheel

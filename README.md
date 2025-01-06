@@ -28,6 +28,26 @@ Alternatively, if you are interested in the latest development (non-stable) vers
 
     pip install git+https://github.com/Softcatala/whisper-ctranslate2
 
+# Using prebuild Docker image
+
+You can use build docker image. First pull the image:
+
+    docker pull ghcr.io/softcatala/whisper-ctranslate2:latest
+
+The Docker image includes the small, medium" and large-v2.
+
+To run it:
+
+    docker run --gpus "device=0" \
+        -v "$(pwd)":/srv/files/ \
+        -it ghcr.io/softcatala/whisper-ctranslate2:latest \
+        /srv/files/e2e-tests/gossos.mp3 \
+        --output_dir /srv/files/
+    
+Notes:
+* _--gpus "device=0"_ gives access to the GPU. If you do not have a GPU, remove this.
+* _"$(pwd)":/srv/files/_ maps your current directory to /srv/files/ inside the container
+
 # CPU and GPU support
 
 GPU and CPU support are provided by [CTranslate2](https://github.com/OpenNMT/CTranslate2/).
