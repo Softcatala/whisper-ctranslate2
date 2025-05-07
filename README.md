@@ -48,9 +48,11 @@ Notes:
 * _--gpus "device=0"_ gives access to the GPU. If you do not have a GPU, remove this.
 * _"$(pwd)":/srv/files/_ maps your current directory to /srv/files/ inside the container
 
+If you always need to use a model that is not in the image, you can create a derived Docker image with the model preloaded or use Docker volumes to persist and share the model files.
+
 # CPU and GPU support
 
-GPU and CPU support are provided by [CTranslate2](https://github.com/OpenNMT/CTranslate2/).
+GPU and CPU support is provided by [CTranslate2](https://github.com/OpenNMT/CTranslate2/).
 
 It has compatibility with x86-64 and AArch64/ARM64 CPU and integrates multiple backends that are optimized for these platforms: Intel MKL, oneDNN, OpenBLAS, Ruy, and Apple Accelerate.
 
@@ -94,7 +96,7 @@ Batched inference transcribes each segment in-dependently which can provide an a
     
 You can additionally use the --batch_size to specify the maximum number of parallel requests to model for decoding.
 
-Batched inference uses Voice Activity Detection (VAD) filter and ignores the following paramters: compression_ratio_threshold, logprob_threshold,
+Batched inference uses Voice Activity Detection (VAD) filter and ignores the following parameters: compression_ratio_threshold, logprob_threshold,
 no_speech_threshold, condition_on_previous_text, prompt_reset_on_temperature, prefix, hallucination_silence_threshold.
 
 ## Quantization
@@ -105,7 +107,7 @@ no_speech_threshold, condition_on_previous_text, prompt_reset_on_temperature, pr
 
 ## Loading the model from a directory
 
-`--model_directory` option allows to specify the directory from which you want to load a CTranslate2 Whisper model. For example, if you want to load your own quantified [Whisper model](https://opennmt.net/CTranslate2/conversion.html) version or using your own [Whisper fine-tunned](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event) version. The model must be in CTranslate2 format.
+`--model_directory` option allows to specify the directory from which you want to load a CTranslate2 Whisper model. For example, if you want to load your own quantified [Whisper model](https://opennmt.net/CTranslate2/conversion.html) version or using your own [Whisper fine-tuned](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event) version. The model must be in CTranslate2 format.
 
 ## Using Voice Activity Detection (VAD) filter
 
