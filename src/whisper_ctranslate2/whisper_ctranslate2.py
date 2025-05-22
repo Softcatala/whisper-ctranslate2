@@ -151,7 +151,7 @@ def main():
         return
 
     if batch_size and not batched:
-        sys.stderr.write("--batched_size can only be used if-- batched is True")
+        sys.stderr.write("--batched_size can only be used if --batched is True")
         return
 
     if args["max_line_count"] and not args["max_line_width"]:
