@@ -111,7 +111,7 @@ def main():
     cache_directory: str = args.pop("model_dir")
     device_index: Union[int, List[int]] = args.pop("device_index")
     live_transcribe: bool = args.pop("live_transcribe")
-    audio: str = args.pop("audio")
+    audio: List[str] = args.pop("audio")
     local_files_only: bool = args.pop("local_files_only")
     live_volume_threshold: float = args.pop("live_volume_threshold")
     live_input_device: int = args.pop("live_input_device")
