@@ -9,8 +9,9 @@ README = (HERE / "README.md").read_text()
 
 
 def read_version(fname="src/whisper_ctranslate2/version.py"):
-    exec(compile(open(fname, encoding="utf-8").read(), fname, "exec"))
-    return locals()["__version__"]
+    version = {}
+    exec(compile(open(fname).read(), fname, "exec"), version)
+    return version["__version__"]
 
 
 setup(
