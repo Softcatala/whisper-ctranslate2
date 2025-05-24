@@ -45,7 +45,7 @@ setup(
         )
     ],
     extras_require={
-        "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2"],
+        "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2", "twine"],
     },
     entry_points={
         "console_scripts": [
