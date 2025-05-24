@@ -9,6 +9,7 @@ from typing import List, Union
 import numpy as np
 
 from .commandline import CommandLine
+from .exit_code import ExitCode
 from .languages import from_language_to_iso_code
 from .live import Live
 from .transcribe import Transcribe, TranscriptionOptions
@@ -216,17 +217,21 @@ def main():
 
         return
 
-    transcribe = Transcribe(
-        model_dir,
-        device,
-        device_index,
-        compute_type,
-        threads,
-        cache_directory,
-        local_files_only,
-        batched,
-        batch_size,
-    )
+    try:
+        transcribe = Transcribe(
+            model_dir,
+            device,
+            device_index,
+            compute_type,
+            threads,
+            cache_directory,
+            local_files_only,
+            batched,
+            batch_size,
+        )
+    except RuntimeError as e:
+        print(f"error: {e}")
+        exit(ExitCode.RUNTIME_ERROR)
 
     diarization = len(hf_token) > 0
 
