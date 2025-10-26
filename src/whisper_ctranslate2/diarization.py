@@ -6,13 +6,15 @@ from faster_whisper.audio import decode_audio
 
 try:
     import torch
-except Exception:
-    print("Unable to import torch library. Make sure that it's installed")
+except Exception as e:
+    print(f"Unable to import torch library. Make sure that it's installed. Error: {e}")
 
 try:
     from pyannote.audio import Pipeline
-except Exception:
-    print("Unable to import pyannote.audio library. Make sure that it's installed")
+except Exception as e:
+    print(
+        f"Unable to import pyannote.audio library. Make sure that it's installed. Error: {e}"
+    )
 
 
 class Diarization:
