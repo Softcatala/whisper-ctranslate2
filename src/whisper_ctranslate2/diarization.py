@@ -35,7 +35,7 @@ class Diarization:
         model_name = "pyannote/speaker-diarization-3.1"
         device = torch.device(self.device)
         model_handle = Pipeline.from_pretrained(
-            model_name, use_auth_token=self.use_auth_token
+            model_name, token=self.use_auth_token
         )
         if model_handle is None:
             raise ValueError(
