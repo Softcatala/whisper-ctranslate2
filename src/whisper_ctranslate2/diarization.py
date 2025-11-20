@@ -68,7 +68,6 @@ class Diarization:
         )
 
     def diarize_chunks_to_records(self, segments):
-        segments = self.model(audio_data)
         if hasattr(segments, "speaker_diarization"):
             annotation = segments.speaker_diarization  # 4.x Pyannote.audio API
         else:
