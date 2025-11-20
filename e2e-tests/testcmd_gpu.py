@@ -61,7 +61,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option} --output_dir {directory}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-small-transcribe/", option
@@ -79,7 +79,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option} --output_dir {directory}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}",
@@ -94,7 +94,7 @@ class TestCmd(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "gossos"
-            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir {directory}"
+            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir {directory}"
             os.system(cmd)
             self._check_ref_small(
                 f"{directory}",
@@ -118,7 +118,7 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --task translate --model medium --compute_type float32 {option} --output_dir {directory}"
+                cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --task translate --model medium --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
                     f"{directory}", _file, "e2e-tests/ref-medium-translate/", option
@@ -133,7 +133,7 @@ class TestCmd(unittest.TestCase):
             _file2 = "temp_file"
             copied_file = os.path.join(directory, f"{_file2}.mp3")
             shutil.copyfile(f"{path}/{_file}.mp3", copied_file)
-            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 {copied_file} --device cpu --compute_type float32 --output_dir {directory}"
+            cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 {copied_file} --device cuda --compute_type float32 --output_dir {directory}"
             os.system(cmd)
             self._check_ref_small(
                 f"{directory}", _file, "e2e-tests/ref-small-transcribe/", ""
@@ -151,7 +151,7 @@ class TestCmd(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "dosparlants"
-            cmd = f"whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --temperature_increment_on_fallback None  --model medium --compute_type float32 --output_dir {directory} --hf_token {hf_token}"
+            cmd = f"whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --temperature_increment_on_fallback None  --model medium --compute_type float32 --output_dir {directory} --hf_token {hf_token}"
             os.system(cmd)
             self._check_ref_small(
                 f"{directory}", _file, "e2e-tests/ref-medium-diarization/", ""
@@ -164,7 +164,7 @@ class TestCmd(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             _file = "gossos"
             cmd = (
-                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --vad_filter True"
+                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cuda --compute_type float32 --vad_filter True"
                 f" --vad_min_speech_duration_ms 2000 --vad_max_speech_duration_s 50000 --output_dir {directory}"
             )
             os.system(cmd)
