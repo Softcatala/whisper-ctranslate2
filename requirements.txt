@@ -3,4 +3,5 @@ faster-whisper>=1.1.0
 ctranslate2
 tqdm
 sounddevice
-numpy
+torch
+pyannote-audio
