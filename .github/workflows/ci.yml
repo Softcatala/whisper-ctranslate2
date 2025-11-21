@@ -49,6 +49,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Free disk space
+        shell: bash
+        run: |
+          set -eux
+          df -h
+          # Biggest low-risk win on hosted runners:
+          sudo rm -rf /opt/hostedtoolcache
+          # Optional extra cleanup:
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/.ghcup
+          sudo apt-get clean
+          sudo rm -rf /var/lib/apt/lists/*
+          df -h
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
