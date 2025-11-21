@@ -52,7 +52,7 @@ jobs:
       - name: Install Ubuntu dependency
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          sudo apt-get install libportaudio2 -y
+          sudo apt-get install libportaudio2 ffmpeg -y
 
       - name: Install module
         run: |
@@ -66,6 +66,7 @@ jobs:
       - name: Run e2e tests
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/usr/local/lib/python3.12/dist-packages/nvidia/cudnn/lib
       
         run: |
           make install-dependencies-e2e-tests
