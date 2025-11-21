@@ -19,6 +19,7 @@ MODEL_NAMES = [
     "turbo",
     "distil-large-v2",
     "distil-large-v3",
+    "distil-large-v3.5",
     "distil-medium.en",
     "distil-small.en",
 ]
@@ -371,6 +372,13 @@ class CommandLine:
             help="When using Batched transcription the maximum number of parallel requests to model for decoding.",
         )
 
+        algorithm_args.add_argument(
+            "--multilingual",
+            type=CommandLine._str2bool,
+            default=False,
+            help="Perform language detection on every segment",
+        )
+
         vad_args = parser.add_argument_group("VAD filter arguments")
 
         vad_args.add_argument(
@@ -381,10 +389,10 @@ class CommandLine:
         )
 
         vad_args.add_argument(
-            "--vad_onset",
+            "--vad_threshold",
             type=float,
             default=None,
-            help="when `vad_filter` is enabled, probabilities above this value are considered as speech. This parameter was called `vad_threshold` before",
+            help="when `vad_filter` is enabled, probabilities above this value are considered as speech.",
         )
 
         vad_args.add_argument(
@@ -430,6 +438,13 @@ class CommandLine:
             help="Name to use to identify the speaker (e.g. SPEAKER_00).",
         )
 
+        diarization_args.add_argument(
+            "--speaker_num",
+            type=int,
+            default=2,
+            help="Number of speakers to use for diarization.",
+        )
+
         live_args = parser.add_argument_group("Live transcribe options")
 
         live_args.add_argument(
@@ -451,6 +466,13 @@ class CommandLine:
             type=int,
             default=None,
             help="Set live stream input device ID (see python -m sounddevice for a list)",
+        )
+
+        live_args.add_argument(
+            "--live_input_device_sample_rate",
+            type=int,
+            default=16000,
+            help="Set live sample rate of input device",
         )
 
         return parser.parse_args().__dict__

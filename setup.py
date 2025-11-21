@@ -9,8 +9,9 @@ README = (HERE / "README.md").read_text()
 
 
 def read_version(fname="src/whisper_ctranslate2/version.py"):
-    exec(compile(open(fname, encoding="utf-8").read(), fname, "exec"))
-    return locals()["__version__"]
+    version = {}
+    exec(compile(open(fname).read(), fname, "exec"), version)
+    return version["__version__"]
 
 with open(os.path.join(os.path.dirname(__file__), "requirements.txt")) as f:
     requirements = f.read().splitlines()
@@ -35,13 +36,14 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     packages=["src/whisper_ctranslate2"],
     include_package_data=True,
     install_requires=requirements,
     extras_require={
-        "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2"],
+        "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2", "twine"],
     },
     entry_points={
         "console_scripts": [

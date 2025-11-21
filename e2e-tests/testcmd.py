@@ -147,7 +147,7 @@ class TestCmd(unittest.TestCase):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)
         hf_token = os.environ.get("HF_TOKEN")
-        self.assertNotEqual(None, hf_token)
+        self.assertTrue(hf_token, "HF_TOKEN should not be None or an empty string")
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "dosparlants"
@@ -164,7 +164,7 @@ class TestCmd(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             _file = "gossos"
             cmd = (
-                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --vad_filter True"
+                f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 --vad_filter True --vad_threshold 0.5"
                 f" --vad_min_speech_duration_ms 2000 --vad_max_speech_duration_s 50000 --output_dir {directory}"
             )
             os.system(cmd)

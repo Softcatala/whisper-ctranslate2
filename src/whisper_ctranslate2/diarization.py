@@ -6,13 +6,15 @@ from faster_whisper.audio import decode_audio
 
 try:
     import torch
-except Exception:
-    print("Unable to import torch library. Make sure that it's installed")
+except Exception as e:
+    print(f"Unable to import torch library. Make sure that it's installed. Error: {e}")
 
 try:
     from pyannote.audio import Pipeline
-except Exception:
-    print("Unable to import pyannote.audio library. Make sure that it's installed")
+except Exception as e:
+    print(
+        f"Unable to import pyannote.audio library. Make sure that it's installed. Error: {e}"
+    )
 
 
 class Diarization:
@@ -20,9 +22,11 @@ class Diarization:
         self,
         use_auth_token=None,
         device: str = "cpu",
+        num_speakers=2,
     ):
         self.device = device
         self.use_auth_token = use_auth_token
+        self.num_speakers = num_speakers
 
     def set_threads(self, threads):
         torch.set_num_threads(threads)
@@ -39,7 +43,7 @@ class Diarization:
         )
         if model_handle is None:
             raise ValueError(
-                f"The token Hugging Face token '{self.use_auth_token}' for diarization is not valid or you did not accept the EULA"
+                f"The token Hugging Face token '{self.use_auth_token}' for diarization is not valid or you did not accept the EULAs for the necessary models. See https://github.com/Softcatala/whisper-ctranslate2#diarization-speaker-identification"
             )
 
         self.model = model_handle.to(device)
@@ -51,7 +55,7 @@ class Diarization:
             "waveform": torch.from_numpy(audio[None, :]),
             "sample_rate": 16000,
         }
-        segments = self.model(audio_data)
+        segments = self.model(audio_data, num_speakers=self.num_speakers)
         return segments
 
     def assign_speakers_to_segments(

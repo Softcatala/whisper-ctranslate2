@@ -49,11 +49,12 @@ class TranscriptionOptions(NamedTuple):
     append_punctuations: str
     hallucination_silence_threshold: Optional[float]
     vad_filter: bool
-    vad_onset: Optional[float]
+    vad_threshold: Optional[float]
     vad_min_speech_duration_ms: Optional[int]
     vad_max_speech_duration_s: Optional[int]
     vad_min_silence_duration_ms: Optional[int]
     print_segment_as_json: Optional[bool]
+    multilingual: bool
 
 
 class Transcribe:
@@ -85,8 +86,8 @@ class Transcribe:
     def _get_vad_parameters_dictionary(self, options):
         vad_parameters = {}
 
-        if options.vad_onset:
-            vad_parameters["onset"] = options.vad_onset
+        if options.vad_threshold:
+            vad_parameters["threshold"] = options.vad_threshold
 
         if options.vad_min_speech_duration_ms:
             vad_parameters["min_speech_duration_ms"] = (
@@ -184,6 +185,7 @@ class Transcribe:
             vad_filter=vad,
             vad_parameters=vad_parameters,
             **batch_size,
+            multilingual=options.multilingual,
         )
 
         language_name = LANGUAGES[info.language].title()
@@ -195,7 +197,7 @@ class Transcribe:
 
         list_segments = []
         last_pos = 0
-        accumated_inc = 0
+        accumulated_inc = 0
         all_text = ""
         diarize_df = None
         if diarize_model:
@@ -237,10 +239,10 @@ class Transcribe:
                 duration = segment.end - last_pos
                 increment = (
                     duration
-                    if accumated_inc + duration < info.duration
-                    else info.duration - accumated_inc
+                    if accumulated_inc + duration < info.duration
+                    else info.duration - accumulated_inc
                 )
-                accumated_inc += increment
+                accumulated_inc += increment
                 last_pos = segment.end
                 pbar.update(increment)
 

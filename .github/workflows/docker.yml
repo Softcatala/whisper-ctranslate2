@@ -1,0 +1,39 @@
+name: Publish to GitHub Container Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to ghcr
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Build Docker image
+      run: docker build -t ghcr.io/softcatala/whisper-ctranslate2:latest .
+
+    - name: Use Docker image
+      run: docker run -v "$(pwd)":/srv/files/ ghcr.io/softcatala/whisper-ctranslate2:latest /srv/files/e2e-tests/gossos.mp3
+
+    - name: Push Docker image
+      run: docker push ghcr.io/softcatala/whisper-ctranslate2:latest
+
+    # These are untagged images left behind in the Docker public registry      
+    - name: Delete old images
+      run: |
+       gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+       gh api -X GET /user/packages/container/whisper-ctranslate2/versions \
+        | jq -r '.[] | select(.metadata.container.tags | index("latest") | not) | .id' \
+        | xargs -I {} gh api -X DELETE /user/packages/container/whisper-ctranslate2/versions/{}
+
