@@ -82,44 +82,53 @@ jobs:
           pip install wheel
           pip install -e .[dev]
 
-      - name: Locate cuDNN and set LD_LIBRARY_PATH
+      - name: Configure GPU libs or force CPU
         shell: bash
         run: |
           set -euo pipefail
 
-          CUDNN_LIB=""
+          # Detect whether a CUDA driver/GPU is actually present
+          if command -v nvidia-smi >/dev/null 2>&1; then
+            echo "GPU runner detected (nvidia-smi present). Looking for cuDNN..."
 
-          # 1) Try NVIDIA pip package layout
-          CUDNN_LIB=$(python - <<'PY' || true
-          import importlib.util, pathlib
-          for mod in ("nvidia.cudnn", "nvidia.cudnn_jit"):
-              spec = importlib.util.find_spec(mod)
-              if spec and spec.origin:
-                  p = pathlib.Path(spec.origin).resolve().parent / "lib"
-                  if p.exists():
-                      print(p)
-                      raise SystemExit
-          PY
-                    )
+            CUDNN_LIB=""
 
-          # 2) Fallback: linker cache
-          if [ -z "$CUDNN_LIB" ]; then
-            CUDNN_LIB=$(ldconfig -p | awk '/libcudnn.*so/{print $NF; exit}' | xargs -r dirname || true)
+            # 1) Try NVIDIA pip package layout
+            CUDNN_LIB=$(python - <<'PY' || true
+            import importlib.util, pathlib
+            for mod in ("nvidia.cudnn", "nvidia.cudnn_jit"):
+                spec = importlib.util.find_spec(mod)
+                if spec and spec.origin:
+                    p = pathlib.Path(spec.origin).resolve().parent / "lib"
+                    if p.exists():
+                        print(p)
+                        raise SystemExit
+            PY
+                  )
+
+            # 2) Fallback: linker cache
+            if [ -z "$CUDNN_LIB" ]; then
+              CUDNN_LIB=$(ldconfig -p | awk '/libcudnn.*so/{print $NF; exit}' | xargs -r dirname || true)
+            fi
+
+            # 3) Fallback: brute find in common roots
+            if [ -z "$CUDNN_LIB" ]; then
+              CUDNN_LIB=$(sudo find /usr /opt /home/runner -type f -name 'libcudnn*.so*' 2>/dev/null \
+                | head -n1 | xargs -r dirname || true)
+            fi
+
+            if [ -z "$CUDNN_LIB" ]; then
+              echo "cuDNN not found even though GPU runner detected."
+              exit 1
+            fi
+
+            echo "Found cuDNN at: $CUDNN_LIB"
+            echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDNN_LIB" >> "$GITHUB_ENV"
+
+          else
+            echo "No GPU/driver detected. Forcing CPU mode."
+            echo "CUDA_VISIBLE_DEVICES=" >> "$GITHUB_ENV"
           fi
-
-          # 3) Fallback: brute find in common roots
-          if [ -z "$CUDNN_LIB" ]; then
-            CUDNN_LIB=$(sudo find /usr /opt /home/runner -type f -name 'libcudnn*.so*' 2>/dev/null \
-              | head -n1 | xargs -r dirname || true)
-          fi
-
-          if [ -z "$CUDNN_LIB" ]; then
-            echo "cuDNN not found on runner"; exit 1
-          fi
-
-          echo "Found cuDNN at: $CUDNN_LIB"
-          echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDNN_LIB" >> "$GITHUB_ENV"
-
       # TODO: Fix tests and enable them again
       # - name: Run tests
       #   run: make run-tests
