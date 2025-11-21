@@ -88,23 +88,21 @@ jobs:
           set -euo pipefail
 
           # Detect whether a CUDA driver/GPU is actually present
-          if command -v nvidia-smi >/dev/null 2>&1; then
-            echo "GPU runner detected (nvidia-smi present). Looking for cuDNN..."
+              if command -v nvidia-smi >/dev/null 2>&1; then
+                echo "GPU runner detected (nvidia-smi present). Looking for cuDNN..."
 
-            CUDNN_LIB=""
-
-            # 1) Try NVIDIA pip package layout
-            CUDNN_LIB=$(python - <<'PY' || true
-            import importlib.util, pathlib
-            for mod in ("nvidia.cudnn", "nvidia.cudnn_jit"):
-                spec = importlib.util.find_spec(mod)
-                if spec and spec.origin:
-                    p = pathlib.Path(spec.origin).resolve().parent / "lib"
-                    if p.exists():
-                        print(p)
-                        raise SystemExit
-            PY
-                  )
+                CUDNN_LIB=$(
+                  python -c "import importlib.util, pathlib, sys
+          mods=('nvidia.cudnn','nvidia.cudnn_jit')
+          for mod in mods:
+              spec=importlib.util.find_spec(mod)
+              if spec and spec.origin:
+                  p=pathlib.Path(spec.origin).resolve().parent/'lib'
+                  if p.exists():
+                      print(p); sys.exit(0)
+          sys.exit(1)
+          " 2>/dev/null || true
+                )
 
             # 2) Fallback: linker cache
             if [ -z "$CUDNN_LIB" ]; then
