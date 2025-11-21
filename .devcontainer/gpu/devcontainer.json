@@ -4,7 +4,7 @@
   
 	"build": {
 	  "dockerfile": "DockerDevImage",  // relative to .devcontainer/
-	  "context": ".."              // repo root -> sees requirements.txt
+	  "context": "../.."              // repo root -> sees requirements.txt
 	},
   
 	"runArgs": [
