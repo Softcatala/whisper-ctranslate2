@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.whisper_ctranslate2.whisper_ctranslate2",
+            "args": [
+                "--model", "tiny",
+                "--segments_as_json", "true",
+                "--output_dir", "output_debug",
+                "--task", "transcribe",
+                "--language", "en",
+                "--word_timestamps", "true",
+                "--vad_filter", "true",
+                "${input:media_file}"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug with diarization",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.whisper_ctranslate2.whisper_ctranslate2",
+            "args": [
+                "--model", "tiny",
+                "--segments_as_json", "true",
+                "--output_dir", "output_debug",
+                "--task", "transcribe",
+                "--language", "en",
+                "--word_timestamps", "true",
+                "--vad_filter", "true",
+                "--hf_token", "${input:hf_token}",
+                "${input:media_file}"
+            ],
+        }
+
+    ],
+    "inputs": [
+        {
+            "id": "hf_token",
+            "type": "promptString",
+            "description": "Hugging Face API token"
+        },
+        {
+            "id": "media_file",
+            "type": "promptString",
+            "description": "Media file to process",
+            "default": "media/yes_or_no.mp4"
+        }
+    ]
+}

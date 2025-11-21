@@ -1,0 +1,14 @@
+[SPEAKER_01]: Hola, bon dia, com et dius?
+[SPEAKER_00]: Hola, bon dia, em dic Carme.
+[SPEAKER_01]: D'on ets, Carme?
+[SPEAKER_00]: Doncs jo soc de l'Explorat Francolí,
+[SPEAKER_00]: que és un poble de la província de Tarragona,
+[SPEAKER_00]: que està molt a prop del monestir de Poblet.
+[SPEAKER_01]: I quan és l'últim cop que vas anar-hi?
+[SPEAKER_00]: Doncs l'últim cop que hi he anat ha sigut avui.
+[SPEAKER_01]: I quin temps feia avui?
+[SPEAKER_00]: Avui feia sol i un vent molt fred.
+[SPEAKER_01]: T'he pensat tornar-hi aviat?
+[SPEAKER_00]: De moment, no.
+[SPEAKER_00]: Però aviat és la fira i potser hi anem.
+[SPEAKER_01]: D'acord, moltes gràcies.

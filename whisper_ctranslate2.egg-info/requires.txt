@@ -1,0 +1,13 @@
+numpy
+faster-whisper>=1.1.0
+ctranslate2
+tqdm
+sounddevice
+torch
+pyannote-audio
+
+[dev]
+flake8==7.*
+black==24.*
+isort==5.13
+nose2

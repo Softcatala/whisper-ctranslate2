@@ -1,0 +1,22 @@
+{
+    "name": "Python 3.12 Dev (CPU)",
+  
+    "build": {
+      "dockerfile": "../DockerDevImage",
+      "context": "../.."
+    },
+  
+    "features": {
+      "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+  
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "ms-python.vscode-pylance"
+        ]
+      }
+    }
+  }
+  

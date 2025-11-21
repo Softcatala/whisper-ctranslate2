@@ -1,0 +1,56 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "install dependencies",
+        "type": "shell",
+        "command": "pip",
+        "args": [
+          "install",
+          "."
+        ],
+      },
+      {
+        "label": "install build package",
+        "type": "shell",
+        "dependsOn": "install dependencies",
+        "command": "python",
+        "args": [
+          "-m",
+          "pip",
+          "install",
+          "build"
+        ],
+        "problemMatcher": [
+          "$python"
+        ]
+      },
+      {
+        "label": "build",
+        "type": "shell",
+        "dependsOn": "install build package",
+        "command": "python",
+        "args": [
+          "-m",
+          "build"
+        ],
+        "problemMatcher": [
+          "$python"
+        ]
+      },
+      {
+        "label": "install diarization dependencies",
+        "type": "shell",
+        "command": "pip",
+        "args": [
+          "install",
+          "pyannote.audio"
+        ],
+        "problemMatcher": [
+          "$python"
+        ]
+      }
+    ]
+  }

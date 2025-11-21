@@ -1,0 +1,2 @@
+[console_scripts]
+whisper-ctranslate2 = src.whisper_ctranslate2.whisper_ctranslate2:main
