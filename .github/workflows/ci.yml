@@ -76,16 +76,16 @@ jobs:
 
           # 1) Try NVIDIA pip package layout
           CUDNN_LIB=$(python - <<'PY' || true
-import importlib.util, pathlib
-for mod in ("nvidia.cudnn", "nvidia.cudnn_jit"):
-    spec = importlib.util.find_spec(mod)
-    if spec and spec.origin:
-        p = pathlib.Path(spec.origin).resolve().parent / "lib"
-        if p.exists():
-            print(p)
-            raise SystemExit
-PY
-          )
+          import importlib.util, pathlib
+          for mod in ("nvidia.cudnn", "nvidia.cudnn_jit"):
+              spec = importlib.util.find_spec(mod)
+              if spec and spec.origin:
+                  p = pathlib.Path(spec.origin).resolve().parent / "lib"
+                  if p.exists():
+                      print(p)
+                      raise SystemExit
+          PY
+                    )
 
           # 2) Fallback: linker cache
           if [ -z "$CUDNN_LIB" ]; then
