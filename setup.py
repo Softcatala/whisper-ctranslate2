@@ -1,6 +1,6 @@
 import pathlib
 from setuptools import setup
-import pkg_resources
+#import pkg_resources
 import os
 
 HERE = pathlib.Path(__file__).parent
@@ -25,20 +25,20 @@ setup(
     url="https://github.com/Softcatala/whisper-ctranslate2",
     author="Jordi Mas",
     author_email="jmas@softcatala.org",
-    license="MIT",
-    classifiers=[
-        "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11",
-        "Programming Language :: Python :: 3.12",
-        "Programming Language :: Python :: 3.13",
-        "Programming Language :: Python :: 3.14",
-        "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    ],
+    #license="MIT",
+    # classifiers=[
+    #     "License :: OSI Approved :: MIT License",
+    #     "Programming Language :: Python :: 3.6",
+    #     "Programming Language :: Python :: 3.7",
+    #     "Programming Language :: Python :: 3.8",
+    #     "Programming Language :: Python :: 3.9",
+    #     "Programming Language :: Python :: 3.10",
+    #     "Programming Language :: Python :: 3.11",
+    #     "Programming Language :: Python :: 3.12",
+    #     "Programming Language :: Python :: 3.13",
+    #     "Programming Language :: Python :: 3.14",
+    #     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    # ],
     packages=["src/whisper_ctranslate2"],
     include_package_data=True,
     install_requires=requirements,
@@ -47,7 +47,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "whisper-ctranslate2=src.whisper_ctranslate2.whisper_ctranslate2:main",
+            "whisper-ctranslate2=whisper_ctranslate2.whisper_ctranslate2:main",
         ]
     },
 )
