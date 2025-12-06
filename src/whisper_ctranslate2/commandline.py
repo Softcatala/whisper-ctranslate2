@@ -108,7 +108,7 @@ class CommandLine:
             "-p",
             type=CommandLine._str2bool,
             default=False,
-            help="produce json in a human readable format",
+            help="produce JSON in a human readable format",
         )
 
         outputs_args.add_argument(
@@ -129,20 +129,20 @@ class CommandLine:
             "--highlight_words",
             type=CommandLine._str2bool,
             default=False,
-            help="underline each word as it is spoken in srt and vtt output formats (requires --word_timestamps True)",
+            help="underline each word as it is spoken in SRT and VTT output formats (requires --word_timestamps True)",
         )
 
         outputs_args.add_argument(
             "--max_line_width",
             type=CommandLine._optional_int,
             default=None,
-            help="the maximum number of characters in a line before breaking the line in srt and vtt output formats (requires --word_timestamps True)",
+            help="the maximum number of characters in a line before breaking the line in SRT and VTT output formats (requires --word_timestamps True)",
         )
         outputs_args.add_argument(
             "--max_line_count",
             type=CommandLine._optional_int,
             default=None,
-            help="the maximum number of lines in a segment in srt and vtt output formats (requires --word_timestamps True)",
+            help="the maximum number of lines in a segment in SRT and VTT output formats (requires --word_timestamps True)",
         )
         outputs_args.add_argument(
             "--max_words_per_line",
@@ -355,14 +355,14 @@ class CommandLine:
             "--batched",
             type=CommandLine._str2bool,
             default=False,
-            help="Uses Batched transcription which can provide an additional 2x-4x speed increase",
+            help="Uses batched transcription which can provide an additional 2x-4x speed increase",
         )
 
         algorithm_args.add_argument(
             "--batch_size",
             type=CommandLine._optional_int,
             default=None,
-            help="When using Batched transcription the maximum number of parallel requests to model for decoding.",
+            help="When using batched transcription the maximum number of parallel requests to model for decoding.",
         )
 
         algorithm_args.add_argument(
@@ -399,7 +399,7 @@ class CommandLine:
             "--vad_max_speech_duration_s",
             type=int,
             default=None,
-            help="when `vad_filter` is enabled, Maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.",
+            help="when `vad_filter` is enabled, maximum duration of speech chunks in seconds. Longer will be split at the timestamp of the last silence.",
         )
 
         vad_args.add_argument(
