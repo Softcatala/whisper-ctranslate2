@@ -348,7 +348,7 @@ class CommandLine:
             "--hotwords",
             type=str,
             default=None,
-            help="Hotwords/hint phrases to the model. Useful for names you want the model to priotize",
+            help="Hotwords/hint phrases to the model. Useful for names you want the model to prioritize",
         )
 
         algorithm_args.add_argument(
