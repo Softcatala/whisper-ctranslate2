@@ -241,7 +241,7 @@ def main():
 
         diarization_device = "cpu" if device == "auto" else device
         diarize_model = Diarization(
-            use_auth_token=hf_token, device=diarization_device, num_speakers=speaker_num
+            token=hf_token, device=diarization_device, num_speakers=speaker_num
         )
         if threads > 0:
             diarize_model.set_threads(threads)

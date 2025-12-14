@@ -152,10 +152,9 @@ There is experimental diarization support using [`pyannote.audio`](https://githu
 
 To enable diarization you need to follow these steps:
 
-1. Install [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) with `pip install "pyannote.audio<4.0.0" "torchaudio<2.9.0" "huggingface_hub==0.36.0"`
-2. Accept [`pyannote/segmentation-3.0`](https://hf.co/pyannote/segmentation-3.0) user conditions
-3. Accept [`pyannote/speaker-diarization-3.1`](https://hf.co/pyannote/speaker-diarization-3.1) user conditions
-4. Create an access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
+1. Install [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) with `pip install "pyannote.audio==4.0"`
+2. Accept [pyannote/speaker-diarization-community-1](Accept pyannote/speaker-diarization-community-1 user conditions) user conditions
+3. Create an access token at [`hf.co/settings/tokens`](https://hf.co/settings/tokens).
 
 And then execute passing the HuggingFace API token as parameter to enable diarization:
 

@@ -20,12 +20,12 @@ except Exception as e:
 class Diarization:
     def __init__(
         self,
-        use_auth_token=None,
+        token=None,
         device: str = "cpu",
         num_speakers=2,
     ):
         self.device = device
-        self.use_auth_token = use_auth_token
+        self.token = token
         self.num_speakers = num_speakers
 
     def set_threads(self, threads):
@@ -36,14 +36,12 @@ class Diarization:
         torch.cuda.empty_cache()
 
     def _load_model(self):
-        model_name = "pyannote/speaker-diarization-3.1"
+        model_name = "pyannote/speaker-diarization-community-1"
         device = torch.device(self.device)
-        model_handle = Pipeline.from_pretrained(
-            model_name, use_auth_token=self.use_auth_token
-        )
+        model_handle = Pipeline.from_pretrained(model_name, token=self.token)
         if model_handle is None:
             raise ValueError(
-                f"The token Hugging Face token '{self.use_auth_token}' for diarization is not valid or you did not accept the EULAs for the necessary models. See https://github.com/Softcatala/whisper-ctranslate2#diarization-speaker-identification"
+                f"The token Hugging Face token '{self.token}' for diarization is not valid or you did not accept the EULAs for the necessary models. See https://github.com/Softcatala/whisper-ctranslate2#diarization-speaker-identification"
             )
 
         self.model = model_handle.to(device)
@@ -59,7 +57,10 @@ class Diarization:
         return segments
 
     def assign_speakers_to_segments(self, segments, transcript_result, speaker_name):
-        diarize_data = list(segments.itertracks(yield_label=True))
+        diarize_data = []
+        for turn, speaker in segments.speaker_diarization:
+            diarize_data.append((turn, None, speaker))
+
         return self._do_assign_speakers_to_segments(
             diarize_data, transcript_result, speaker_name
         )

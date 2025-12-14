@@ -41,23 +41,32 @@ jobs:
     environment: CI/CD
     strategy:
       matrix:
-         os: [ ubuntu-22.04, windows-latest ]
-         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        os: [ ubuntu-22.04, windows-latest ]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Install Ubuntu dependency
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          sudo apt-get install libportaudio2 -y
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Windows dependency
+        if: startsWith(matrix.os, 'windows')
+        run: |
+            choco install ffmpeg -y
 
       - name: Install module
         run: |
-          pip install --no-cache-dir wheel
-          pip install --no-cache-dir -e .[dev]
+         pip install --no-cache-dir -e .[dev]
 
       - name: Run tests
         run: |
