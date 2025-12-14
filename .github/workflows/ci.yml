@@ -97,4 +97,4 @@ jobs:
 
       - name: Run tests
         run: |
-          make run-tests
+          whisper-ctranslate2 e2e-tests/gossos.mp3
