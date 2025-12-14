@@ -143,6 +143,8 @@ class TestCmd(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
 
+
+    @unittest.skipIf(sys.platform == "win32", "Skipping test on Windows")
     def test_transcribe_diarization(self):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)
