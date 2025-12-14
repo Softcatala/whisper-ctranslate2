@@ -3,7 +3,7 @@ import os
 import shutil
 import tempfile
 import unittest
-
+import sys
 
 class TestCmd(unittest.TestCase):
     def _remove_fields_from_json(self, json_file):
