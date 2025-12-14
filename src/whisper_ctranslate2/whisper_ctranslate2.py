@@ -100,7 +100,8 @@ def main():
     args = CommandLine().read_command_line()
     output_dir: str = args.pop("output_dir")
     output_format: str = args.pop("output_format")
-    os.makedirs(output_dir, exist_ok=True)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
     model: str = args.pop("model")
     threads: int = args.pop("threads")
     language: str = args.pop("language")
@@ -187,7 +188,8 @@ def main():
             "Print colors requires word-level time stamps. Generated files in output directory will have word-level timestamps"
         )
 
-    output_dir = os.path.abspath(output_dir)
+    if output_dir:
+        output_dir = os.path.abspath(output_dir)
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
@@ -290,7 +292,10 @@ def main():
             continue
 
     if verbose:
-        print(f"Transcription results written to '{output_dir}' directory")
+        if output_dir:
+            print(f"Transcription results written to '{output_dir}' directory")
+        else:
+            print("No output directory specified; skipping writing output files")
 
 
 if __name__ == "__main__":
