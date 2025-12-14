@@ -92,7 +92,7 @@ class CommandLine:
             "-o",
             type=str,
             default=".",
-            help="Directory to save the outputs (set to \"\" to disable writing files)",
+            help='Directory to save the outputs (set to "" to disable writing files)',
         )
         outputs_args.add_argument(
             "--output_format",
