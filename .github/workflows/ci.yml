@@ -70,3 +70,31 @@ jobs:
         run: |
           make install-dependencies-e2e-tests
           make run-e2e-tests
+
+  build-package-and-run-tests:
+    environment: CI/CD
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+
+      - name: Install dependencies
+        run: |
+          pip install wheel twine setuptools
+
+      - name: Build package
+        run: |
+          python3 setup.py sdist bdist_wheel
+
+      - name: Build package
+        run: |
+         pip install dist/*.whl
+
+      - name: Run tests
+        run: |
+          make run-tests
