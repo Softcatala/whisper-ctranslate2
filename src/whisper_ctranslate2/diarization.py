@@ -57,11 +57,8 @@ class Diarization:
         return segments
 
     def assign_speakers_to_segments(self, segments, transcript_result, speaker_name):
-        # For pyannote.audio 3.0+ (Community-1 model)
-        # segments is a DiarizeOutput object with speaker_diarization attribute
         diarize_data = []
         for turn, speaker in segments.speaker_diarization:
-            # Create tuple matching the expected format: (segment, label, speaker)
             diarize_data.append((turn, None, speaker))
 
         return self._do_assign_speakers_to_segments(
