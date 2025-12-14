@@ -1,18 +1,15 @@
 import pathlib
-from setuptools import setup
+from setuptools import setup, find_packages
 import pkg_resources
 import os
 
 HERE = pathlib.Path(__file__).parent
-
 README = (HERE / "README.md").read_text()
-
 
 def read_version(fname="src/whisper_ctranslate2/version.py"):
     version = {}
     exec(compile(open(fname).read(), fname, "exec"), version)
     return version["__version__"]
-
 
 setup(
     name="whisper-ctranslate2",
@@ -37,7 +34,8 @@ setup(
         "Programming Language :: Python :: 3.14",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
-    packages=["src/whisper_ctranslate2"],
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
     include_package_data=True,
     install_requires=[
         str(r)
@@ -50,7 +48,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "whisper-ctranslate2=src.whisper_ctranslate2.whisper_ctranslate2:main",
+            "whisper-ctranslate2=whisper_ctranslate2.whisper_ctranslate2:main",
         ]
     },
 )
