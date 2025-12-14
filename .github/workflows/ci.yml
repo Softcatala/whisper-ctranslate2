@@ -52,7 +52,12 @@ jobs:
       - name: Install Ubuntu dependency
         if: startsWith(matrix.os, 'ubuntu')
         run: |
-          sudo apt-get install libportaudio2 -y
+            sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Windows dependency
+        if: startsWith(matrix.os, 'windows')
+        run: |
+            choco install ffmpeg -y
 
       - name: Install module
         run: |
