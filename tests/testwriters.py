@@ -6,7 +6,7 @@ from tempfile import NamedTemporaryFile
 
 from faster_whisper.transcribe import Segment, Word
 
-from src.whisper_ctranslate2.writers import (
+from whisper_ctranslate2.writers import (
     WriteJSON,
     WriteSRT,
     WriteTSV,

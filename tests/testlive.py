@@ -1,6 +1,6 @@
 import unittest
 
-from src.whisper_ctranslate2.live import Live
+from whisper_ctranslate2.live import Live
 
 
 class TestLive(unittest.TestCase):
