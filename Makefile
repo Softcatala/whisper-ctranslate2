@@ -15,7 +15,6 @@ install-dependencies-e2e-tests:
 	pip install --force-reinstall faster-whisper==1.2.1 "ctranslate2==4.6.2"
 	pip install --force-reinstall "pyannote.audio==4.0.3"
 
-
 run-e2e-tests:
 	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' KMP_DUPLICATE_LIB_OK="TRUE" nose2 -s e2e-tests
 
@@ -29,7 +28,7 @@ update-e2e-tests:
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu  --compute_type float32 --output_dir e2e-tests/ref-small-transcribe/
 	$(E2E_COMMAND) e2e-tests/dosparlants.mp3 --temperature_increment_on_fallback None  --device cpu --model medium --compute_type float32 --output_dir e2e-tests/ref-medium-diarization/ --hf_token ${HF_TOKEN}
 	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --max_words_per_line 5 --word_timestamps True --output_dir e2e-tests/ref-small-transcribe-line-max-words/
-	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --vad_filter True --vad_onset 0.5 --vad_min_speech_duration_ms 2000 --vad_max_speech_duration_s 50000 --output_dir e2e-tests/ref-small-transcribe-vad/
+	$(E2E_COMMAND) e2e-tests/gossos.mp3 --device cpu --compute_type float32 --vad_filter True --vad_threshold 0.5 --vad_min_speech_duration_ms 2000 --vad_max_speech_duration_s 50000 --output_dir e2e-tests/ref-small-transcribe-vad/
 
 PATHS = src/ tests/ e2e-tests/
 
