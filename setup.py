@@ -1,7 +1,5 @@
 import pathlib
 from setuptools import setup, find_packages
-import pkg_resources
-import os
 
 HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
@@ -10,6 +8,13 @@ def read_version(fname="src/whisper_ctranslate2/version.py"):
     version = {}
     exec(compile(open(fname).read(), fname, "exec"), version)
     return version["__version__"]
+
+def read_requirements(fname="requirements.txt"):
+    """Read requirements from file and return as list."""
+    requirements_file = HERE / fname
+    with open(requirements_file) as f:
+        return [line.strip() for line in f
+                if line.strip() and not line.startswith('#')]
 
 setup(
     name="whisper-ctranslate2",
@@ -37,12 +42,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     include_package_data=True,
-    install_requires=[
-        str(r)
-        for r in pkg_resources.parse_requirements(
-            open(os.path.join(os.path.dirname(__file__), "requirements.txt"))
-        )
-    ],
+    install_requires=read_requirements(),
     extras_require={
         "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2", "twine"],
     },
