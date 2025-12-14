@@ -5,6 +5,7 @@ import tempfile
 import unittest
 import sys
 
+
 class TestCmd(unittest.TestCase):
     def _remove_fields_from_json(self, json_file):
         _dict = json.loads(json_file)
@@ -142,7 +143,6 @@ class TestCmd(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.srt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
-
 
     @unittest.skipIf(sys.platform == "win32", "Skipping test on Windows")
     def test_transcribe_diarization(self):
