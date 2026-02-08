@@ -89,7 +89,7 @@ def get_language(language, model_directory, model):
     ):
         if language is not None:
             warnings.warn(
-                f"{model} is an English-only model but receipted '{language}'; using English instead."
+                f"{model} is an English-only model but received '{language}'; using English instead."
             )
         language = "en"
 
@@ -193,7 +193,7 @@ def main():
     if model_directory:
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
-            sys.stderr.write(f"Model file '{model_filename}' does not exists\n")
+            sys.stderr.write(f"Model file '{model_filename}' does not exist\n")
             return
         model_dir = model_directory
     else:
