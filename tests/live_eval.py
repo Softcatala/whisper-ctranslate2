@@ -24,8 +24,9 @@ class LiveWER(Live):
         self.collected_text: List[str] = []
 
     def transcribed_text(self, text):
-      if text:
-          self.collected_text.append(text)
+        print(f"**** transcribed_text: {text}")
+        if text:
+            self.collected_text.append(text)
 
 
 # -----------------------------
@@ -110,10 +111,10 @@ def main():
         sample_wer = wer(reference, hypothesis)
         total_wer.append(sample_wer)
 
-        print(f"[{idx:03d}] WER={sample_wer:.3f}")
+        print("-" * 60)
         print(f"REF: {reference}")
         print(f"HYP: {hypothesis}")
-        print("-" * 60)
+        print(f"[{idx:03d}] WER={sample_wer:.3f}")
 
     avg_wer = sum(total_wer) / len(total_wer)
     print(f"\nAverage WER over {len(total_wer)} samples: {avg_wer:.3f}")

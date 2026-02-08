@@ -88,8 +88,10 @@ class Live:
 
     def callback(self, indata, frames, _time, status):
         if not any(indata):
+            print("callback no data")
             return
 
+        print("callback data")
         voice = self._is_there_voice(indata, frames)
 
         # Silence and no nobody has started speaking
