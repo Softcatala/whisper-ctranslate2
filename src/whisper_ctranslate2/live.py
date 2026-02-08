@@ -69,7 +69,7 @@ class Live:
 
     @staticmethod
     def force_not_available_exception():
-        raise (sounddevice_exception)
+        raise sounddevice_exception
 
     def _is_there_voice(self, indata, frames):
         freq = (
