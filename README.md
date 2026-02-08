@@ -9,12 +9,11 @@ It uses [CTranslate2](https://github.com/OpenNMT/CTranslate2/) and [Faster-whisp
 
 Key features:
 
-✅ 4x faster than OpenAI's Whisper at the same accuracy (up to 16X faster with batched inference)
-✅ Live transcription from microphone
-✅ OpenAI CLI compatibility (easier migration)
-✅ Color-coded confidence visualization
-✅ Docker image with pre-loaded models
-
+- ✅ 4x faster than OpenAI's Whisper at the same accuracy (up to 16X faster with batched inference)
+- ✅ Live transcription from microphone
+- ✅ OpenAI Whisper CLI compatibility (easier migration)
+- ✅ Color-coded confidence visualization
+-  ✅ Docker image with pre-loaded models
 
 # Installation
 
