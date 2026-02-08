@@ -33,9 +33,9 @@ class Diarization:
         torch.set_num_threads(threads)
 
     def unload_model(self):
-        if  self.model:
-          del self.model
-          torch.cuda.empty_cache()
+        if self.model:
+            del self.model
+            torch.cuda.empty_cache()
 
     def _load_model(self):
         model_name = "pyannote/speaker-diarization-community-1"
