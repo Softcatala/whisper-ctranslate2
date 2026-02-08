@@ -13,19 +13,17 @@ Key features:
 - ✅ Live transcription from microphone
 - ✅ OpenAI Whisper CLI compatibility (easier migration)
 - ✅ Color-coded confidence visualization
--  ✅ Docker image with pre-loaded models
+- ✅ Docker image with pre-loaded models
 
 # Installation
 
+## Python package
+
 To install the latest stable version, just type:
 
-    pip install -U whisper-ctranslate2
+    pip install whisper-ctranslate2
 
-Alternatively, if you are interested in the latest development (non-stable) version from this repository, just type:
-
-    pip install git+https://github.com/Softcatala/whisper-ctranslate2
-
-# Using prebuild Docker image
+## Using prebuild Docker image
 
 You can use build docker image. First pull the image:
 
