@@ -130,9 +130,11 @@ def main():
         sys.stderr.write("You need to specify one or more audio files\n")
         sys.stderr.write(
             "Use `whisper-ctranslate2 --help` to see the available options.\n"
+            "Quick start:\n"
+            "  whisper-ctranslate2 audio.mp3                                    # Basic transcription\n"
+            "  whisper-ctranslate2 audio.mp3 --model large-v3 --device cuda     # Better model with GPU\n"
         )
         return
-
     word_options = [
         "highlight_words",
         "max_line_count",
