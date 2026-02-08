@@ -23,31 +23,9 @@ class LiveWER(Live):
         super().__init__(*args, **kwargs)
         self.collected_text: List[str] = []
 
-    def process(self):
-        if len(self.buffers_to_process) > 0:
-            _buffer = self.buffers_to_process.pop(0)
-            if not self.transcribe:
-                self.transcribe = Transcribe(
-                    self.model_path,
-                    self.device,
-                    self.device_index,
-                    self.compute_type,
-                    self.threads,
-                    self.cache_directory,
-                    self.local_files_only,
-                    False,
-                )
-            result = self.transcribe.inference(
-                audio=_buffer.flatten().astype("float32"),
-                task=self.task,
-                language=self.language,
-                verbose=False,
-                live=True,
-                options=self.options,
-            )
-            text = result["text"].strip()
-            if text:
-                self.collected_text.append(text)
+    def transcribed_text(self, text):
+      if text:
+          self.collected_text.append(text)
 
 
 # -----------------------------
