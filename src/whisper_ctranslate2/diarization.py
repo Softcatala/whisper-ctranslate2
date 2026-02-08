@@ -27,13 +27,15 @@ class Diarization:
         self.device = device
         self.token = token
         self.num_speakers = num_speakers
+        self.model = None
 
     def set_threads(self, threads):
         torch.set_num_threads(threads)
 
     def unload_model(self):
-        del self.model
-        torch.cuda.empty_cache()
+        if  self.model:
+          del self.model
+          torch.cuda.empty_cache()
 
     def _load_model(self):
         model_name = "pyannote/speaker-diarization-community-1"
