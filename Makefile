@@ -13,7 +13,7 @@ run:
 
 install-dependencies-e2e-tests:
 	pip install --force-reinstall faster-whisper==1.2.1 "ctranslate2==4.7.1"
-	pip install --force-reinstall "pyannote.audio==4.0.3"
+	pip install --force-reinstall "pyannote.audio==4.0.4"
 
 run-e2e-tests:
 	CT2_USE_MKL="False" CT2_FORCE_CPU_ISA='GENERIC' KMP_DUPLICATE_LIB_OK="TRUE" nose2 -s e2e-tests
