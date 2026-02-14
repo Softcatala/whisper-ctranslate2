@@ -32,7 +32,7 @@ You can use build docker image. First pull the image:
 
     docker pull ghcr.io/softcatala/whisper-ctranslate2:latest
 
-The Docker image includes the small, medium" and large-v2.
+The Docker image includes the small, medium and large-v2 models.
 
 To run it:
 
@@ -88,7 +88,7 @@ On top of the OpenAI Whisper command line options, there are some specific optio
 
 ## Batched inference
 
-Batched inference transcribes each segment in-dependently which can provide an additional 2x-4x speed increase:
+Batched inference transcribes each segment independently which can provide an additional 2x-4x speed increase:
 
     whisper-ctranslate2 inaguracio2011.mp3 --batched True
     
