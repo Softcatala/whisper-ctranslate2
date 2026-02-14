@@ -130,7 +130,7 @@ Maximum duration of speech chunks in seconds. Longer will be split at the timest
 
 ## Print colors
 
-`--print_colors True` options prints the transcribed text using an experimental color coding strategy based on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) to highlight words with high or low confidence:
+`--print_colors True` options prints the transcribed text using a color coding strategy based on [whisper.cpp](https://github.com/ggerganov/whisper.cpp) to highlight words with high or low confidence:
 
     whisper-ctranslate2 myfile.mp3 --print_colors True
 
@@ -146,7 +146,7 @@ https://user-images.githubusercontent.com/309265/231533784-e58c4b92-e9fb-4256-b4
 
 ## Diarization (speaker identification)
 
-There is experimental diarization support using [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) to identify speakers. At the moment, the support is at segment level.
+Diarization support using [`pyannote.audio`](https://github.com/pyannote/pyannote-audio) to identify speakers. At the moment, the support is at segment level.
 
 To enable diarization you need to follow these steps:
 
