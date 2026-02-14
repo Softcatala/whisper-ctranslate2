@@ -37,9 +37,6 @@ dev:
 	python -m flake8 $(PATHS)
 	python -m isort $(PATHS)
 
-live-eval:
-	python tests/live_eval.py 
-
 publish-release:
 	rm dist/ -r -f
 	python3 setup.py sdist bdist_wheel

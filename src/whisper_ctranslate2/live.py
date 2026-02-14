@@ -88,10 +88,8 @@ class Live:
 
     def callback(self, indata, frames, _time, status):
         if not any(indata):
-            print("callback no data")
             return
 
-        print("callback data")
         voice = self._is_there_voice(indata, frames)
 
         # Silence and no nobody has started speaking
@@ -124,9 +122,6 @@ class Live:
         if self.blocks_speaking < 1:
             self._save_to_process()
 
-    def transcribed_text(self, text):
-        print(f"\033[1A\033[2K\033[0G{text}")
-
     def process(self):
         if len(self.buffers_to_process) > 0:
             _buffer = self.buffers_to_process.pop(0)
@@ -153,7 +148,7 @@ class Live:
                 live=True,
                 options=self.options,
             )
-            self.transcribed_text(result["text"])
+            print(f"\033[1A\033[2K\033[0G{result['text']}")
             if not self.verbose:
                 print("")
 
