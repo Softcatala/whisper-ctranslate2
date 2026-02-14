@@ -105,7 +105,7 @@ no_speech_threshold, condition_on_previous_text, prompt_reset_on_temperature, pr
 
 ## Loading the model from a directory
 
-`--model_directory` option allows to specify the directory from which you want to load a CTranslate2 Whisper model. For example, if you want to load your own quantified [Whisper model](https://opennmt.net/CTranslate2/conversion.html) version or using your own [Whisper fine-tuned](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event) version. The model must be in CTranslate2 format.
+`--model_directory` option allows to specify the directory from which you want to load a CTranslate2 Whisper model. For example, if you want to load your own quantized [Whisper model](https://opennmt.net/CTranslate2/conversion.html) version or using your own [Whisper fine-tuned](https://github.com/huggingface/community-events/tree/main/whisper-fine-tuning-event) version. The model must be in CTranslate2 format.
 
 ## Using Voice Activity Detection (VAD) filter
 
@@ -158,7 +158,7 @@ And then execute passing the HuggingFace API token as parameter to enable diariz
 
     whisper-ctranslate2 --hf_token YOUR_HF_TOKEN
 
-and then the name of the speaker is added in the output files (e.g. JSON, VTT and STR files):
+and then the name of the speaker is added in the output files (e.g. JSON, VTT and SRT files):
 
 _[SPEAKER_00]: There is a lot of people in this room_
 
