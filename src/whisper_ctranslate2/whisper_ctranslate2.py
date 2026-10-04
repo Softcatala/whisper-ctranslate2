@@ -253,7 +253,6 @@ def main():
 
     # We need to do first the diarization of all files because CTranslate2 and torch
     # use incompatible CUDA versions and once CTranslate2 is used torch will not work
-    failed = False
     for audio_path in audio:
         try:
             if verbose and len(audio) > 1:
@@ -282,7 +281,6 @@ def main():
             writer(result, audio_path, writer_args)
 
         except Exception as e:
-            failed = True
             error_details = traceback.format_exc()
             sys.stderr.write(
                 f"Error: Unable to process file: {audio_path}\n"
@@ -291,9 +289,6 @@ def main():
                 f"Traceback:\n{error_details}\n"
             )
             continue
-
-    if failed:
-        sys.exit(1)
 
     if verbose:
         print(f"Transcription results written to '{output_dir}' directory")
