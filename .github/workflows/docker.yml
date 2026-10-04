@@ -4,10 +4,16 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "0 0 * * 0"
 
 jobs:
   build:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - name: Checkout code
@@ -23,17 +29,37 @@ jobs:
     - name: Build Docker image
       run: docker build -t ghcr.io/softcatala/whisper-ctranslate2:latest .
 
-    - name: Use Docker image
-      run: docker run -v "$(pwd)":/srv/files/ ghcr.io/softcatala/whisper-ctranslate2:latest /srv/files/e2e-tests/gossos.mp3
+    - name: Test Docker image
+      run: |
+        mkdir -p "$RUNNER_TEMP/docker-output"
+        docker run --rm --network none -v "$PWD":/srv/files:ro -v "$RUNNER_TEMP/docker-output":/output ghcr.io/softcatala/whisper-ctranslate2:latest /srv/files/e2e-tests/gossos.mp3 --device cpu --compute_type float32 --local_files_only True --output_format txt --output_dir /output
+        diff e2e-tests/ref-small-transcribe/gossos.txt "$RUNNER_TEMP/docker-output/gossos.txt"
 
     - name: Push Docker image
       run: docker push ghcr.io/softcatala/whisper-ctranslate2:latest
 
-    # These are untagged images left behind in the Docker public registry      
     - name: Delete old images
-      run: |
-       gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
-       gh api -X GET /user/packages/container/whisper-ctranslate2/versions \
-        | jq -r '.[] | select(.metadata.container.tags | index("latest") | not) | .id' \
-        | xargs -I {} gh api -X DELETE /user/packages/container/whisper-ctranslate2/versions/{}
+      uses: snok/container-retention-policy@v3.1.0
+      with:
+        account: Softcatala
+        token: ${{ secrets.GITHUB_TOKEN }}
+        image-names: whisper-ctranslate2
+        tag-selection: untagged
+        cut-off: 0s
 
+  test-published-image:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Pull published Docker image
+      run: docker pull ghcr.io/softcatala/whisper-ctranslate2:latest
+
+    - name: Test Docker image
+      run: |
+        mkdir -p "$RUNNER_TEMP/docker-output"
+        docker run --rm --network none -v "$PWD":/srv/files:ro -v "$RUNNER_TEMP/docker-output":/output ghcr.io/softcatala/whisper-ctranslate2:latest /srv/files/e2e-tests/gossos.mp3 --device cpu --compute_type float32 --local_files_only True --output_format txt --output_dir /output
+        diff e2e-tests/ref-small-transcribe/gossos.txt "$RUNNER_TEMP/docker-output/gossos.txt"
