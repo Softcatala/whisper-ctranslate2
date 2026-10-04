@@ -19,9 +19,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13"
+
       - name: Install dev tools
         run: |
-          pip install --no-cache-dir -e .[dev]
+          python -m pip install --upgrade pip
+          python -m pip install --no-cache-dir -e ".[dev]"
 
       - name: Check code format with Black
         run: |
