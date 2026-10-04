@@ -1,5 +1,7 @@
 numpy
 faster-whisper>=1.2.0
+# faster-whisper still passes metadata_errors to av.open; PyAV 19 removed it.
+av>=11,<19
 ctranslate2
 tqdm
 sounddevice
