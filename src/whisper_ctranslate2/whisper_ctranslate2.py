@@ -133,7 +133,7 @@ def main():
             "  whisper-ctranslate2 audio.mp3                                    # Basic transcription\n"
             "  whisper-ctranslate2 audio.mp3 --model large-v3 --device cuda     # Better model with GPU\n"
         )
-        return
+        sys.exit(1)
     word_options = [
         "highlight_words",
         "max_line_count",
@@ -144,17 +144,17 @@ def main():
         for option in word_options:
             if args[option]:
                 sys.stderr.write(f"--{option} requires --word_timestamps True\n")
-                return
+                sys.exit(1)
 
     if options.hallucination_silence_threshold and not options.word_timestamps:
         sys.stderr.write(
             "--hallucination_silence_threshold requires --word_timestamps True"
         )
-        return
+        sys.exit(1)
 
     if batch_size and not batched:
         sys.stderr.write("--batched_size can only be used if --batched is True")
-        return
+        sys.exit(1)
 
     if args["max_line_count"] and not args["max_line_width"]:
         warnings.warn("--max_line_count has no effect without --max_line_width")
@@ -168,7 +168,7 @@ def main():
 
     if not verbose and options.print_colors:
         sys.stderr.write("You cannot disable verbose and enable print colors\n")
-        return
+        sys.exit(1)
 
     if live_transcribe and not Live.is_available():
         Live.force_not_available_exception()
@@ -193,7 +193,7 @@ def main():
         model_filename = os.path.join(model_directory, "model.bin")
         if not os.path.exists(model_filename):
             sys.stderr.write(f"Model file '{model_filename}' does not exist\n")
-            return
+            sys.exit(1)
         model_dir = model_directory
     else:
         model_dir = model
@@ -253,6 +253,7 @@ def main():
 
     # We need to do first the diarization of all files because CTranslate2 and torch
     # use incompatible CUDA versions and once CTranslate2 is used torch will not work
+    failed = False
     for audio_path in audio:
         try:
             if verbose and len(audio) > 1:
@@ -281,6 +282,7 @@ def main():
             writer(result, audio_path, writer_args)
 
         except Exception as e:
+            failed = True
             error_details = traceback.format_exc()
             sys.stderr.write(
                 f"Error: Unable to process file: {audio_path}\n"
@@ -289,6 +291,9 @@ def main():
                 f"Traceback:\n{error_details}\n"
             )
             continue
+
+    if failed:
+        sys.exit(1)
 
     if verbose:
         print(f"Transcription results written to '{output_dir}' directory")
