@@ -1,10 +1,8 @@
 import sys
-
 from typing import BinaryIO, List, NamedTuple, Optional, Union
 
 import numpy as np
 import tqdm
-
 from faster_whisper import BatchedInferencePipeline, WhisperModel
 
 from .languages import LANGUAGES

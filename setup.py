@@ -44,7 +44,7 @@ setup(
     include_package_data=True,
     install_requires=read_requirements(),
     extras_require={
-        "dev": ["flake8==7.*", "black==24.*", "isort==5.13", "nose2", "twine"],
+        "dev": ["ruff==0.16.10", "nose2", "twine"],
     },
     entry_points={
         "console_scripts": [

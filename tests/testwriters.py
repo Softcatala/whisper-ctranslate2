@@ -1,7 +1,6 @@
 import json
 import os
 import unittest
-
 from tempfile import NamedTemporaryFile
 
 from faster_whisper.transcribe import Segment, Word

@@ -1,0 +1,14 @@
+# Match Black's default formatting width.
+line-length = 88
+target-version = "py310"
+
+[lint]
+# Flake8 checks, import sorting, and all stable Bugbear rules.
+select = ["E", "F", "W", "I", "B"]
+# E203 was ignored by Flake8; W503 has no Ruff equivalent.
+# E501 uses the separate lint limit below, rather than the formatting width.
+# Keep Python's default warning locations without explicit stacklevel values.
+ignore = ["E203", "B028"]
+
+[lint.pycodestyle]
+max-line-length = 250

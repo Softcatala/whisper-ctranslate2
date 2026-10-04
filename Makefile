@@ -33,9 +33,8 @@ update-e2e-tests:
 PATHS = src/ tests/ e2e-tests/
 
 dev:
-	python -m black $(PATHS)
-	python -m flake8 $(PATHS)
-	python -m isort $(PATHS)
+	python -m ruff check --fix $(PATHS)
+	python -m ruff format $(PATHS)
 
 publish-release:
 	rm dist/ -r -f
