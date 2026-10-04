@@ -5,6 +5,24 @@ target-version = "py310"
 [lint]
 # Flake8's Pyflakes/pycodestyle checks and isort's import sorting.
 select = ["E", "F", "W", "I"]
+# Additional bug detection, without Bugbear's style and warning-location checks.
+extend-select = [
+    "B006",  # Mutable argument defaults shared across calls.
+    "B008",  # Function calls evaluated only once in argument defaults.
+    "B012",  # Control flow in finally blocks that suppresses exceptions.
+    "B015",  # Comparisons whose results are discarded.
+    "B016",  # Raising literals instead of exceptions.
+    "B018",  # Useless expressions, such as forgotten function calls.
+    "B020",  # Loop variables overwriting the iterable being traversed.
+    "B023",  # Closures capturing changing loop variables.
+    "B029",  # Empty exception-handler tuples.
+    "B030",  # Exception handlers catching non-exception types.
+    "B031",  # Reusing exhausted itertools.groupby groups.
+    "B032",  # Accidental annotations instead of assignments.
+    "B033",  # Duplicate set items.
+    "B034",  # Positional re arguments with easily confused meanings.
+    "B035",  # Dictionary comprehensions that overwrite a constant key.
+]
 # E203 was ignored by Flake8; W503 has no Ruff equivalent.
 # E501 uses the separate lint limit below, rather than the formatting width.
 ignore = ["E203"]
