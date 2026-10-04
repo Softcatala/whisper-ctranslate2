@@ -7,7 +7,8 @@ target-version = "py310"
 select = ["E", "F", "W", "I", "B"]
 # E203 was ignored by Flake8; W503 has no Ruff equivalent.
 # E501 uses the separate lint limit below, rather than the formatting width.
-ignore = ["E203"]
+# Keep Python's default warning locations without explicit stacklevel values.
+ignore = ["E203", "B028"]
 
 [lint.pycodestyle]
 max-line-length = 250

@@ -88,8 +88,7 @@ def get_language(language, model_directory, model):
     ):
         if language is not None:
             warnings.warn(
-                f"{model} is an English-only model but received '{language}'; using English instead.",
-                stacklevel=2,
+                f"{model} is an English-only model but received '{language}'; using English instead."
             )
         language = "en"
 
@@ -158,14 +157,10 @@ def main():
         return
 
     if args["max_line_count"] and not args["max_line_width"]:
-        warnings.warn(
-            "--max_line_count has no effect without --max_line_width", stacklevel=1
-        )
+        warnings.warn("--max_line_count has no effect without --max_line_width")
 
     if args["max_words_per_line"] and args["max_line_width"]:
-        warnings.warn(
-            "--max_words_per_line has no effect with --max_line_width", stacklevel=1
-        )
+        warnings.warn("--max_words_per_line has no effect with --max_line_width")
 
     writer_options = list(word_options)
     writer_options.append("pretty_json")
