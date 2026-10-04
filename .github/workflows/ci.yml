@@ -24,19 +24,14 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install --no-cache-dir -e ".[dev]"
 
-      - name: Check code format with Black
+      - name: Check code style and imports with Ruff
         run: |
-          black --check src/ tests/ e2e-tests/
+          python -m ruff check src/ tests/ e2e-tests/
 
-      - name: Check code style with Flake8
+      - name: Check code format with Ruff
         if: ${{ always() }}
         run: |
-          flake8 src/ tests/ e2e-tests/
-
-      - name: Check code style with isort
-        if: ${{ always() }}
-        run: |
-          isort --check-only src/ tests/ e2e-tests/
+          python -m ruff format --check src/ tests/ e2e-tests/
 
   run-tests:
     environment: CI/CD

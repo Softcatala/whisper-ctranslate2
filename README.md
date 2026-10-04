@@ -164,6 +164,21 @@ _[SPEAKER_00]: There is a lot of people in this room_
 
 The option `--speaker_name SPEAKER_NAME` allows to use your own string to identify the speaker.
 
+## Development
+
+Install the development dependencies with `python -m pip install -e ".[dev]"`.
+Run `make dev` to fix lint issues, sort imports, and format code with Ruff.
+
+To run the same checks as CI:
+
+```sh
+python -m ruff check src/ tests/ e2e-tests/
+python -m ruff format --check src/ tests/ e2e-tests/
+```
+
+Ruff is configured in `ruff.toml`, with an 88-character formatting target and
+an independent 250-character lint limit.
+
 # Need help?
 
 Check our [frequently asked questions](FAQ.md) for common questions.
