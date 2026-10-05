@@ -76,14 +76,21 @@ class SubtitlesWriter(ResultWriter):
             last = result["segments"][0]["words"][0]["start"]
             for segment in result["segments"]:
                 speaker = f"[{segment['speaker']}]: " if "speaker" in segment else ""
+                words = segment.get("words") or [
+                    {
+                        "word": segment["text"],
+                        "start": segment["start"],
+                        "end": segment["end"],
+                    }
+                ]
                 chunk_index = 0
                 words_count = max_words_per_line
-                while chunk_index < len(segment["words"]):
-                    remaining_words = len(segment["words"]) - chunk_index
-                    if max_words_per_line > len(segment["words"]) - chunk_index:
+                while chunk_index < len(words):
+                    remaining_words = len(words) - chunk_index
+                    if max_words_per_line > len(words) - chunk_index:
                         words_count = remaining_words
                     for i, original_timing in enumerate(
-                        segment["words"][chunk_index : chunk_index + words_count]
+                        words[chunk_index : chunk_index + words_count]
                     ):
                         timing = original_timing.copy()
                         long_pause = (
