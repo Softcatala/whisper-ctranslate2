@@ -4,15 +4,8 @@ import shutil
 import tempfile
 import unittest
 
-from huggingface_hub.constants import HF_HUB_CACHE
-
 
 class TestCmd(unittest.TestCase):
-    @staticmethod
-    def _reuse_model_cache(directory, option):
-        if option == "--model_dir tmp/":
-            shutil.copytree(HF_HUB_CACHE, os.path.join(directory, "tmp"))
-
     def _remove_fields_from_json(self, json_file):
         _dict = json.loads(json_file)
         for segment in _dict["segments"]:
@@ -68,7 +61,6 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                self._reuse_model_cache(directory, option)
                 cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
@@ -126,7 +118,6 @@ class TestCmd(unittest.TestCase):
         for option in options:
             with tempfile.TemporaryDirectory() as directory:
                 _file = "gossos"
-                self._reuse_model_cache(directory, option)
                 cmd = f"cd {directory} && whisper-ctranslate2 {path}/{_file}.mp3 --device cpu --task translate --model medium --compute_type float32 {option} --output_dir {directory}"
                 os.system(cmd)
                 self._check_ref_small(
