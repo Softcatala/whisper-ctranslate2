@@ -92,6 +92,31 @@ class TestWriters(unittest.TestCase):
         self.assertEqual("How are you?\n", r[6], "text")
         self.assertEqual("\n", r[7], "text")
 
+    def test_write_srt_preserves_segment_without_word_timestamps(self):
+        segments = [
+            self._get_segment("Hello", start=0, end=1),
+            self._get_segment("How are you?", start=1, end=2),
+            self._get_segment("Goodbye", start=2, end=3),
+        ]
+        segments[0]["words"] = [
+            Word(start=0, end=1, word="Hello", probability=1)._asdict(),
+        ]
+        segments[2]["words"] = [
+            Word(start=2, end=3, word="Goodbye", probability=1)._asdict(),
+        ]
+        results = {"text": "Hello How are you? Goodbye", "segments": segments}
+
+        subtitles = list(WriteSRT(output_dir=".").iterate_result(results, {}))
+
+        self.assertEqual(
+            [
+                ("00:00:00,000", "00:00:01,000", "Hello"),
+                ("00:00:01,000", "00:00:02,000", "How are you?"),
+                ("00:00:02,000", "00:00:03,000", "Goodbye"),
+            ],
+            subtitles,
+        )
+
     def test_write_tsv(self):
         segments = [
             self._get_segment("Hello my friends.", start=1, end=5),
