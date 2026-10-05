@@ -15,6 +15,8 @@ on:
 
 jobs:
   check-code-format:
+    # Same-repository PR commits are already checked by the push workflow.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-22.04
 
     steps:
@@ -34,6 +36,8 @@ jobs:
           python -m ruff format --check src/ tests/ e2e-tests/
 
   run-tests:
+    # Same-repository PR commits are already checked by the push workflow.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     environment: CI/CD
     strategy:
       matrix:
@@ -77,6 +81,8 @@ jobs:
           make run-e2e-tests
 
   build-package-and-run-tests:
+    # Same-repository PR commits are already checked by the push workflow.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
     environment: CI/CD
     runs-on: ubuntu-latest
 
