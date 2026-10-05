@@ -15,7 +15,7 @@ class TestCmd(unittest.TestCase):
 
         def link_or_copy(source, destination):
             try:
-                os.link(source, destination)
+                os.link(os.path.realpath(source), destination)
             except OSError:
                 shutil.copy2(source, destination)
 
