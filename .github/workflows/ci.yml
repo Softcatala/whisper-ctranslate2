@@ -18,9 +18,33 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref_type == 'branch') }}
 
 jobs:
+  select-ci-event:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      should-run: ${{ steps.select.outputs.should-run }}
+    steps:
+      - name: Prefer PR checks for branches with an open PR
+        id: select
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REF_TYPE" = "branch" ]; then
+            count=$(gh api "repos/$GITHUB_REPOSITORY/pulls" --method GET -f state=open -f head="$GITHUB_REPOSITORY_OWNER:$GITHUB_REF_NAME" --jq length)
+          else
+            count=0
+          fi
+          if [ "$count" -eq 0 ]; then
+            echo "should-run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+          fi
+
   check-code-format:
-    # Same-repository PR commits are already checked by the push workflow.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    needs: select-ci-event
+    if: needs.select-ci-event.outputs.should-run == 'true'
     runs-on: ubuntu-22.04
 
     steps:
@@ -40,8 +64,8 @@ jobs:
           python -m ruff format --check src/ tests/ e2e-tests/
 
   run-tests:
-    # Same-repository PR commits are already checked by the push workflow.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    needs: select-ci-event
+    if: needs.select-ci-event.outputs.should-run == 'true'
     environment: CI/CD
     strategy:
       matrix:
@@ -85,8 +109,8 @@ jobs:
           make run-e2e-tests
 
   build-package-and-run-tests:
-    # Same-repository PR commits are already checked by the push workflow.
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
+    needs: select-ci-event
+    if: needs.select-ci-event.outputs.should-run == 'true'
     environment: CI/CD
     runs-on: ubuntu-latest
 
