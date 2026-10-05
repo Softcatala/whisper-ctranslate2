@@ -24,7 +24,7 @@ jobs:
       - name: Install dev tools
         run: |
           python -m pip install --upgrade pip
-          python -m pip install --no-cache-dir -e ".[dev]"
+          python -m pip install --no-cache-dir ruff==0.16.10
 
       - name: Check code style and imports with Ruff
         run: |
