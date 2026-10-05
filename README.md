@@ -54,7 +54,7 @@ GPU and CPU support is provided by [CTranslate2](https://github.com/OpenNMT/CTra
 
 It has compatibility with x86-64 and AArch64/ARM64 CPU and integrates multiple backends that are optimized for these platforms: Intel MKL, oneDNN, OpenBLAS, Ruy, and Apple Accelerate.
 
-GPU execution requires the NVIDIA libraries cuBLAS 11.x to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html)
+GPU execution requires the NVIDIA libraries cuBLAS for CUDA 12 and cuDNN 9 for CUDA 12 to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html)
 
 By default the best hardware available is selected for inference. You can use the options `--device` and `--device_index` to control manually the selection.
     
@@ -115,7 +115,7 @@ no_speech_threshold, condition_on_previous_text, prompt_reset_on_temperature, pr
 
 The VAD filter accepts multiple additional options to determine the filter behavior:
 
-    --vad_onset VALUE (float)
+    --vad_threshold VALUE (float)
 
 Probabilities above this value are considered as speech.
 
@@ -156,7 +156,7 @@ To enable diarization you need to follow these steps:
 
 And then execute passing the HuggingFace API token as parameter to enable diarization:
 
-    whisper-ctranslate2 --hf_token YOUR_HF_TOKEN
+    whisper-ctranslate2 myfile.mp3 --hf_token YOUR_HF_TOKEN
 
 and then the name of the speaker is added in the output files (e.g. JSON, VTT and SRT files):
 
