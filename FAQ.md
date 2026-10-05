@@ -1,12 +1,12 @@
 # Problems using GPUs and CUDA drivers
 
-GPU execution requires the NVIDIA libraries cuBLAS 11.x and cuDNN 8.x to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html).
+GPU execution requires the NVIDIA libraries cuBLAS for CUDA 12 and cuDNN 9 for CUDA 12 to be installed on the system. Please refer to the [CTranslate2 documentation](https://opennmt.net/CTranslate2/installation.html).
 
 If executing whisper-ctranslate2 gives errors like:
 
 *Could not load library cudnn_ops_infer64_8.dll. Error code 126*
 
-Make sure that the environment variable *LD_LIBRARY_PATH* includes the path where your libraries are installed.
+Make sure that *PATH* on Windows or *LD_LIBRARY_PATH* on Linux includes the path where your libraries are installed.
 
 # Executing the program more than once produces different transcriptions
 
