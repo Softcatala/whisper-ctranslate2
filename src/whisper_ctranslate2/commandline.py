@@ -1,7 +1,14 @@
 import argparse
 
+from ctranslate2 import __version__ as _ct2_version
+from packaging.version import Version
+
 from .languages import LANGUAGES, TO_LANGUAGE_CODE
 from .version import __version__
+
+_DEVICE_CHOICES = ["auto", "cpu", "cuda"]
+if Version(_ct2_version) >= Version("4.9.0"):
+    _DEVICE_CHOICES.append("mps")
 
 MODEL_NAMES = [
     "tiny",
@@ -154,11 +161,7 @@ class CommandLine:
 
         computing_args.add_argument(
             "--device",
-            choices=[
-                "auto",
-                "cpu",
-                "cuda",
-            ],
+            choices=_DEVICE_CHOICES,
             default="auto",
             help="Device to use for CTranslate2 inference",
         )
