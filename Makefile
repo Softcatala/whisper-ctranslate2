@@ -12,7 +12,7 @@ run:
 	pip3 install --force-reinstall .
 
 install-dependencies-e2e-tests:
-	pip install --force-reinstall -e . faster-whisper==1.2.1 "ctranslate2==4.7.1"
+	pip install --force-reinstall -e . faster-whisper==1.2.1 "ctranslate2==4.9.0"
 	pip install --force-reinstall -e . "pyannote.audio==4.0.4"
 
 run-e2e-tests:
