@@ -95,7 +95,16 @@ def get_language(language, model_directory, model):
     return language
 
 
+def replace_unencodable_output():
+    # A redirected or piped stdout on Windows uses the ANSI code page instead of
+    # UTF-8, so printing the help text or a transcription raised UnicodeEncodeError.
+    reconfigure = getattr(sys.stdout, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(errors="replace")
+
+
 def main():
+    replace_unencodable_output()
     args = CommandLine().read_command_line()
     output_dir: str = args.pop("output_dir")
     output_format: str = args.pop("output_format")
