@@ -143,11 +143,14 @@ class TestCmd(unittest.TestCase):
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.txt")))
             self.assertTrue(os.path.exists(os.path.join(directory, f"{_file2}.json")))
 
+    @unittest.skipUnless(
+        os.environ.get("HF_TOKEN"),
+        "HF_TOKEN not set (e.g. pull requests from forks do not receive secrets)",
+    )
     def test_transcribe_diarization(self):
         full_path = os.path.realpath(__file__)
         path, _ = os.path.split(full_path)
-        hf_token = os.environ.get("HF_TOKEN")
-        self.assertTrue(hf_token, "HF_TOKEN should not be None or an empty string")
+        hf_token = os.environ["HF_TOKEN"]
 
         with tempfile.TemporaryDirectory() as directory:
             _file = "dosparlants"
