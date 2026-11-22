@@ -5,7 +5,7 @@ import unittest
 
 
 class TestEncoding(unittest.TestCase):
-    def test_help_with_non_utf8_stdout(self):
+    def test_help_is_utf8_when_stdout_uses_another_encoding(self):
         # A redirected or piped stdout on Windows uses the ANSI code page, which
         # cannot encode every character of the help text.
         env = dict(os.environ, PYTHONIOENCODING="cp1252")
@@ -18,7 +18,7 @@ class TestEncoding(unittest.TestCase):
         )
 
         self.assertEqual(0, result.returncode, result.stderr.decode(errors="replace"))
-        self.assertIn(b"--append_punctuations", result.stdout)
+        self.assertIn("。", result.stdout.decode("utf-8"))
 
 
 if __name__ == "__main__":

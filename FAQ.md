@@ -35,3 +35,7 @@ Additionally, you can try with a lower volume threshold using *--live_volume_thr
 This is a _sounddevice_ library dependency needed for the live transcription functionality. If you are running Ubuntu, you can install the necessary library by running:
 
     sudo apt-get install libportaudio2
+
+# Output encoding
+
+whisper-ctranslate2 always writes its standard output and standard error as UTF-8, also when they are redirected to a file or piped to another program. This does not depend on the console code page on Windows, and it overrides *PYTHONIOENCODING*. Read redirected output as UTF-8.
