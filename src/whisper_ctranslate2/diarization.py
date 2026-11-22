@@ -42,7 +42,7 @@ class Diarization:
         model_handle = Pipeline.from_pretrained(model_name, token=self.token)
         if model_handle is None:
             raise ValueError(
-                f"The token Hugging Face token '{self.token}' for diarization is not valid or you did not accept the EULAs for the necessary models. See https://github.com/Softcatala/whisper-ctranslate2#diarization-speaker-identification"
+                "The Hugging Face token for diarization is not valid or you did not accept the EULAs for the necessary models. See https://github.com/Softcatala/whisper-ctranslate2#diarization-speaker-identification"
             )
 
         self.model = model_handle.to(device)
