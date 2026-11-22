@@ -95,7 +95,17 @@ def get_language(language, model_directory, model):
     return language
 
 
+def use_utf8_output():
+    # A redirected or piped stream on Windows uses the ANSI code page instead of
+    # UTF-8, so printing the help text or a transcription raised UnicodeEncodeError.
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            reconfigure(encoding="utf-8", errors=stream.errors)
+
+
 def main():
+    use_utf8_output()
     args = CommandLine().read_command_line()
     output_dir: str = args.pop("output_dir")
     output_format: str = args.pop("output_format")

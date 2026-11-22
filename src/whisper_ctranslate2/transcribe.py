@@ -1,4 +1,3 @@
-import sys
 from typing import BinaryIO, List, NamedTuple, Optional, Union
 
 import numpy as np
@@ -7,18 +6,6 @@ from faster_whisper import BatchedInferencePipeline, WhisperModel
 
 from .languages import LANGUAGES
 from .writers import format_timestamp
-
-system_encoding = sys.getdefaultencoding()
-
-if system_encoding != "utf-8":
-
-    def make_safe(string):
-        return string.encode(system_encoding, errors="replace").decode(system_encoding)
-
-else:
-
-    def make_safe(string):
-        return string
 
 
 class TranscriptionOptions(NamedTuple):
@@ -207,7 +194,7 @@ class Transcribe:
 
                     if not live:
                         line = f"[{format_timestamp(start)} --> {format_timestamp(end)}] {text}"
-                        print(make_safe(line))
+                        print(line)
 
                 segment_dict = segment._asdict()
                 if segment.words:
